@@ -3,10 +3,13 @@ const mongoose = require("mongoose");
 const cashbackSchema = new mongoose.Schema(
     {
         member_id: { type: String },
-        cashback_date: { type: Date, unique: true },
         duration: { type: Number, default: 18 },
+        plan_amount: {  type: Number, default: 0 },
+        total_cashback: { type: Number, default:0},
         paidMonth: {  type: Number, default: 0 },
-        amount: {  type: Number, default: 0 },
+        total_cashback: {  type: Number, default: 0 },
+        cashback_date: { type: Date, unique: true },
+
     },
     { timestamps: true, collection: "cashback" }
 );

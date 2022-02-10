@@ -23,14 +23,16 @@ function creacteTopup(req, res) {
               $set: {
                 pin_wallet: parseInt(user.pin_wallet) - parseInt(amount),
                 coin_wallet: parseInt(user.coin_wallet) + parseInt(amount),
-                status: 1
+                status: 1,
               },
             }
           );
-          UpdateAllParent(member_id, 1, amount)
-          referalCommition(sponser_id, user_lavel, pin_amount)
-          activationHestory(pin_wallet, coin_wallet)
 
+          UpdateAllParent(member_id, 1, amount);
+          referalCommition(sponser_id, user_lavel, pin_amount);
+          createCashbackSchema(member_id, amount)
+          activationHestory(pin_wallet, coin_wallet);
+          
           return res.status(200).json({ message: "Topup successfully" });
         }
       }
@@ -41,22 +43,42 @@ function creacteTopup(req, res) {
 }
 
 async function referalCommition(sponser_id, user_lavel, pin_amount) {
- try{
-  const User = require("../models/user");
-  const percentage = [ 10, 15, 20, 25, 30]
-  const sponser_per = percentage[user_lavel]
-  const sponser_profite = pin_amount/sponser_per
-  const sponser = await User.findOne({ member_id: sponser_id });
-  User.updateOne(
-    {member_id: sponser_id},
-    {
-      $set: {
-        coin_wallet: parseInt(sponser.coin_wallet) + parseInt(sponser_profite),
-      },
-    }
-  )
- } catch(error) {
-    console.log("Error From referalCommition", error.message)
- }
+  try {
+    const User = require("../models/user");
+    const percentage = [10, 15, 20, 25, 30];
+    const sponser_per = percentage[user_lavel];
+    const sponser_profite = pin_amount / sponser_per;
+    const sponser = await User.findOne({ member_id: sponser_id });
+    User.updateOne(
+      { member_id: sponser_id },
+      {
+        $set: {
+          coin_wallet:
+            parseInt(sponser.coin_wallet) + parseInt(sponser_profite),
+        },
+      }
+    );
+  } catch (error) {
+    console.log("Error From referalCommition", error.message);
+  }
+}
 
+async function createCashbackSchema(member_id, amount) {
+  try {
+    const Cashback = require("../models/cashback");
+    const monthly_cashback = amount * 0.025;
+
+    const cash = new Cashback({
+      member_id: member_id,
+      plan_amount: amount,
+      total_cashback: monthly_cashback * 18,
+      monthly_cashback: monthly_cashback,
+      duration: 18,
+    })
+
+    cash.save((error, data) => {
+    })
+  } catch (error) {
+    console.log("Error from: createCashbackSchema", error.message)
+  }
 }
