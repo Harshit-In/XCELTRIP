@@ -1,0 +1,172 @@
+/*
+Template Name: Pick Admin
+Author: PSD2ALLCONVERSION
+Email: psd2allconversion@gmail.com
+File: Main Style
+*/
+/*
+- Font Family Import
+- Font Family
+- Color Variables
+- Top Header
+- Sidebar Menu
+- Common Css
+- Circle
+- Badge
+- Animation Style
+- List Group
+- Border Color
+- Scroll bar color
+- Card Header
+- Time Garph
+- Twitter Section
+- Bootstrap Nav Tabs
+- To do List
+- Checkbox Radio Button
+- Activity List
+- Info Card
+- Business card
+- Star Rating
+- Bootstrap Element
+- Progress Bar
+- Social Graph
+- Footer
+- Back to top
+- Template Settings
+- Dropdown Menu
+- App Calendar
+- Page Loader
+- Model Pop Up
+- Pop Over / Tool Tip
+- Scrollyfy
+- Select 2
+- Sweet Alert
+- Chat App
+- Task Board
+- Flip Menu
+- ToDo App
+- Form Control
+- Sparkline Chart 
+- Chartist Js
+- Height
+- Flot Chart
+- Google Chart
+- Apex Chart
+- c3 Chart
+- Mail App
+- Notes App 
+- Quill Editor
+- Upload Button Wrapper
+- Focus
+- Form Input
+- Bootstrap 4 checkboxes
+- toggle Switch
+- Float Input
+- Form Wizard Page Css
+- File Upload
+- Dropzone Css
+- Icheck
+- Image Cropper
+- Typeahead
+- X-Editable
+- Summernote
+- tablesaw
+- Table / Layout
+- datatable
+- Footable
+- Js grid
+- Tablesaw/Responsive Table
+- Buttons
+- Accordion Alt
+- Lockscreen Page
+- Timeline Css
+- Portfolio/ Gallery
+- Price Table
+- icon font
+- Conatct List
+- File Manager
+- Invoice List
+- blockquote
+- Ecommerce
+- Line Height Class
+- Cryptocurrency Dashboard
+- Analyitc Dashboard
+- Covid Dash Borad
+- Compact Menu
+- horizontal Menu
+- Dark Template
+- Responsive Css
+*/
+/* Font Family Import */
+
+
+/* Lockscreen Page */
+.lockscreen {
+  max-width: 600px;
+  float: none;
+  margin: 0 auto;
+  background: var(--mainbackground);
+  border-radius: 20px;
+  overflow: hidden;
+  -webkit-box-shadow: -2px 7px 23px -5px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: -2px 7px 23px -5px rgba(0, 0, 0, 0.75);
+  box-shadow: -2px 7px 23px -5px rgba(0, 0, 0, 0.75);
+}
+
+.lockscreen .lock-image {
+  /* background-image: url(/images/logo-white.png); */
+  width: 250px;
+  float: left;
+  background-size: cover;
+}
+
+@media (max-width: 575px) {
+  .lockscreen .lock-image {
+    height: 300px;
+  }
+}
+
+.lockscreen .login-form {
+  padding: 20px;
+  width: 350px;
+  float: left;
+}
+
+canvas {
+  width: 100% !important;
+}
+.btn.disable {
+  opacity: 0.56;
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 8px!important;
+}
+
+/* Track */
+.sidebar::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgb(241, 241, 241); 
+  border-radius: 10px;
+}
+ 
+/* Handle */
+.sidebar::-webkit-scrollbar-thumb {
+  background:#dddddd;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: #dddddd; 
+}
+
+.loader-container {
+  position: fixed;
+  height: 97%;
+  z-index: 2;
+  background: #ffffff;
+  top: 66px;
+}
+.or{
+    background: #ce8e18;
+}
