@@ -2,11 +2,13 @@ const user = require("../models/user");
 const User = require("../models/user");
 
 async function getNextId() {
-  const user = await User.find({}).sort({createdAt: -1});
-  
-  const count = (user.member_id?user.member_id: XCE1234567 ) + 1
-  //console.log(count, user.member_id )
-  return count;
+  const user = await User.findOne({}).sort({createdAt: -1});
+  console.log(user)
+  const old = user.member_id
+  const n = parseInt(old.slice(4)) + 1
+  const next_id = "XCEL" + n
+  console.log(next_id)
+  return next_id;
 }
 
 async function unique_id() {
@@ -217,15 +219,15 @@ async function findparent(member_id) {
         $project: {
           member_id: 1,
           sponsor_id: 1,
-          level: 1,
+          // level: 1,
           "referal.member_id": 1,
-          // "referal.level": 1,
-          "referal.member_name": 1,
+          "referal.level": 1,
         },
       },
     ]);
 
     if (data && data.length > 0) {
+      console.log(data)
       return data;
     } else {
       // console.log("Hello")
@@ -251,6 +253,7 @@ async function UpdateAllParent(member_id, status, amount) {
       case 1:
         referals.map(async (d) => {
           const user = await User.findOne({ member_id: d.member_id });
+          // console.log(user)
           Update_user_level(
             member_id,
             parseInt(user.direct_coin) + amount,
@@ -261,8 +264,8 @@ async function UpdateAllParent(member_id, status, amount) {
               { member_id: d.member_id },
               {
                 $set: {
-                  direct: parseInt(user.direct_coin) + amount,
-                  total_child: parseInt(user.total_coin) + amount,
+                  direct_coin: parseInt(user.direct_coin) + amount,
+                  total_coin: parseInt(user.total_coin) + amount,
                 },
               }
             );
@@ -271,7 +274,7 @@ async function UpdateAllParent(member_id, status, amount) {
               { member_id: d.member_id },
               {
                 $set: {
-                  total_child: parseInt(user.total_coin) + amount,
+                  total_coin: parseInt(user.total_coin) + amount,
                 },
               }
             );
@@ -286,8 +289,8 @@ async function UpdateAllParent(member_id, status, amount) {
               { member_id: d.member_id },
               {
                 $set: {
-                  direct: parseInt(user.direct_coin) - amount,
-                  total_child: parseInt(user.total_coin) - amount,
+                  direct_coin: parseInt(user.direct_coin) - amount,
+                  total_coin: parseInt(user.total_coin) - amount,
                 },
               }
             );
@@ -296,7 +299,7 @@ async function UpdateAllParent(member_id, status, amount) {
               { member_id: d.member_id },
               {
                 $set: {
-                  total_child: parseInt(user.total_coin) - amount,
+                  total_coin: parseInt(user.total_coin) - amount,
                 },
               }
             );

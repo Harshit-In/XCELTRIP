@@ -8,7 +8,7 @@ const cashbackSchema = new mongoose.Schema(
         total_cashback: { type: Number, default:0},
         paidMonth: {  type: Number, default: 0 },
         total_cashback: {  type: Number, default: 0 },
-        cashback_date: { type: Date, unique: true },
+        cashback_date: { type: Date, default: Date.now() },
 
     },
     { timestamps: true, collection: "cashback" }

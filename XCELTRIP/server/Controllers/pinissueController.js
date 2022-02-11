@@ -1,56 +1,55 @@
 const { findparent, UpdateAllParent } = require("../functions/function");
-const user = require("../models/user");
 const { updateUserInfo } = require("./userController");
 
-function creacteTopup(req, res) {
+async function creacteTopup(req, res) {
   const User = require("../models/user");
   try {
     const { member_id, amount } = req.body;
-    User.findOne({ member_id: member_id }).then((error, user) => {
-      if (error)
-        return res.status(400).json({ message: "Somthing went wrong" });
-
-      if (user) {
-        if (amount / 100 != 0) {
-          return res
-            .status(400)
-            .json({ message: "Please Enter a valid amount " });
-        }
-        if (user.pin_wallet >= amount) {
-          User.updateOne(
-            { member_id: user.member_id },
-            {
-              $set: {
-                pin_wallet: parseInt(user.pin_wallet) - parseInt(amount),
-                coin_wallet: parseInt(user.coin_wallet) + parseInt(amount),
-                status: 1,
-              },
-            }
-          );
-
-          UpdateAllParent(member_id, 1, amount);
-          referalCommition(sponser_id, user_lavel, pin_amount);
-          createCashbackSchema(member_id, amount)
-          activationHestory(pin_wallet, coin_wallet);
-          
-          return res.status(200).json({ message: "Topup successfully" });
-        }
+    const user = await User.findOne({ member_id: member_id });
+    if (user) {
+      if (amount % 100 != 0) {
+        return res
+          .status(400)
+          .json({ message: "Please Enter a valid amount " });
       }
-    });
+      if (user.pin_wallet >= amount) {
+       await User.updateOne(
+          { member_id: user.member_id },
+          {
+            $set: {
+              pin_wallet: parseInt(user.pin_wallet) - parseInt(amount),
+              coin_wallet: parseInt(user.coin_wallet) + parseInt(amount),
+              status: 1,
+            },
+          }
+        )
+        console.log(user.sponsor_id, user.level, amount)
+        await UpdateAllParent(member_id, 1, amount);
+        await referalCommition(user.sponsor_id, amount);
+        await createCashbackSchema(member_id, amount);
+        return res.status(200).json({ message: "Topup successfully" });
+      } else {
+        return res
+          .status(400)
+          .json({ message: "Insufficient Account Balance " });
+      }
+    }
   } catch (error) {
     return res.status(400).json({ message: "Topup successfully" });
   }
 }
 
-async function referalCommition(sponser_id, user_lavel, pin_amount) {
+async function referalCommition(sponsor_id, pin_amount) {
   try {
+    console.log(sponsor_id, pin_amount)
     const User = require("../models/user");
     const percentage = [10, 15, 20, 25, 30];
-    const sponser_per = percentage[user_lavel];
+    const sponser = await User.findOne({ member_id: sponsor_id });
+    const sponser_per = (percentage[(sponser.level)-1]);
     const sponser_profite = pin_amount / sponser_per;
-    const sponser = await User.findOne({ member_id: sponser_id });
-    User.updateOne(
-      { member_id: sponser_id },
+
+    await User.updateOne(
+      { member_id: sponsor_id },
       {
         $set: {
           coin_wallet:
@@ -74,11 +73,45 @@ async function createCashbackSchema(member_id, amount) {
       total_cashback: monthly_cashback * 18,
       monthly_cashback: monthly_cashback,
       duration: 18,
-    })
+    });
 
     cash.save((error, data) => {
-    })
+      if(error){
+        console.log("error from: pinissueController >> createCashbackSchema", error.message)
+      }
+      if(data){
+        console.log("Cashback Schema create successfully", data)
+      }
+    });
   } catch (error) {
-    console.log("Error from: createCashbackSchema", error.message)
+    console.log("Error from: createCashbackSchema", error.message);
   }
 }
+
+async function fundTransferUserToUser(req, res) {
+  try {
+    const User = require("../models/user");
+    const { amount, member_id } = req.body;
+    const user = await User.findOne({ member_id: member_id });
+    await User.updateOne(
+      { member_id: member_id },
+      {
+        $set: {
+          pin_wallet: Number(user.pin_wallet) + Number(amount),
+        },
+      }
+    );
+    return res.status(200).json({ message: "Fund transfer successfully" });
+  } catch (error) {
+    console.log(
+      "Error From: pinissueController  >> fundTransferUserToUser",
+      error.message
+    );
+    return res.status(400).json({ message: "Somthing went Wrong" });
+  }
+}
+
+module.exports = {
+  creacteTopup,
+  fundTransferUserToUser,
+};
