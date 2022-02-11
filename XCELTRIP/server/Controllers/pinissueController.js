@@ -91,16 +91,32 @@ async function createCashbackSchema(member_id, amount) {
 async function fundTransferUserToUser(req, res) {
   try {
     const User = require("../models/user");
-    const { amount, member_id } = req.body;
-    const user = await User.findOne({ member_id: member_id });
-    await User.updateOne(
-      { member_id: member_id },
-      {
-        $set: {
-          pin_wallet: Number(user.pin_wallet) + Number(amount),
-        },
-      }
-    );
+    const { amount, user_id, downline_id } = req.body;
+    const downline = await User.findOne({ member_id: downline_id });
+    const user = await User.findOne({ member_id: user_id })
+    findparent(downline_id).then(async(data) => {
+      data.map(async(a) => {
+        if(a.member_id == user_id) {
+          await User.updateOne(
+            { member_id: downline_id },
+            {
+              $set: {
+                pin_wallet: Number(downline.pin_wallet) + Number(amount),
+              },
+            }
+          );
+          await User.updateOne(
+            { member_id: user_id },
+            {
+              $set: {
+                pin_wallet: Number(user.pin_wallet) + Number(amount),
+              },
+            }
+          );
+        }
+      })
+    })
+    
     return res.status(200).json({ message: "Fund transfer successfully" });
   } catch (error) {
     console.log(
