@@ -19,16 +19,14 @@ async function signup(req, res) {
         });
       }
       const hash = await bcrypt.hash(password, 10);
-        //   const get_Sponser = await getSponser(sponsor_id)
-        //  if(get_Sponser == false){
-        //      return res.status(400).json({message: "Invalid sponser Id. Please enter a valid sponser Id or Sponser is blocked"})
-        //  }
-      const new_id = "1233345"
+          const get_Sponser = await getSponser(sponsor_id)
+         if(get_Sponser == false){
+             return res.status(400).json({message: "Invalid sponser Id. Please enter a valid sponser Id or Sponser is blocked"})
+         }
+      const new_id = await getNextId()
       const _user = new User({
         member_id: new_id,
         sponsor_id,
-        // sponsor_name: get_Sponser.member_name,
-        // member_name,
         email,
         hash_password: hash,
       });
