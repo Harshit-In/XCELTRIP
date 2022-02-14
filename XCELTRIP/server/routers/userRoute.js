@@ -13,6 +13,7 @@ const {
     otp_match,
     change_password
 } = require('../Controllers/userController');
+const { diret_and_direct_childlength } = require('../functions/function');
 const {
     isRequestValidated,
     validateSignUpRequest,
@@ -37,6 +38,9 @@ router.post('/change_password', validateSignUpRequest, change_password);
 router.post('/creacteTopup', creacteTopup);
 router.post('/fundTransferUserToUser', fundTransferUserToUser);
 
+
+// test rout
+router.post('/diret_and_direct_childlength', diret_and_direct_childlength);
 
 
 

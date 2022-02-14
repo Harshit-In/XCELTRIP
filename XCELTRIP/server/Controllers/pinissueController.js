@@ -13,20 +13,19 @@ async function creacteTopup(req, res) {
           .json({ message: "Please Enter a valid amount " });
       }
       if (user.pin_wallet >= amount) {
-       await User.updateOne(
-          { member_id: user.member_id },
-          {
-            $set: {
-              pin_wallet: parseInt(user.pin_wallet) - parseInt(amount),
-              coin_wallet: parseInt(user.coin_wallet) + parseInt(amount),
-              status: 1,
-            },
-          }
-        )
-        console.log(user.sponsor_id, user.level, amount)
-        await UpdateAllParent(member_id, 1, amount);
-        await referalCommition(user.sponsor_id, amount);
-        await createCashbackSchema(member_id, amount);
+        // await User.updateOne(
+        //   { member_id: user.member_id },
+        //   {
+        //     $set: {
+        //       pin_wallet: parseInt(user.pin_wallet) - parseInt(amount),
+        //       coin_wallet: parseInt(user.coin_wallet) + parseInt(amount),
+        //       status: 1,
+        //     },
+        //   }
+        // );
+        // await UpdateAllParent(member_id, 1, amount);
+        await referalCommition(member_id, user.sponsor_id, amount);
+        // await createCashbackSchema(member_id, amount);
         return res.status(200).json({ message: "Topup successfully" });
       } else {
         return res
@@ -39,24 +38,36 @@ async function creacteTopup(req, res) {
   }
 }
 
-async function referalCommition(sponsor_id, pin_amount) {
+async function referalCommition(member_id, sponsor_id, pin_amount) {
   try {
-    console.log(sponsor_id, pin_amount)
     const User = require("../models/user");
-    const percentage = [10, 15, 20, 25, 30];
-    const sponser = await User.findOne({ member_id: sponsor_id });
-    const sponser_per = (percentage[(sponser.level)-1]);
-    const sponser_profite = pin_amount / sponser_per;
-
-    await User.updateOne(
-      { member_id: sponsor_id },
-      {
-        $set: {
-          coin_wallet:
-            parseInt(sponser.coin_wallet) + parseInt(sponser_profite),
-        },
+    const getAllParent = await incomDistribute(member_id);
+    console.log("getAllParent", getAllParent);
+    getAllParent.map(async (data, index) => {
+      console.log(":data:", data);
+      const percentage = [5, 10, 15, 20, 25, 30];
+      if(index ==0 ) {
+        console.log(percentage[data.level]);
+      } else {
+        console.log(percentage[data.level] - percentage[getAllParent[index-1].level]);
       }
-    );
+      
+
+      // const sponser = await User.findOne({ member_id: data.sponsor_id });
+      // const user = await User.findOne({ member_id: data.member_id });
+      // const differance = sponser.level - user.level;
+      //const sponser_per = percentage[differance];
+      // const sponser_profite = pin_amount / sponser_per;
+      await User.updateOne(
+        { member_id: d.member_id },
+        {
+          $set: {
+            coin_wallet:
+              parseInt(sponser.coin_wallet) + parseInt(sponser_profite),
+          },
+        }
+      );
+    });
   } catch (error) {
     console.log("Error From referalCommition", error.message);
   }
@@ -76,11 +87,14 @@ async function createCashbackSchema(member_id, amount) {
     });
 
     cash.save((error, data) => {
-      if(error){
-        console.log("error from: pinissueController >> createCashbackSchema", error.message)
+      if (error) {
+        console.log(
+          "error from: pinissueController >> createCashbackSchema",
+          error.message
+        );
       }
-      if(data){
-        console.log("Cashback Schema create successfully", data)
+      if (data) {
+        console.log("Cashback Schema create successfully");
       }
     });
   } catch (error) {
@@ -93,10 +107,10 @@ async function fundTransferUserToUser(req, res) {
     const User = require("../models/user");
     const { amount, user_id, downline_id } = req.body;
     const downline = await User.findOne({ member_id: downline_id });
-    const user = await User.findOne({ member_id: user_id })
-    findparent(downline_id).then(async(data) => {
-      data.map(async(a) => {
-        if(a.member_id == user_id) {
+    const user = await User.findOne({ member_id: user_id });
+    findparent(downline_id).then(async (data) => {
+      data.map(async (a) => {
+        if (a.member_id == user_id) {
           await User.updateOne(
             { member_id: downline_id },
             {
@@ -114,9 +128,9 @@ async function fundTransferUserToUser(req, res) {
             }
           );
         }
-      })
-    })
-    
+      });
+    });
+
     return res.status(200).json({ message: "Fund transfer successfully" });
   } catch (error) {
     console.log(
@@ -127,7 +141,64 @@ async function fundTransferUserToUser(req, res) {
   }
 }
 
+async function incomDistribute(member_id) {
+  const User = require("../models/user");
+  try {
+    const data = await User.aggregate([
+      { $match: { member_id: member_id } },
+      {
+        $graphLookup: {
+          from: "user",
+          startWith: "$member_id",
+          connectFromField: "sponsor_id",
+          connectToField: "member_id",
+          depthField: "ParentNo",
+          as: "referal",
+        },
+      },
+      {
+        $project: {
+          member_id: 1,
+          sponsor_id: 1,
+          "referal.level": 1,
+          "referal.member_id": 1,
+          "referal.ParentNo": 1,
+        },
+      },
+    ]);
+
+    if (data && data.length > 0) {
+      console.log(data);
+      // return data;
+
+      const referalData = data[0].referal;
+      referalData.sort((a, b) => {
+        a.ParentNo > b.ParentNo ? 1 : -1;
+      });
+      let distinctData = [];
+      let lastPaidLevel = null;
+      for (num of referalData) {
+        if (num.level > lastPaidLevel) {
+          lastPaidLevel = num.level;
+          distinctData.push(num);
+        }
+      }
+      // console.log("distinctData: ", distinctData)
+      return distinctData.filter((item) => item.ParentNo > 0);
+    } else {
+      // console.log("Hello")
+      return [];
+    }
+  } catch (error) {
+    //getDirectAndtotalmember
+    console.log(
+      "Error from functions >> function >> findparent: ",
+      error.message
+    );
+  }
+}
 module.exports = {
   creacteTopup,
+  referalCommition,
   fundTransferUserToUser,
 };
