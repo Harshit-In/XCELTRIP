@@ -79,7 +79,7 @@ export default function Dashboard(props) {
                                 <span> <i className="fa fa-inr  icoon_style  mr-2" />Coin Wallet</span>
                               </h3>
                               <div className="">
-                                <span>{parseInt(datadash?.pin_wallet)}</span>
+                                <span>{parseInt(datadash?.coin_wallet)}</span>
                               </div>
                             </div>
                           </div>
@@ -95,7 +95,7 @@ export default function Dashboard(props) {
                                 <span> <i className="fa fa-inr  icoon_style  mr-2" />Income Wallet</span>
                               </h3>
                               <div className="">
-                                <span>{datadash?.coin_wallet ?? 0}</span>
+                                <span>{datadash?.income_wallet ?? 0}</span>
                               </div>
                             </div>
                           </div>

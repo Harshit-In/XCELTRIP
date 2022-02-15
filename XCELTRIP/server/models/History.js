@@ -1,23 +1,15 @@
 const mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema(
+const historySchema = new mongoose.Schema(
   {
-    email: { type: String, required: true, unique: true },
-    pin_prise: { type: Number, default:0},
+    email: { type: String },
+    member_id: { type: String },
+    income_type: { type: String},
     coin_wallet: { type: Number, default:0},
+    income_wallet: { type: Number, default:0},
     level: { type: Number, default:0}
   },
-  { timestamps: true, collection: "user" }
+  { timestamps: true, collection: "history" }
 );
 
-// userSchema.virtual('password')
-//   .set(function (password) {
-//     this.hash_password = bcrypt.hashSync(password, 10)
-//   })
-
-// userSchema.methods = {
-//   authenticate: async function (password) {
-//     return this.hash_password === password;
-//   },
-// };
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model("history", historySchema);
