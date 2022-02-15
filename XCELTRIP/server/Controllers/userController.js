@@ -58,11 +58,9 @@ async function signup(req, res) {
 async function signin(req, res) {
   try {
     User.findOne({ email: req.body.email }).then(async (user, error) => {
-        console.log(error)
       if (error) return res.status(400).json({ error });
       if (user) {
-    console.log(user);
-
+        
         let isValid = bcrypt.compareSync(req.body.password, user.hash_password);
         if (isValid) {
           const { _id, email, member_id, sponsor_id } = user;
