@@ -229,7 +229,7 @@ async function forgetPassword(req, res) {
 
 function sendOtp(contact, otp) {
   try {
-    const message = `Dear User, Your OTP for UserId ${contact} is ${otp} - MYFASTEARN`;
+    const message = `Dear User, Your OTP for UserId ${contact} is ${otp} - TEARN`;
     return sendMobileOtp(contact, message);
   } catch (error) {
     console.log("Error from userController >> sendOtp: ", error.message);

@@ -6,7 +6,6 @@ import { postAPICall} from "../components/request";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import TopCard from "../components/dashboard/TopCard";
 import MainTree from "./MainTree";
-import Notification from "./Notification";
 import { useParams } from "react-router-dom";
 export default function Dashboard(props) {
   console.log(props);
@@ -18,31 +17,30 @@ export default function Dashboard(props) {
   const [Directmember, setDirectmember] = useState([])
   const { id, wallet } = useSelector((state) => state.userinfo);
   const userid = JSON.parse(localStorage.getItem("userdata"));
-  const user_id = member_id ?? userid.user?.member_id;
+  // const user_id = member_id ?? userid.user?.member_id;
   const dasdata = JSON.parse(localStorage.getItem("dashboarddata"));
   const [totalUsers, setTotalUsers] = useState(0);
   const [isLoading, setLoading] = useState(true);
  
-  const levelName = ["New Distributor", "Business Distributor", "Growth Distributor", "Platinum Distributor", "Senior Distributor"];
-  useEffect(() => {
+  // const levelName = ["New Distributor", "Business Distributor", "Growth Distributor", "Platinum Distributor", "Senior Distributor"];
+  // useEffect(() => {
 
-    const alltxtData = {
-      member_id: user_id,
-    }
-    postAPICall('userInfo', alltxtData).then((res) => {
-      setdatadash(res.data.data);
-      setactivationdate(res.data.data?.activation_date);
-      setLoading(false)
-    })
+  //   const alltxtData = {
+  //     member_id: user_id,
+  //   }
+  //   postAPICall('userInfo', alltxtData).then((res) => {
+  //     setdatadash(res.data.data);
+  //     setactivationdate(res.data.data?.activation_date);
+  //     setLoading(false)
+  //   })
 
-  }, []);
+  // }, []);
   console.log("iou897u89",datadash);
   return (
     <>
 
       <div className="main-panel">
-        {/* <Partical /> */}
-        {/* <Notification/> */}
+        
         <div className="content-wrapper p-2">
           {/* <TopCard visible name={"User Id"} value={id} /> */}
           {datadash ? (
@@ -55,8 +53,11 @@ export default function Dashboard(props) {
                         <div className="col-sm-4 ">
                           <TopCard visible name={"Member Name"} value={userid?.user?.member_name ?? datadash.member_name} />
                         </div>
-                        <div className="col-sm-4"> <TopCard visible name={"Member ID"} value={user_id} /></div>
-                        <div className="col-sm-4">  <TopCard visible name={"Activation Date"} value={activationdate} /></div>
+                        {/* <div className="col-sm-4"> <TopCard visible name={"Member ID"} value={user_id} /></div> */}
+                        {/* <div className="col-sm-4">  <TopCard visible name={"Activation Date"} value={activationdate} /></div> */}
+                        <div className="col-sm-4"> <TopCard visible name={"Member ID"} /></div>
+                        <div className="col-sm-4">  <TopCard visible name={"Activation Date"} /></div>
+
                       </div>
                       <div className="row">
 
@@ -81,7 +82,7 @@ export default function Dashboard(props) {
                                   Current Level</span>
                               </h3>
                               <div className="">
-                                <span>{datadash.level} : {levelName[datadash.level - 1]}</span>
+                                {/* <span>{datadash.level} : {levelName[datadash.level - 1]}</span> */}
                               </div>
                             </div>
                           </div>
@@ -93,7 +94,7 @@ export default function Dashboard(props) {
                                 <span> <i className="fa fa-inr  icoon_style  mr-2" /> Wallet Amount</span>
                               </h3>
                               <div className="">
-                                <span>{parseInt(datadash.wallet_amount) + parseInt(datadash.pending_withdrawl_amount)}</span>
+                                {/* <span>{parseInt(datadash.wallet_amount) + parseInt(datadash.pending_withdrawl_amount)}</span> */}
                               </div>
                             </div>
                           </div>
@@ -109,7 +110,7 @@ export default function Dashboard(props) {
                                 <span> <i className="fa fa-inr  icoon_style  mr-2" />New Wallet</span>
                               </h3>
                               <div className="">
-                                <span>{datadash?.new_wallet_amount ?? 0}</span>
+                                {/* <span>{datadash?.new_wallet_amount ?? 0}</span> */}
                               </div>
                             </div>
                           </div>
@@ -121,7 +122,7 @@ export default function Dashboard(props) {
                                 <span> <i className="fa fa-inr  icoon_style  mr-2" />withdrawl Amount</span>
                               </h3>
                               <div className="">
-                                <span>{datadash.withdrawl_amount ?? 0}</span>
+                                {/* <span>{datadash.withdrawl_amount ?? 0}</span> */}
                               </div>
                             </div>
                           </div>
@@ -133,7 +134,7 @@ export default function Dashboard(props) {
                                 <span> <i className="fa fa-inr  icoon_style  mr-2" />My Downlines</span>
                               </h3>
                               <div className="">
-                                <span>{datadash.total_child}</span>
+                                {/* <span>{datadash.total_child}</span> */}
                               </div>
                             </div>
                           </div>

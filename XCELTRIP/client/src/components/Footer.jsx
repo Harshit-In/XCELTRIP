@@ -8,7 +8,7 @@ export default function Footer() {
           <div className="row">
             <div className="col-xs-12 col-md-6">
               <div className="footer-logos">
-                <img className="" src="/images/logo.png" />
+                <img className="" src="/images/" />
               </div>
               <span className="mixify text-warning" >
                 Copyright © 2021. All rights reserved by FastEarn.in
