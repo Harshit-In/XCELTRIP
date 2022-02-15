@@ -1,4 +1,4 @@
-const { findparent, UpdateAllParent } = require("../functions/function");
+const { findparent, UpdateAllParent, createIncomeHistory } = require("../functions/function");
 const { updateUserInfo } = require("./userController");
 
 async function creacteTopup(req, res) {
@@ -17,21 +17,23 @@ async function creacteTopup(req, res) {
           { member_id: user.member_id },
           {
             $set: {
-              coin_wallet: parseInt(user.coin_wallet) - parseInt(amount),
-              income_wallet: parseInt(user.income_wallet) + parseInt(amount),
+              coin_wallet: parseInt(user.coin_wallet) - parseInt(amount/2),
+              income_wallet: parseInt(user.income_wallet) + parseInt(amount/2),
               activation_date: new Date().toISOString(),
               status: 1,
             },
           }
         );
+        const incomeType = "Topup Income"
         await UpdateAllParent(member_id, 1, amount);
         await referalCommition(member_id, user.sponsor_id, amount);
-        // await createCashbackSchema(member_id, amount);
+        await createCashbackSchema(member_id, amount);
+        await createIncomeHistory(user.member_id, amount, incomeType)
         return res.status(200).json({ message: "Topup successfully" });
       } else {
         return res
           .status(400)
-          .json({ message: "Insufficient Account Balance " });
+          .json({ message: "Insufficient Account Balance"});
       }
     }
   } catch (error) {
