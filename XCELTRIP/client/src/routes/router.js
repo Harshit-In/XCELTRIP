@@ -84,17 +84,17 @@ export default function Router(props) {
               }
             />
 
-            <Route
+            {/* <Route
               exact
               path="/dashboard/user_dashboard/:member_id"
               component={(props) => <Dashboard {...props} />}
-            />
+            /> */}
 
-            <Route
+            {/* <Route
               exact
               path="/dashboard"
               component={(props) => <Dashboard {...props} />}
-            />
+            /> */}
             <Route exact path="/new_login" component={new_login} />
           </div>
         </div>

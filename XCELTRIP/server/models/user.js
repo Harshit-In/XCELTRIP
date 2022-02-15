@@ -16,6 +16,7 @@ const userSchema = new mongoose.Schema(
     total_coin: { type: Number, default: 0},
     direct_members: { type: Number, default: 0 },
     total_members: { type: Number, default: 0 },
+    activation_date: {  type: Date, default:(new Date()).toISOString() }
 
 
   },

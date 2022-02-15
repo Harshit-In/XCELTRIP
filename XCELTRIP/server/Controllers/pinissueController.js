@@ -13,17 +13,18 @@ async function creacteTopup(req, res) {
           .json({ message: "Please Enter a valid amount " });
       }
       if (user.pin_wallet >= amount) {
-        // await User.updateOne(
-        //   { member_id: user.member_id },
-        //   {
-        //     $set: {
-        //       pin_wallet: parseInt(user.pin_wallet) - parseInt(amount),
-        //       coin_wallet: parseInt(user.coin_wallet) + parseInt(amount),
-        //       status: 1,
-        //     },
-        //   }
-        // );
-        // await UpdateAllParent(member_id, 1, amount);
+        await User.updateOne(
+          { member_id: user.member_id },
+          {
+            $set: {
+              pin_wallet: parseInt(user.pin_wallet) - parseInt(amount),
+              coin_wallet: parseInt(user.coin_wallet) + parseInt(amount),
+              activation_date: new Date().toISOString(),
+              status: 1,
+            },
+          }
+        );
+        await UpdateAllParent(member_id, 1, amount);
         await referalCommition(member_id, user.sponsor_id, amount);
         // await createCashbackSchema(member_id, amount);
         return res.status(200).json({ message: "Topup successfully" });

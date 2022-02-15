@@ -29,8 +29,8 @@ export default function Dashboard(props) {
     }); */
 
     api.post("userInfo", {member_id: user_id}).then((res)=>{
-      console.log(res.data)
-      setdatadash(res.data);
+      console.log(res.data.data)
+      setdatadash(res.data.data);
     }).catch((error)=>{
       console.log(error.message)
     })
@@ -59,7 +59,6 @@ export default function Dashboard(props) {
 
                       </div>
                       <div className="row">
-
                         <div className="col-sm-4">
                           <div className="transact">
                             <div className="transact-dom">
@@ -67,7 +66,7 @@ export default function Dashboard(props) {
                                 <span> <i className="fa fa-users  icoon_style " /> Direct Downline</span>
                               </h3>
                               <div className="">
-                                <span>{datadash.direct_coin}</span>
+                                <span>{datadash?.direct_coin}</span>
 
                               </div>
                             </div>
@@ -80,7 +79,7 @@ export default function Dashboard(props) {
                                 <span> <i className="fa fa-inr  icoon_style  mr-2" />Coin Wallet</span>
                               </h3>
                               <div className="">
-                                <span>{parseInt(datadash.pin_wallet)}</span>
+                                <span>{parseInt(datadash?.pin_wallet)}</span>
                               </div>
                             </div>
                           </div>
