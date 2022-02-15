@@ -14,6 +14,10 @@ const userSchema = new mongoose.Schema(
     status: { type: Number, default: 0},
     direct_coin: { type: Number, default: 0 },
     total_coin: { type: Number, default: 0},
+    direct_members: { type: Number, default: 0 },
+    total_members: { type: Number, default: 0 },
+
+
   },
   { timestamps: true, collection: "user" }
 );

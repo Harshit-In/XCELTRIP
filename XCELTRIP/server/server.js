@@ -10,6 +10,9 @@ const app = express();
 
 // routes
 const userRoutes = require("./routers/userRoute");
+const adminRoutes = require("./routers/admin/adminRouter");
+
+
 const user = require("./models/user");
 
 // mongodb+srv://${process.env.MONGO_DB_USER}:${process.env.MONGO_DB_PASSWORD}@cluster0.fqkuj.mongodb.net/${process.env.MONGO_DB_DATABASE}?retryWrites=true&w=majority
@@ -44,6 +47,7 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use("/api", userRoutes);
+app.use("/api", adminRoutes);
 
 
 

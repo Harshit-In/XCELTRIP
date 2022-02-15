@@ -23,8 +23,6 @@ export default function Router(props) {
               : ""
           }
         >
-          
-
           {location.pathname.startsWith("/dashboard") && <Topbar />}
           <div
             className={
@@ -36,8 +34,9 @@ export default function Router(props) {
             {location.pathname.startsWith("/dashboard") && (
               <Sidebar {...props} />
             )}
-           
+
             <Route
+              exact
               path="/new_login"
               component={(props) =>
                 !isLoggedIn ? (
@@ -47,7 +46,7 @@ export default function Router(props) {
                 )
               }
             />
-            
+
             <Route
               exact
               path="/create"
@@ -60,10 +59,9 @@ export default function Router(props) {
               }
             />
             <Route exact path="/otp" component={Otp} />
-        
-           
 
             <Route
+              exact
               path="/create/ref"
               component={(props) =>
                 !isLoggedIn ? (
@@ -91,15 +89,13 @@ export default function Router(props) {
               path="/dashboard/user_dashboard/:member_id"
               component={(props) => <Dashboard {...props} />}
             />
-           
-           
-           <Route
+
+            <Route
               exact
               path="/dashboard"
               component={(props) => <Dashboard {...props} />}
             />
-           <Route path="/new_login" component={new_login} />
-           
+            <Route exact path="/new_login" component={new_login} />
           </div>
         </div>
       </Switch>

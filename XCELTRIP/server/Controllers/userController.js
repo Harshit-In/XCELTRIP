@@ -65,7 +65,7 @@ async function signin(req, res) {
 
         let isValid = bcrypt.compareSync(req.body.password, user.hash_password);
         if (isValid) {
-          const { _id, email } = user;
+          const { _id, email, member_id, sponsor_id } = user;
           const token = jwt.sign(
             { _id: user._id, email: user.email },
             process.env.JWT_SECRET,
@@ -76,6 +76,8 @@ async function signin(req, res) {
             user: {
               _id,
               email,
+              member_id,
+              sponsor_id
             },
           });
         } else {

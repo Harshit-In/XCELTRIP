@@ -110,6 +110,9 @@ async function UpdateAllParent(member_id, status, amount) {
                 $set: {
                   direct_coin: parseInt(user.direct_coin) + amount,
                   total_coin: parseInt(user.total_coin) + amount,
+                  direct_members: parseInt(user.direct_members) + 1,
+                  total_members: parseInt(user.total_members) + 1,
+
                 },
               }
             );
@@ -119,6 +122,7 @@ async function UpdateAllParent(member_id, status, amount) {
               {
                 $set: {
                   total_coin: parseInt(user.total_coin) + amount,
+                  total_members: parseInt(user.total_members) + 1,
                 },
               }
             );
@@ -135,6 +139,8 @@ async function UpdateAllParent(member_id, status, amount) {
                 $set: {
                   direct_coin: parseInt(user.direct_coin) - amount,
                   total_coin: parseInt(user.total_coin) - amount,
+                  direct_members: parseInt(user.direct_members) - 1,
+                  total_members: parseInt(user.total_members) - 1,
                 },
               }
             );
@@ -144,6 +150,7 @@ async function UpdateAllParent(member_id, status, amount) {
               {
                 $set: {
                   total_coin: parseInt(user.total_coin) - amount,
+                  total_members: parseInt(user.total_members) - 1,
                 },
               }
             );

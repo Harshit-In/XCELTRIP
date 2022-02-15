@@ -1,44 +1,43 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import Partical from "../components/dashboard/Partical";
-import "./dashboard.css"
-import { postAPICall} from "../components/request";
+import "./dashboard.css";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import TopCard from "../components/dashboard/TopCard";
-import MainTree from "./MainTree";
 import { useParams } from "react-router-dom";
+import api from "../api";
+import { applyMiddleware } from "redux";
 export default function Dashboard(props) {
   console.log(props);
-  const {member_id} = useParams();
+  const { member_id } = useParams();
   console.log(member_id);
-  const [dashboardData, setDashboardData] = useState(0);
   const [datadash, setdatadash] = useState();
-  const [activationdate, setactivationdate] = useState("")
-  const [Directmember, setDirectmember] = useState([])
-  const { id, wallet } = useSelector((state) => state.userinfo);
   const userid = JSON.parse(localStorage.getItem("userdata"));
-  // const user_id = member_id ?? userid.user?.member_id;
-  const dasdata = JSON.parse(localStorage.getItem("dashboarddata"));
-  const [totalUsers, setTotalUsers] = useState(0);
+  console.log(userid);
+  const user_id = member_id ?? userid.user?.member_id;
   const [isLoading, setLoading] = useState(true);
- 
-  // const levelName = ["New Distributor", "Business Distributor", "Growth Distributor", "Platinum Distributor", "Senior Distributor"];
-  // useEffect(() => {
 
-  //   const alltxtData = {
-  //     member_id: user_id,
-  //   }
-  //   postAPICall('userInfo', alltxtData).then((res) => {
-  //     setdatadash(res.data.data);
-  //     setactivationdate(res.data.data?.activation_date);
-  //     setLoading(false)
-  //   })
+  useEffect(() => {
+   /*  const alltxtData = {
+      member_id: user_id,
+    }; */
 
-  // }, []);
-  console.log("iou897u89",datadash);
+    //console.log("user_id: ", alltxtData);
+    /* postAPICall("userInfo").then((res) => {
+      console.log("UserData",res.data.data)
+      setdatadash(res.data.data);
+      setactivationdate(res.data.data?.activation_date);
+      setLoading(false);
+    }); */
+
+    api.post("userInfo", {member_id: user_id}).then((res)=>{
+      console.log(res.data)
+      setdatadash(res.data);
+    }).catch((error)=>{
+      console.log(error.message)
+    })
+  },[]);
+
   return (
     <>
-
       <div className="main-panel">
         
         <div className="content-wrapper p-2">
@@ -51,12 +50,12 @@ export default function Dashboard(props) {
                     <div className="container">
                       <div className="row mb-4" >
                         <div className="col-sm-4 ">
-                          <TopCard visible name={"Member Name"} value={userid?.user?.member_name ?? datadash.member_name} />
+                          {/* <TopCard visible name={"Member Name"} value={userid?.user?.member_id ?? datadash.member_id} /> */}
                         </div>
-                        {/* <div className="col-sm-4"> <TopCard visible name={"Member ID"} value={user_id} /></div> */}
-                        {/* <div className="col-sm-4">  <TopCard visible name={"Activation Date"} value={activationdate} /></div> */}
-                        <div className="col-sm-4"> <TopCard visible name={"Member ID"} /></div>
-                        <div className="col-sm-4">  <TopCard visible name={"Activation Date"} /></div>
+                        <div className="col-sm-4"> <TopCard visible name={"Member ID"} value={user_id} /></div>
+                        <div className="col-sm-4">  <TopCard visible name={"Sponsor Id"} value={userid?.user?.sponsor_id ?? datadash.sponsor_id} /></div>
+                        {/* {/* <div className="col-sm-4"> <TopCard visible name={"Member ID"} /></div> */}
+                        {/* // <div className="col-sm-4">  <TopCard visible name={"Activation Date"} /></div> */}
 
                       </div>
                       <div className="row">
@@ -68,7 +67,7 @@ export default function Dashboard(props) {
                                 <span> <i className="fa fa-users  icoon_style " /> Direct Downline</span>
                               </h3>
                               <div className="">
-                                <span>{datadash.direct}</span>
+                                <span>{datadash.direct_coin}</span>
 
                               </div>
                             </div>
@@ -78,23 +77,10 @@ export default function Dashboard(props) {
                           <div className="transact">
                             <div className="transact-dom">
                               <h3>
-                                <span> <i className="fa fa-inr  icoon_style  mr-2" />
-                                  Current Level</span>
+                                <span> <i className="fa fa-inr  icoon_style  mr-2" />Coin Wallet</span>
                               </h3>
                               <div className="">
-                                {/* <span>{datadash.level} : {levelName[datadash.level - 1]}</span> */}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="col-sm-4">
-                          <div className="transact">
-                            <div className="transact-dom">
-                              <h3>
-                                <span> <i className="fa fa-inr  icoon_style  mr-2" /> Wallet Amount</span>
-                              </h3>
-                              <div className="">
-                                {/* <span>{parseInt(datadash.wallet_amount) + parseInt(datadash.pending_withdrawl_amount)}</span> */}
+                                <span>{parseInt(datadash.pin_wallet)}</span>
                               </div>
                             </div>
                           </div>
@@ -107,10 +93,10 @@ export default function Dashboard(props) {
                           <div className="transact">
                             <div className="transact-dom">
                               <h3>
-                                <span> <i className="fa fa-inr  icoon_style  mr-2" />New Wallet</span>
+                                <span> <i className="fa fa-inr  icoon_style  mr-2" />Income Wallet</span>
                               </h3>
                               <div className="">
-                                {/* <span>{datadash?.new_wallet_amount ?? 0}</span> */}
+                                <span>{datadash?.coin_wallet ?? 0}</span>
                               </div>
                             </div>
                           </div>
@@ -131,10 +117,10 @@ export default function Dashboard(props) {
                           <div className="transact">
                             <div className="transact-dom">
                               <h3>
-                                <span> <i className="fa fa-inr  icoon_style  mr-2" />My Downlines</span>
+                                <span> <i className="fa fa-inr  icoon_style  mr-2" />Group Coin</span>
                               </h3>
                               <div className="">
-                                {/* <span>{datadash.total_child}</span> */}
+                                <span>{datadash.total_coin}</span>
                               </div>
                             </div>
                           </div>
