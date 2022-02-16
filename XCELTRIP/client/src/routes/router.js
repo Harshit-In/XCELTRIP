@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Route, Switch, useLocation, Redirect } from "react-router-dom";
+import { Route, Switch, useLocation, Redirect, NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Dashboard from "./Dashboard";
 import Topbar from "../components/dashboard/Topbar";
@@ -44,6 +44,8 @@ import Notification from "./Notification";
 import Leveofmember from "./Leveofmember";
 import Notification_Alert from "./Notification_alert";
 import Globalmatrix from "./Globalmatrix";
+import SignInForm from "./auth/SignInForm";
+import SignUpForm from "./auth/SignUpForm";
 export default function Router(props) {
   const location = useLocation();
   const isLoggedIn = useSelector((state) => state.userinfo.isLoggedIn);
@@ -74,7 +76,7 @@ export default function Router(props) {
             {location.pathname.startsWith("/dashboard") && (
               <Sidebar {...props} />
             )}
-            <Route exact path="/" component={Home} />
+            {/* <Route exact path="/" component={Home} /> */}
             <Route
               path="/new_login"
               component={(props) =>
@@ -403,6 +405,52 @@ export default function Router(props) {
               path="/dashboard/package_checkout"
               component={PackageCheckout}
             />
+
+            {/* <Route exact path="/" component={SignUpForm} />
+            <Route path="/sign-in" component={SignInForm} /> */}
+
+            <div className="appAside" />
+          <div className="appForm">
+            <div className="pageSwitcher">
+              <NavLink
+                to="/sign-in"
+                activeClassName="pageSwitcherItem-active"
+                className="pageSwitcherItem"
+              >
+                Sign In
+              </NavLink>
+              <NavLink
+                exact
+                to="/"
+                activeClassName="pageSwitcherItem-active"
+                className="pageSwitcherItem"
+              >
+                Sign Up
+              </NavLink>
+            </div>
+
+            <div className="formTitle">
+              <NavLink
+                to="/sign-in"
+                activeClassName="formTitleLink-active"
+                className="formTitleLink"
+              >
+                Sign In
+              </NavLink>{" "}
+              or{" "}
+              <NavLink
+                exact
+                to="/"
+                activeClassName="formTitleLink-active"
+                className="formTitleLink"
+              >
+                Sign Up
+              </NavLink>
+            </div>
+
+            <Route exact path="/" component={SignUpForm} />
+            <Route path="/sign-in" component={SignInForm} />
+          </div>
           </div>
         </div>
       </Switch>
