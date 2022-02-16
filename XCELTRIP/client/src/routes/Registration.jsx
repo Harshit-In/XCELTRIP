@@ -16,7 +16,7 @@ export default function Registration(props) {
   const [contact, setcontact] = useState("");
   const [userID, setUserId] = useState("");
   const [loading, setLoading] = useState(0);
-  const [Sponcer_name,set_Sponcer_name]=useState("")
+  const [Sponcer_name, set_Sponcer_name] = useState("");
   const dispatch = useDispatch();
   const { isConnected, contract, wallet } = useSelector((state) => state);
 
@@ -26,39 +26,41 @@ export default function Registration(props) {
     });
   }, []);
 
-
-  const getUserInfo = async ()=>{
-    const res = await axios.post('/userInfo',{member_id:userID}).then((d)=>{
-      set_Sponcer_name(d.data.data.member_name);
-    })
+  const getUserInfo = async () => {
+    const res = await axios
+      .post("/userInfo", { member_id: userID })
+      .then((d) => {
+        set_Sponcer_name(d.data.data.member_name);
+      });
     // setUserInfo(res.data.data[0]);
-    
-  }
-  useEffect(()=>{
-    getUserInfo()
-  },[userID]);
+  };
+  useEffect(() => {
+    getUserInfo();
+  }, [userID]);
   return (
     <div className="">
       <div className="main-panel">
-        <div className="container vh-100 offset-md-1 justify-content-center align-items-center d-flex">
+        <div className="container vh-100 justify-content-center align-items-center d-flex">
           <div className="row">
             <div className="col-12">
               <div
-                class="card"
+                class="card "
                 style={{ background: "rgba(0, 0, 0, 0.3)", padding: "47px" }}
               >
+                                <img src="images/logo.png" style={{ height: "80px", textAlign: "justify"}} />
+
                 <h1>Sign Up</h1>
                 <div class="card-body">
                   <form action="/dashboard" className="was-validated">
                     <div className="row">
-                      <div className="col-sm-6 col-lg-6">
+                      <div className="col">
                         <div className="form-group">
                           <label for="uname">Sponcer Id</label>
                           <input
                             type="text"
                             className="form-control"
                             id="sponcer_id"
-                            placeholder="Enter username"
+                            placeholder="Enter sponcer Id"
                             value={userID}
                             onChange={(e) => setUserId(e.target.value)}
                             required
@@ -68,24 +70,6 @@ export default function Registration(props) {
                             Please fill out this field.
                           </div>
                         </div>
-                      </div>
-                      <div className="col-sm-6 col-lg-6">
-                        <div className="form-group">
-                          <label for="uname">Sponcer name</label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="sponcer_id"
-                            placeholder="Enter username"
-                            value={Sponcer_name}
-                          
-                            readOnly="readOnly"
-                          />
-                          <div className="valid-feedback">Valid.</div>
-
-                        </div>
-                      </div>
-                      <div className="col-sm-6 col-lg-6">
                         <div className="form-group">
                           <label for="uname">Email</label>
                           <input
@@ -102,8 +86,6 @@ export default function Registration(props) {
                             Please fill out this field.
                           </div>
                         </div>
-                      </div>
-                      <div className="col-sm-6 col-lg-6">
                         <div className="form-group">
                           <label for="pwd">Password:</label>
                           <input
@@ -120,8 +102,6 @@ export default function Registration(props) {
                             Please fill out this field.
                           </div>
                         </div>
-                      </div>
-                      <div className="col-sm-6 col-lg-6">
                         <div className="form-group">
                           <label for="pwd">Confirm Password:</label>
                           <input
@@ -138,39 +118,43 @@ export default function Registration(props) {
                             Please fill out this field.
                           </div>
                         </div>
-                      </div>
-                      <div className="text-center mt-4">
-                        <button
-                          type="button"
-                          className="btn btn-primary"
-                          onClick={async () => {
-                            setLoading(1);
-                            dispatch(
-                              onConnect(
-                                name,
-                                password,
-                                email,
-                                userID,
-                                Cpassword,
-                                contact,
-                                () => setLoading(0)
-                              )
-                            );
-                          }}
-                        >
-                          {loading ? (
-                            <div disabled>
-                              <span
-                                class="spinner-border spinner-border-sm"
-                                role="status"
-                                aria-hidden="true"
-                              ></span>
-                              <span class="sr-only">Loading...</span>
-                            </div>
-                          ) : (
-                            "SignUp"
-                          )}
-                        </button>
+                        <div className="text-center mt-4">
+                          <button
+                            type="button"
+                            className="loginbtn"
+                            onClick={async () => {
+                              setLoading(1);
+                              dispatch(
+                                onConnect(
+                                  name,
+                                  password,
+                                  email,
+                                  userID,
+                                  Cpassword,
+                                  contact,
+                                  () => setLoading(0)
+                                )
+                              );
+                            }}
+                          >
+                            {loading ? (
+                              <div disabled>
+                                <span
+                                  class="spinner-border spinner-border-sm"
+                                  role="status"
+                                  aria-hidden="true"
+                                ></span>
+                                <span class="sr-only">Loading...</span>
+                              </div>
+                            ) : (
+                              "SignUp"
+                            )}
+                          </button>
+                        </div>
+                        <span className="m-5">
+                          If you already registered{" "}
+                          <Link to="/new_login">Login</Link>
+                        </span>
                       </div>
                     </div>
                   </form>

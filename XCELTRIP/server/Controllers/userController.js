@@ -58,14 +58,12 @@ async function signup(req, res) {
 async function signin(req, res) {
   try {
     User.findOne({ email: req.body.email }).then(async (user, error) => {
-        console.log(error)
       if (error) return res.status(400).json({ error });
       if (user) {
-    console.log(user);
-
+        
         let isValid = bcrypt.compareSync(req.body.password, user.hash_password);
         if (isValid) {
-          const { _id, email } = user;
+          const { _id, email, member_id, sponsor_id } = user;
           const token = jwt.sign(
             { _id: user._id, email: user.email },
             process.env.JWT_SECRET,
@@ -76,6 +74,8 @@ async function signin(req, res) {
             user: {
               _id,
               email,
+              member_id,
+              sponsor_id
             },
           });
         } else {
@@ -229,7 +229,7 @@ async function forgetPassword(req, res) {
 
 function sendOtp(contact, otp) {
   try {
-    const message = `Dear User, Your OTP for UserId ${contact} is ${otp} - MYFASTEARN`;
+    const message = `Dear User, Your OTP for UserId ${contact} is ${otp} - TEARN`;
     return sendMobileOtp(contact, message);
   } catch (error) {
     console.log("Error from userController >> sendOtp: ", error.message);

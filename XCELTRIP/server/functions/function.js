@@ -110,6 +110,9 @@ async function UpdateAllParent(member_id, status, amount) {
                 $set: {
                   direct_coin: parseInt(user.direct_coin) + amount,
                   total_coin: parseInt(user.total_coin) + amount,
+                  direct_members: parseInt(user.direct_members) + 1,
+                  total_members: parseInt(user.total_members) + 1,
+
                 },
               }
             );
@@ -119,6 +122,7 @@ async function UpdateAllParent(member_id, status, amount) {
               {
                 $set: {
                   total_coin: parseInt(user.total_coin) + amount,
+                  total_members: parseInt(user.total_members) + 1,
                 },
               }
             );
@@ -135,6 +139,8 @@ async function UpdateAllParent(member_id, status, amount) {
                 $set: {
                   direct_coin: parseInt(user.direct_coin) - amount,
                   total_coin: parseInt(user.total_coin) - amount,
+                  direct_members: parseInt(user.direct_members) - 1,
+                  total_members: parseInt(user.total_members) - 1,
                 },
               }
             );
@@ -144,6 +150,7 @@ async function UpdateAllParent(member_id, status, amount) {
               {
                 $set: {
                   total_coin: parseInt(user.total_coin) - amount,
+                  total_members: parseInt(user.total_members) - 1,
                 },
               }
             );
@@ -222,7 +229,24 @@ async function diret_and_direct_childlength(req, res) {
 }
 
 
+async function createIncomeHistory(member_id, amount, incomeType) {
+    try{
+      const History = require("../models/History")
+      const User = require("../models/user")
+      const user = await User.findOne({ member_id: member_id})
+      const history = new History({
+        member_id: member_id,
+        amount: amount,
+        income_type: incomeType,
+        coin_wallet: user.coin_wallet,
+        income_wallet: user.income_wallet,
+        level: user.level
+      })
 
+    } catch(error) {
+
+    }
+}
 
 
 
@@ -235,5 +259,6 @@ module.exports = {
   generatePin,
   sendMobileOtp,
   UpdateAllParent,
+  createIncomeHistory,
   diret_and_direct_childlength,
 };

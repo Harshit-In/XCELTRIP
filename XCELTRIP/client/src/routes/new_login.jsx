@@ -14,17 +14,15 @@ const Newlogin = (props) => {
     <>    <div className="backimgg">
       <div className="main-panel" >
 
-        <div className="container-fluied  vh-100 offset-md-2 justify-content-center align-items-center d-flex">
+        <div className="container vh-100 justify-content-center align-items-center d-flex">
           <div className="row">
             <div className="col-lg-12">
-              <div className="loginlogoparent">
 
-                <img src="images/logo.png" className="loginlogoimg" />
-              </div>
               <div
                 class="card"
                 style={{ backgroundColor: "rgba(0, 0, 0, 0.3)" }}
               >
+                <img src="images/logo.png" className="loginlogoimg" />
                 <div class="card-body">
 
                   <form action="/dashboard" className="was-validated" id="create-course-form">
@@ -65,7 +63,7 @@ const Newlogin = (props) => {
                       <Link to="/Forget_Password" style={{ color: "#2ae3ec" }} className="mr-2">
                         Forget Password?
                       </Link>
-                      <Link to="/c reate" style={{ color: "#f4a310" }}>
+                      <Link to="/create" style={{ color: "#f4a310" }}>
                         Registration
                       </Link>
 

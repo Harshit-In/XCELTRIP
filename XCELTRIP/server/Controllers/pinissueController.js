@@ -1,4 +1,4 @@
-const { findparent, UpdateAllParent } = require("../functions/function");
+const { findparent, UpdateAllParent, createIncomeHistory } = require("../functions/function");
 const { updateUserInfo } = require("./userController");
 
 async function creacteTopup(req, res) {
@@ -12,25 +12,28 @@ async function creacteTopup(req, res) {
           .status(400)
           .json({ message: "Please Enter a valid amount " });
       }
-      if (user.pin_wallet >= amount) {
-        // await User.updateOne(
-        //   { member_id: user.member_id },
-        //   {
-        //     $set: {
-        //       pin_wallet: parseInt(user.pin_wallet) - parseInt(amount),
-        //       coin_wallet: parseInt(user.coin_wallet) + parseInt(amount),
-        //       status: 1,
-        //     },
-        //   }
-        // );
-        // await UpdateAllParent(member_id, 1, amount);
+      if (user.coin_wallet >= amount) {
+        await User.updateOne(
+          { member_id: user.member_id },
+          {
+            $set: {
+              coin_wallet: parseInt(user.coin_wallet) - parseInt(amount/2),
+              income_wallet: parseInt(user.income_wallet) + parseInt(amount/2),
+              activation_date: new Date().toISOString(),
+              status: 1,
+            },
+          }
+        );
+        const incomeType = "Topup Income"
+        await UpdateAllParent(member_id, 1, amount);
         await referalCommition(member_id, user.sponsor_id, amount);
-        // await createCashbackSchema(member_id, amount);
+        await createCashbackSchema(member_id, amount);
+        await createIncomeHistory(user.member_id, amount, incomeType)
         return res.status(200).json({ message: "Topup successfully" });
       } else {
         return res
           .status(400)
-          .json({ message: "Insufficient Account Balance " });
+          .json({ message: "Insufficient Account Balance"});
       }
     }
   } catch (error) {
@@ -62,8 +65,8 @@ async function referalCommition(member_id, sponsor_id, pin_amount) {
         { member_id: d.member_id },
         {
           $set: {
-            coin_wallet:
-              parseInt(sponser.coin_wallet) + parseInt(sponser_profite),
+            income_wallet:
+              parseInt(sponser.income_wallet) + parseInt(sponser_profite),
           },
         }
       );
@@ -115,7 +118,7 @@ async function fundTransferUserToUser(req, res) {
             { member_id: downline_id },
             {
               $set: {
-                pin_wallet: Number(downline.pin_wallet) + Number(amount),
+                coin_wallet: Number(downline.coin_wallet) + Number(amount),
               },
             }
           );
@@ -123,7 +126,7 @@ async function fundTransferUserToUser(req, res) {
             { member_id: user_id },
             {
               $set: {
-                pin_wallet: Number(user.pin_wallet) + Number(amount),
+                coin_wallet: Number(user.coin_wallet) + Number(amount),
               },
             }
           );
