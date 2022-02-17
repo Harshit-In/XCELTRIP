@@ -242,9 +242,17 @@ async function createIncomeHistory(member_id, amount, incomeType) {
         income_wallet: user.income_wallet,
         level: user.level
       })
+      history.save((error, data) => {
+        if (error) {
+          console.log("Error from: function.js >> createIncomeHistory", error);
+        }
+        if (data) {
+          console.log("Error from: function.js >> createIncomeHistory", data);
+        }
+      });
 
     } catch(error) {
-
+      console.log("Error from: function.js >> createIncomeHistory", error.message)
     }
 }
 

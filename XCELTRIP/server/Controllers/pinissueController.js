@@ -46,40 +46,48 @@ async function creacteTopup(req, res) {
   }
 }
 
-async function referalCommition(member_id, sponsor_id, pin_amount) {
+async function referalCommition(member_id, pin_amount) {
   try {
     const User = require("../models/user");
+    const user = await User.findOne({member_id: member_id})
     const getAllParent = await incomDistribute(member_id);
+    const incomeType = "Incom from downline"
     console.log("getAllParent", getAllParent);
     getAllParent.map(async (data, index) => {
-      console.log(":data:", data);
       const percentage = [5, 10, 15, 20, 25, 30];
       if (index == 0) {
         console.log(percentage[data.level]);
         const sponser_per = percentage[data.level];
         const sponser_profite = pin_amount / sponser_per;
-
+        await User.updateOne(
+          { member_id: member_id },
+          {
+            $set: {
+              income_wallet:
+                parseInt(user.income_wallet) + parseInt(sponser_profite),
+            },
+          }
+        );
+        await createIncomeHistory(member_id, amount, incomeType)
       } else {
+        console.log(
+          percentage[data.level] - percentage[getAllParent[index - 1].level]
+        );
         const sponser_per = percentage[data.level] - percentage[getAllParent[index - 1].level];
         const sponser_profite = pin_amount / sponser_per;
-        console.log(percentage[data.level] - percentage[getAllParent[index - 1].level]
+        await User.updateOne(
+          { member_id: member_id },
+          {
+            $set: {
+              income_wallet:
+                parseInt(user.income_wallet) + parseInt(sponser_profite),
+            },
+          }
         );
+        await createIncomeHistory(member_id, amount, incomeType)
+
       }
 
-      // const sponser = await User.findOne({ member_id: data.sponsor_id });
-      // const user = await User.findOne({ member_id: data.member_id });
-      // const differance = sponser.level - user.level;
-      //const sponser_per = percentage[differance];
-      // const sponser_profite = pin_amount / sponser_per;
-      await User.updateOne(
-        { member_id: d.member_id },
-        {
-          $set: {
-            income_wallet:
-              parseInt(sponser.income_wallet) + parseInt(sponser_profite),
-          },
-        }
-      );
     });
   } catch (error) {
     console.log("Error From referalCommition", error.message);
@@ -136,7 +144,7 @@ async function fundTransferUserToUser(req, res) {
             { member_id: user_id },
             {
               $set: {
-                coin_wallet: Number(user.coin_wallet) + Number(amount),
+                coin_wallet: Number(user.coin_wallet) - Number(amount),
               },
             }
           );
