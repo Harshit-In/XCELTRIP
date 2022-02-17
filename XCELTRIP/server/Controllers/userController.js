@@ -9,9 +9,10 @@ const bcrypt = require("bcrypt");
 
 async function signup(req, res) {
   try {
-    User.findOne({ email: req.body.email }).then(async (error, user) => {
+    const user = await User.findOne({ email: req.body.email })
       if (user)
         return res.status(400).json({ message: "user already registered" });
+  
       const { email, sponsor_id, password, conform_password } = req.body;
       if (password !== conform_password) {
         return res.status(400).json({
@@ -21,7 +22,7 @@ async function signup(req, res) {
       const hash = await bcrypt.hash(password, 10);
           const get_Sponser = await getSponser(sponsor_id)
          if(get_Sponser == false){
-             return res.status(400).json({message: "Invalid sponser Id. Please enter a valid sponser Id or Sponser is blocked"})
+             return res.status(400).json({message: "Invalid sponser Id or Sponser is blocked. Please enter a valid sponser Id"})
          }
       const new_id = await getNextId()
       const _user = new User({
@@ -48,7 +49,6 @@ async function signup(req, res) {
           });
         }
       });
-    });
   } catch (error) {
     console.log("Error from userController >> signup: ", error.message);
     return res.status(400).json({ message: "Somthing went wrong" });

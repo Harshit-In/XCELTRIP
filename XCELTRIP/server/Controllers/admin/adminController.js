@@ -103,35 +103,6 @@ async function userInfo(req, res) {
   }
 }
 
-async function change_password_admin(req, res) {
-  try {
-    const Admin = require("../../models/admin");
-    const { email, pass, confirm_pass } = req.body;
-    if (pass == confirm_pass) {
-      const chk = await Admin.updateOne(
-        { email: email },
-        {
-          $set: {
-            password: confirm_pass,
-          },
-        }
-      );
-      if (chk.modifiedCount > 0) {
-        res
-          .status(200)
-          .json({ message: "Admin Password Successfully Updated" });
-      } else {
-        res.status(400).json({ message: "Email Do Not Match" });
-      }
-    } else {
-      res.status(400).json({ message: "Password Do not Match" });
-    }
-    return res.status(200).json({ message: " success" });
-  } catch (error) {
-    console.log("Error frome: controller >> change_password_admin ");
-    return res.status(400).json({ error: error.message });
-  }
-}
 
 
 
@@ -143,5 +114,4 @@ module.exports = {
   signup,
   signin,
   userInfo,
-  change_password_admin,
 };

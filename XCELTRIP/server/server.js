@@ -51,9 +51,6 @@ app.use("/api", userRoutes);
 app.use("/api", adminRoutes);
 
 
-// main()
-
-
 app.listen(process.env.PORT, () => {
   console.log(`server is running on port ${process.env.PORT}`);
 });
