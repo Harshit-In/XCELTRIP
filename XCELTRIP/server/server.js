@@ -14,6 +14,7 @@ const adminRoutes = require("./routers/admin/adminRouter");
 
 
 const user = require("./models/user");
+const { main } = require("./functions/mailer");
 
 // mongodb+srv://${process.env.MONGO_DB_USER}:${process.env.MONGO_DB_PASSWORD}@cluster0.fqkuj.mongodb.net/${process.env.MONGO_DB_DATABASE}?retryWrites=true&w=majority
 
@@ -50,7 +51,7 @@ app.use("/api", userRoutes);
 app.use("/api", adminRoutes);
 
 
-
+// main()
 
 
 app.listen(process.env.PORT, () => {

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import "./style.css";
 import "./dashboard.css";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import TopCard from "../components/dashboard/TopCard";
