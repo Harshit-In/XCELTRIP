@@ -50,7 +50,7 @@ async function findparent(member_id) {
   const User = require("../models/user");
   try {
     const data = await User.aggregate([
-      { $match: { member_id: member_id } },
+      { $match: { member_id: member_id} },
       {
         $graphLookup: {
           from: "user",
@@ -73,10 +73,9 @@ async function findparent(member_id) {
     ]);
 
     if (data && data.length > 0) {
-      console.log(data)
+      // console.log(data)
       return data;
     } else {
-      // console.log("Hello")
       return [];
     }
   } catch (error) {
@@ -172,19 +171,22 @@ async function Update_user_level(member_id) {
     const userInfo = await user.findOne({ member_id: member_id });
     const currentLevel = userInfo.level;
     /* Update Lavel */
-    let newLevel = currentLevel ? currentLevel : 1;
+    // let newLevel = currentLevel ? currentLevel : 0;
     if (userInfo.direct_coin >= 10000 && currentLevel < 5) {
-      if (currentLevel == 4 && ( userInfo.direct_coin >= 100000 ||userInfo.total_coin >= 2500000)) {
+      if (currentLevel == 4 && ( userInfo.direct_coin >= 500000 ||userInfo.total_coin >= 10000000)) {
         newLevel = 5;
       }
-      if (currentLevel == 3 && ( userInfo.direct_coin >= 50000 || userInfo.total_coin >= 500000)) {
+      if (currentLevel == 3 && ( userInfo.direct_coin >= 100000 ||userInfo.total_coin >= 2500000)) {
         newLevel = 4;
       }
-      if (currentLevel == 2 && ( userInfo.direct_coin >= 25000 || userInfo.total_coin >= 100000)) {
+      if (currentLevel == 2 && ( userInfo.direct_coin >= 50000 || userInfo.total_coin >= 500000)) {
         newLevel = 3;
       }
-      if (currentLevel == 1 && ( userInfo.direct_coin >= 10000 || userInfo.total_coin >= 50000)) {
+      if (currentLevel == 1 && ( userInfo.direct_coin >= 25000 || userInfo.total_coin >= 100000)) {
         newLevel = 2;
+      }
+      if (currentLevel == 0 && ( userInfo.direct_coin >= 10000 || userInfo.total_coin >= 50000)) {
+        newLevel = 1;
       }
     }
     /* will update new level */
@@ -247,7 +249,7 @@ async function createIncomeHistory(member_id, amount, incomeType) {
           console.log("Error from: function.js >> createIncomeHistory", error);
         }
         if (data) {
-          console.log("Error from: function.js >> createIncomeHistory", data);
+          console.log("success");
         }
       });
 

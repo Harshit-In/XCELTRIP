@@ -103,9 +103,59 @@ async function userInfo(req, res) {
   }
 }
 
+async function getIncomeHistory(req, res) {
+  const History = require("../../models/History");
+  try {
+    const { member_id } = req.body;
+    if (member_id) {
+      History.findOne({ member_id: member_id }).then(async (data, error) => {
+        if (error) return res.status(200).json({ message: error });
+        if (data) {
+          return res.status(200).json({ data });
+        }
+      });
+    } else {
+      History.find({}).then(async (data, error) => {
+        if (error) return res.status(200).json({ message: error });
+        if (data) {
+          return res.status(200).json({ data });
+        }
+      });
+    }
+  } catch (error) {
+    return res.status(400).json({
+      message: "Error frome: controller >> signin ",
+      error: error.message,
+    });
+  }
+}
 
-
-
+async function getFundTransferHistory(req, res) {
+  const fundHistory = require("../../models/fundTransfer");
+  try {
+    const { from, to } = req.body;
+    if (from ||  to) {
+      fundHistory.findOne({$or: [ { from: from }, { to: to } ]  }).then(async (data, error) => {
+        if (error) return res.status(200).json({ message: error });
+        if (data) {
+          return res.status(200).json({ data });
+        }
+      });
+    } else {
+      fundHistory.find({}).then(async (data, error) => {
+        if (error) return res.status(200).json({ message: error });
+        if (data) {
+          return res.status(200).json({ data });
+        }
+      });
+    }
+  } catch (error) {
+    return res.status(400).json({
+      message: "Error frome: controller >> signin ",
+      error: error.message,
+    });
+  }
+}
 
 
 
@@ -114,4 +164,6 @@ module.exports = {
   signup,
   signin,
   userInfo,
+  getIncomeHistory,
+  getFundTransferHistory
 };

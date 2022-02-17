@@ -31,9 +31,9 @@ async function creacteTopup(req, res) {
         );
         const incomeType = "Topup Income";
         await UpdateAllParent(member_id, 1, amount);
-        await referalCommition(member_id, user.sponsor_id, amount);
+        await referalCommition(user.member_id, amount);
         await createCashbackSchema(member_id, amount);
-        await createIncomeHistory(user.member_id, amount, incomeType);
+        await createIncomeHistory(member_id, amount, incomeType);
         return res.status(200).json({ message: "Topup successfully" });
       } else {
         return res
@@ -49,18 +49,20 @@ async function creacteTopup(req, res) {
 async function referalCommition(member_id, pin_amount) {
   try {
     const User = require("../models/user");
-    const user = await User.findOne({member_id: member_id})
     const getAllParent = await incomDistribute(member_id);
-    const incomeType = "Incom from downline"
-    console.log("getAllParent", getAllParent);
+    const incomeType = "Incom from downline";
+    // console.log("getAllParent", getAllParent);
+
     getAllParent.map(async (data, index) => {
       const percentage = [5, 10, 15, 20, 25, 30];
+      const user = await User.findOne({ member_id: data.member_id });
+
       if (index == 0) {
-        console.log(percentage[data.level]);
         const sponser_per = percentage[data.level];
-        const sponser_profite = pin_amount / sponser_per;
+        const sponser_profite = (pin_amount *  sponser_per)/100;
+        // console.log("parent: ",sponser_per, sponser_profite, user.member_id)
         await User.updateOne(
-          { member_id: member_id },
+          { member_id: user.member_id },
           {
             $set: {
               income_wallet:
@@ -68,15 +70,14 @@ async function referalCommition(member_id, pin_amount) {
             },
           }
         );
-        await createIncomeHistory(member_id, amount, incomeType)
+        await createIncomeHistory(user.member_id, sponser_profite, incomeType);
       } else {
-        console.log(
-          percentage[data.level] - percentage[getAllParent[index - 1].level]
-        );
-        const sponser_per = percentage[data.level] - percentage[getAllParent[index - 1].level];
-        const sponser_profite = pin_amount / sponser_per;
+        const sponser_per = percentage[percentage[data.level] - percentage[getAllParent[index - 1].level]];
+        const sponser_profite = (pin_amount *  sponser_per)/100;
+        // console.log("unparent: ",sponser_per, sponser_profite, user.member_id)
+
         await User.updateOne(
-          { member_id: member_id },
+          { member_id: user.member_id },
           {
             $set: {
               income_wallet:
@@ -84,15 +85,14 @@ async function referalCommition(member_id, pin_amount) {
             },
           }
         );
-        await createIncomeHistory(member_id, amount, incomeType)
-
+        await createIncomeHistory(user.member_id, sponser_profite, incomeType);
       }
-
     });
   } catch (error) {
     console.log("Error From referalCommition", error.message);
   }
 }
+
 
 async function createCashbackSchema(member_id, amount) {
   try {
@@ -107,7 +107,7 @@ async function createCashbackSchema(member_id, amount) {
       duration: 18,
     });
 
-    cash.save((error, data) => {
+    cash.save((data, error) => {
       if (error) {
         console.log(
           "error from: pinissueController >> createCashbackSchema",
@@ -120,45 +120,6 @@ async function createCashbackSchema(member_id, amount) {
     });
   } catch (error) {
     console.log("Error from: createCashbackSchema", error.message);
-  }
-}
-
-async function fundTransferUserToUser(req, res) {
-  try {
-    const User = require("../models/user");
-    const { amount, user_id, downline_id } = req.body;
-    const downline = await User.findOne({ member_id: downline_id });
-    const user = await User.findOne({ member_id: user_id });
-    findparent(downline_id).then(async (data) => {
-      data.map(async (a) => {
-        if (a.member_id == user_id) {
-          await User.updateOne(
-            { member_id: downline_id },
-            {
-              $set: {
-                coin_wallet: Number(downline.coin_wallet) + Number(amount),
-              },
-            }
-          );
-          await User.updateOne(
-            { member_id: user_id },
-            {
-              $set: {
-                coin_wallet: Number(user.coin_wallet) - Number(amount),
-              },
-            }
-          );
-        }
-      });
-    });
-
-    return res.status(200).json({ message: "Fund transfer successfully" });
-  } catch (error) {
-    console.log(
-      "Error From: pinissueController  >> fundTransferUserToUser",
-      error.message
-    );
-    return res.status(400).json({ message: "Somthing went Wrong" });
   }
 }
 
@@ -189,22 +150,22 @@ async function incomDistribute(member_id) {
     ]);
 
     if (data && data.length > 0) {
-      console.log(data);
       // return data;
 
       const referalData = data[0].referal;
+      // console.log("referalData: ", referalData)
       referalData.sort((a, b) => {
         a.ParentNo > b.ParentNo ? 1 : -1;
       });
       let distinctData = [];
       let lastPaidLevel = null;
       for (num of referalData) {
-        if (num.level > lastPaidLevel) {
-          lastPaidLevel = num.level;
+        if (num.ParentNo > lastPaidLevel) {
+          lastPaidLevel = num.ParentNo;
           distinctData.push(num);
         }
       }
-      // console.log("distinctData: ", distinctData)
+      console.log("distinctData: ", distinctData);
       return distinctData.filter((item) => item.ParentNo > 0);
     } else {
       // console.log("Hello")
@@ -218,6 +179,74 @@ async function incomDistribute(member_id) {
     );
   }
 }
+
+async function fundTransferUserToUser(req, res) {
+  try {
+    const User = require("../models/user");
+    const { amount, user_id, downline_id } = req.body;
+    const downline = await User.findOne({ member_id: downline_id });
+    const user = await User.findOne({ member_id: user_id });
+    const findDdownline = await findparent(downline_id);
+    const isDownline = findDdownline[0].referal.filter(
+      (d) => d.member_id == user.member_id
+    );
+    // console.log(isDownline);
+    if (isDownline.length > 0) {
+      await User.updateOne(
+        { member_id: downline_id },
+        {
+          $set: {
+            coin_wallet: Number(downline.coin_wallet) + Number(amount),
+          },
+        }
+      );
+      await User.updateOne(
+        { member_id: user_id },
+        {
+          $set: {
+            coin_wallet: Number(user.coin_wallet) - Number(amount),
+          },
+        }
+      );
+    }
+    await fundTransferHistory(user_id, downline_id, amount)
+    return res.status(200).json({ message: "Fund transfer successfully" });
+  } catch (error) {
+    console.log(
+      "Error From: pinissueController  >> fundTransferUserToUser",
+      error.message
+    );
+    return res.status(400).json({ message: "Somthing went Wrong" });
+  }
+}
+
+
+function fundTransferHistory(from, to, amount) {
+  try {
+    const FundT = require("../models/fundTransfer");
+
+    const fund = new FundT({
+      from: from,
+      to: to,
+      amount: amount,
+    });
+
+    fund.save((data, error) => {
+      if (error) {
+        console.log(
+          "error from: pinissueController >> fundTransferHistory",
+          error.message
+        );
+      }
+      if (data) {
+        console.log("Fund History");
+      }
+    });
+  } catch (error) {
+    console.log("Error from: fundTransferHistory", error.message);
+  }
+}
+
 module.exports = {
   creacteTopup,
   referalCommition,
