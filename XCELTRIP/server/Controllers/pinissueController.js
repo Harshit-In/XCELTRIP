@@ -1,4 +1,8 @@
-const { findparent, UpdateAllParent, createIncomeHistory } = require("../functions/function");
+const {
+  findparent,
+  UpdateAllParent,
+  createIncomeHistory,
+} = require("../functions/function");
 const { updateUserInfo } = require("./userController");
 
 async function creacteTopup(req, res) {
@@ -17,23 +21,24 @@ async function creacteTopup(req, res) {
           { member_id: user.member_id },
           {
             $set: {
-              coin_wallet: parseInt(user.coin_wallet) - parseInt(amount/2),
-              income_wallet: parseInt(user.income_wallet) + parseInt(amount/2),
+              coin_wallet: parseInt(user.coin_wallet) - parseInt(amount / 2),
+              income_wallet:
+                parseInt(user.income_wallet) + parseInt(amount / 2),
               activation_date: new Date().toISOString(),
               status: 1,
             },
           }
         );
-        const incomeType = "Topup Income"
+        const incomeType = "Topup Income";
         await UpdateAllParent(member_id, 1, amount);
         await referalCommition(member_id, user.sponsor_id, amount);
         await createCashbackSchema(member_id, amount);
-        await createIncomeHistory(user.member_id, amount, incomeType)
+        await createIncomeHistory(user.member_id, amount, incomeType);
         return res.status(200).json({ message: "Topup successfully" });
       } else {
         return res
           .status(400)
-          .json({ message: "Insufficient Account Balance"});
+          .json({ message: "Insufficient Account Balance" });
       }
     }
   } catch (error) {
@@ -41,35 +46,48 @@ async function creacteTopup(req, res) {
   }
 }
 
-async function referalCommition(member_id, sponsor_id, pin_amount) {
+async function referalCommition(member_id, pin_amount) {
   try {
     const User = require("../models/user");
+    const user = await User.findOne({member_id: member_id})
     const getAllParent = await incomDistribute(member_id);
+    const incomeType = "Incom from downline"
     console.log("getAllParent", getAllParent);
     getAllParent.map(async (data, index) => {
-      console.log(":data:", data);
       const percentage = [5, 10, 15, 20, 25, 30];
-      if(index ==0 ) {
+      if (index == 0) {
         console.log(percentage[data.level]);
+        const sponser_per = percentage[data.level];
+        const sponser_profite = pin_amount / sponser_per;
+        await User.updateOne(
+          { member_id: member_id },
+          {
+            $set: {
+              income_wallet:
+                parseInt(user.income_wallet) + parseInt(sponser_profite),
+            },
+          }
+        );
+        await createIncomeHistory(member_id, amount, incomeType)
       } else {
-        console.log(percentage[data.level] - percentage[getAllParent[index-1].level]);
-      }
-      
+        console.log(
+          percentage[data.level] - percentage[getAllParent[index - 1].level]
+        );
+        const sponser_per = percentage[data.level] - percentage[getAllParent[index - 1].level];
+        const sponser_profite = pin_amount / sponser_per;
+        await User.updateOne(
+          { member_id: member_id },
+          {
+            $set: {
+              income_wallet:
+                parseInt(user.income_wallet) + parseInt(sponser_profite),
+            },
+          }
+        );
+        await createIncomeHistory(member_id, amount, incomeType)
 
-      // const sponser = await User.findOne({ member_id: data.sponsor_id });
-      // const user = await User.findOne({ member_id: data.member_id });
-      // const differance = sponser.level - user.level;
-      //const sponser_per = percentage[differance];
-      // const sponser_profite = pin_amount / sponser_per;
-      await User.updateOne(
-        { member_id: d.member_id },
-        {
-          $set: {
-            income_wallet:
-              parseInt(sponser.income_wallet) + parseInt(sponser_profite),
-          },
-        }
-      );
+      }
+
     });
   } catch (error) {
     console.log("Error From referalCommition", error.message);
@@ -126,7 +144,7 @@ async function fundTransferUserToUser(req, res) {
             { member_id: user_id },
             {
               $set: {
-                coin_wallet: Number(user.coin_wallet) + Number(amount),
+                coin_wallet: Number(user.coin_wallet) - Number(amount),
               },
             }
           );

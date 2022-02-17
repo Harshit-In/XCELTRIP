@@ -85,7 +85,7 @@ async function signin(req, res) {
         }
       } else {
         return res.status(400).json({
-          message: "Somthing went wrong",
+          message: "Incorrect credentials, member not found.",
         });
       }
     });
