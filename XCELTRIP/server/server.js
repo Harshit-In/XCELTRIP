@@ -14,7 +14,7 @@ const adminRoutes = require("./routers/admin/adminRouter");
 
 
 const user = require("./models/user");
-const { main } = require("./functions/mailer");
+const { main, sendOTP } = require("./functions/mailer");
 
 // mongodb+srv://${process.env.MONGO_DB_USER}:${process.env.MONGO_DB_PASSWORD}@cluster0.fqkuj.mongodb.net/${process.env.MONGO_DB_DATABASE}?retryWrites=true&w=majority
 
@@ -49,6 +49,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use("/api", userRoutes);
 app.use("/api", adminRoutes);
+
+
+
+
+// const to = "harshitdubey1996@gmail.com",
+// const otp = "1234567"
+
+// sendOTP("harshitdubey1996@gmail.com", 1234567)
+
+
 
 
 app.listen(process.env.PORT, () => {

@@ -107,7 +107,7 @@ async function createCashbackSchema(member_id, amount) {
       duration: 18,
     });
 
-    cash.save((data, error) => {
+    cash.save((error, data) => {
       if (error) {
         console.log(
           "error from: pinissueController >> createCashbackSchema",
@@ -231,7 +231,7 @@ function fundTransferHistory(from, to, amount) {
       amount: amount,
     });
 
-    fund.save((data, error) => {
+    fund.save((error, data) => {
       if (error) {
         console.log(
           "error from: pinissueController >> fundTransferHistory",

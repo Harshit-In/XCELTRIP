@@ -6,6 +6,7 @@ const {
   sendMobileOtp,
 } = require("../functions/function");
 const bcrypt = require("bcrypt");
+const { sendEmailOtp } = require("../functions/mailer");
 
 async function signup(req, res) {
   try {
@@ -188,31 +189,31 @@ async function forgetPassword(req, res) {
   try {
     const forget = require("../models/forgetOtp");
     const User = require("../models/user");
-    const { member_id } = req.body;
+    const { email } = req.body;
     const otp = await generateOtp();
-    const user = await User.findOne({ member_id: member_id });
-    forget.findOne({ member_id: member_id }).then(async (data, error) => {
+    const user = await User.findOne({ email: email });
+    forget.findOne({ email: email }).then(async (data, error) => {
       if (error)
         return res
           .status(400)
           .json({ message: "Somthing went wrong", error: error });
       if (data) {
         await forget.updateOne(
-          { member_id: member_id },
+          { email: email },
           {
             $set: {
               otp: otp,
             },
           }
         );
-        await sendOtp(user.contact, otp);
+        await sendOtp(user.email, otp);
         return res.status(200).json({ message: "Otp send on your number" });
       } else {
         const fopt = await new forget({
-          member_id: user.member_id,
+          email: user.email,
           otp: otp,
         });
-        await sendOtp(user.contact, otp);
+        await sendOtp(email, otp);
         fopt.save((data, error) => {
           if (error) return res.status(400).json({ message: "error" });
           if (data) {
@@ -227,10 +228,12 @@ async function forgetPassword(req, res) {
   }
 }
 
-function sendOtp(contact, otp) {
+function sendOtp(email, otp) {
   try {
     const message = `Dear User, Your OTP for UserId ${contact} is ${otp} - TEARN`;
-    return sendMobileOtp(contact, message);
+    // return sendMobileOtp(contact, message);
+    return sendEmailOtp(email, otp);
+
   } catch (error) {
     console.log("Error from userController >> sendOtp: ", error.message);
     return res.status(400).json({ message: "Somthing went wrong" });
