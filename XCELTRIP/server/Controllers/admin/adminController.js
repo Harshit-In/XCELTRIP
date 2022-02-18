@@ -79,18 +79,21 @@ async function signin(req, res) {
 async function userInfo(req, res) {
   const User = require("../../models/user");
   try {
-    const { member_id } = req.body;
+    const { member_id, startDate, endDate } = req.body;
     if (member_id) {
       User.findOne({ member_id: member_id }).then(async (data, error) => {
         if (error) return res.status(200).json({ message: error });
         if (data) {
-          return res.status(200).json({ data });
+          const directChild = await  User.find({ sponsor_id: member_id })
+          return res.status(200).json({ data, directChild });
         }
       });
     } else {
-      User.find({}).then(async (data, error) => {
+      User.find({ createdAt:{$gt: endDate, $lt: startDate}}).then(async (data, error) => {
         if (error) return res.status(200).json({ message: error });
         if (data) {
+          
+          // data.filter((d)=>{ return d})
           return res.status(200).json({ data });
         }
       });

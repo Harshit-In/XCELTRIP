@@ -220,7 +220,6 @@ async function fundTransferUserToUser(req, res) {
   }
 }
 
-
 function fundTransferHistory(from, to, amount) {
   try {
     const FundT = require("../models/fundTransfer");
