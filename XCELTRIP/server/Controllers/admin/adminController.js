@@ -1,78 +1,83 @@
 const Admin = require("../../models/admin");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 
 async function signup(req, res) {
   try {
-    Admin.findOne({ email: req.body.email }).exec((error, user) => {
-      if (user)
+    const admin = await Admin.findOne({ email: req.body.email })
+      if (admin)
+        return res.status(400).json({ message: "user already registered" });
+  
+      const { email, password, conform_password } = req.body;
+      if (password !== conform_password) {
         return res.status(400).json({
-          message: "user already registered",
+          message: "Enter same password",
         });
-      const { admin_name, email, password } = req.body;
-
-      const _user = new Admin({
-        admin_name,
+      }
+      const hash = await bcrypt.hash(password, 10);
+      const _admin = new Admin({
         email,
-        password,
+        hash_password: hash,
       });
 
-      _user.save((error, data) => {
+      _admin.save((error, data) => {
         if (error) {
+          console.log("Error from: adminController >> signup", error.message);
           return res.status(400).json({
             message: "Somthing went wrong",
+            error: error.message,
           });
         }
         if (data) {
-          return res.status(201).json({
-            message: "Admin created successfully",
+          // sendMobileOtp(contact, message)
+          return res.status(200).json({
+            message: "user created successfully",
+            data: data,
           });
         }
       });
-    });
   } catch (error) {
-    return res.status(400).json({
-      message: "Error frome: controller >> signup ",
-      error: error.message,
-    });
+    console.log("Error from userController >> signup: ", error.message);
+    return res.status(400).json({ message: "Somthing went wrong" });
   }
 }
 
 async function signin(req, res) {
   try {
-    Admin.findOne({ email: req.body.email }).exec(async (error, user) => {
+    Admin.findOne({ email: req.body.email }).then(async (admin, error) => {
       if (error) return res.status(400).json({ error });
-      if (user) {
-        //const isValid = await Admin.authenticate(req.body.password)
-        if (req.body.password == user.password) {
-          const { email, _id, name } = user;
-          const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
-            expiresIn: "1h",
-          });
+      if (admin) {
+        
+        let isValid = bcrypt.compareSync(req.body.password, admin.hash_password);
+        if (isValid) {
+          const { _id, email} = admin;
+          const token = jwt.sign(
+            { _id: admin._id, email: admin.email },
+            process.env.JWT_SECRET,
+            { expiresIn: "1h" }
+          );
           return res.status(200).json({
             token,
-            user: {
+            admin: {
               _id,
               email,
-              name,
             },
           });
         } else {
           return res.status(400).json({
-            message: "Invalid username and password",
+            message: "Invalide username and password",
           });
         }
       } else {
         return res.status(400).json({
-          message: "Invalid username and password",
+          message: "Incorrect credentials, user not found.",
         });
       }
     });
   } catch (error) {
-    return res.status(400).json({
-      message: "Error frome: controller >> signin ",
-      error: error.message,
-    });
+    console.log("Error from adminController >> signin: ", error.message);
+    return res.status(400).json({ message: "Somthing went wrong" });
   }
 }
 
