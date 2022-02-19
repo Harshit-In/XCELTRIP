@@ -116,7 +116,7 @@ async function getIncomeHistory(req, res) {
   try {
     const { member_id } = req.body;
     if (member_id) {
-      History.findOne({ member_id: member_id }).then(async (data, error) => {
+      History.findOne( req.body ).then(async (data, error) => {
         if (error) return res.status(200).json({ message: error });
         if (data) {
           return res.status(200).json({ data });
