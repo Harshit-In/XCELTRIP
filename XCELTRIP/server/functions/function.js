@@ -174,9 +174,11 @@ async function Update_user_level(member_id) {
     // let newLevel = currentLevel ? currentLevel : 0;
     if (userInfo.direct_coin >= 10000 && currentLevel < 5) {
       if (currentLevel == 4 && ( userInfo.direct_coin >= 500000 ||userInfo.total_coin >= 10000000)) {
+        updateRoyltyLevel(member_id)
         newLevel = 5;
       }
       if (currentLevel == 3 && ( userInfo.direct_coin >= 100000 ||userInfo.total_coin >= 2500000)) {
+        createRoyltySchema(member_id)
         newLevel = 4;
       }
       if (currentLevel == 2 && ( userInfo.direct_coin >= 50000 || userInfo.total_coin >= 500000)) {
@@ -258,6 +260,39 @@ async function createIncomeHistory(member_id, amount, incomeType) {
     }
 }
 
+async function createRoyltySchema(member_id){
+  try{
+    const Royalty = require("../models/royalty")
+    const User = require("../models/user")
+    const user = await User.findOne({ member_id: member_id})
+    const royalty = new Royalty({
+      member_id: member_id,
+      level: user.level,
+      income_type: incomeType,
+      royalty_amount,
+    })
+    royalty.save((error, data) => {
+      if (error) {
+        console.log("Error from: function.js >> createIncomeHistory", error);
+      }
+      if (data) {
+        console.log("success");
+      }
+    });
+
+  } catch(error) {
+    console.log("Error from: function.js >> createIncomeHistory", error.message)
+  }
+}
+
+async function updateRoyltyLevel(member_id) {
+  const Royalty = require("../models/royalty")
+  await updateOne({member_id: member_id},{
+    $set: {
+      level: 5
+    }
+  })
+}
 
 
 

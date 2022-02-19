@@ -94,7 +94,7 @@ async function userInfo(req, res) {
         }
       });
     } else {
-      User.find({ createdAt:{$gt: endDate, $lt: startDate}}).then(async (data, error) => {
+      User.find({}).then(async (data, error) => {
         if (error) return res.status(200).json({ message: error });
         if (data) {
           
