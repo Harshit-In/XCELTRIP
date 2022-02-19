@@ -138,15 +138,15 @@ async function getFundTransferHistory(req, res) {
   try {
     const { from, to } = req.body;
     if (from ||  to) {
-      fundHistory.findOne({$or: [ { from: from }, { to: to } ]  }).then(async (data, error) => {
-        if (error) return res.status(200).json({ message: error });
+      fundHistory.find(req.body).then(async (data, error) => {
+        if (error) return res.status(400).json({ error: error });
         if (data) {
           return res.status(200).json({ data });
         }
       });
     } else {
       fundHistory.find({}).then(async (data, error) => {
-        if (error) return res.status(200).json({ message: error });
+        if (error) return res.status(400).json({ error: error });
         if (data) {
           return res.status(200).json({ data });
         }
@@ -159,7 +159,6 @@ async function getFundTransferHistory(req, res) {
     });
   }
 }
-
 
 
 

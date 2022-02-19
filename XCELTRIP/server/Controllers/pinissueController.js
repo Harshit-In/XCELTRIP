@@ -220,7 +220,7 @@ async function fundTransferUserToUser(req, res) {
   }
 }
 
-function fundTransferHistory(from, to, amount) {
+async function fundTransferHistory(from, to, amount) {
   try {
     const FundT = require("../models/fundTransfer");
 
@@ -246,8 +246,41 @@ function fundTransferHistory(from, to, amount) {
   }
 }
 
+async function currentInvestment(req, res) {
+  const History = require("../models/History")
+  const { member_id } = req.body;
+  if(member_id) {
+    data = await History.aggregate([
+      { $match: { member_id: member_id, income_type: "Topup Income" } },
+      {
+        $group: {
+          _id: "$member_id",
+          totalInvestment: { $sum: "$amount" },
+          Investment: { $push: "$$ROOT" },
+    
+        },
+      },
+    ])
+  } else {
+    data = await History.aggregate([
+      { $match: { income_type: "Topup Income" } },
+      {
+        $group: {
+          _id: "$member_id",
+          totalInvestment: { $sum: "$amount" },
+          Investment: { $push: "$$ROOT" },
+    
+        },
+      },
+    ])
+  }
+ 
+return res.status(200).json({data})
+}
+
 module.exports = {
   creacteTopup,
   referalCommition,
+  currentInvestment,
   fundTransferUserToUser,
 };
