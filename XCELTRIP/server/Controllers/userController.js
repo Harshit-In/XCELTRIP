@@ -14,8 +14,8 @@ async function signup(req, res) {
       if (user)
         return res.status(400).json({ message: "user already registered" });
   
-      const { email, sponsor_id, password, conform_password } = req.body;
-      if (password !== conform_password) {
+      const { email, sponsor_id, password, confirm_password } = req.body;
+      if (password !== confirm_password) {
         return res.status(400).json({
           message: "Enter same password",
         });

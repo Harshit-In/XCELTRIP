@@ -10,6 +10,7 @@ async function creacteTopup(req, res) {
   try {
     const { member_id, amount } = req.body;
     const user = await User.findOne({ member_id: member_id });
+    console.log(user);
     if (user) {
       if (amount % 100 != 0) {
         return res
@@ -40,9 +41,11 @@ async function creacteTopup(req, res) {
           .status(400)
           .json({ message: "Insufficient Account Balance" });
       }
+    } else {
+      return res.status(400).json({ message: "User not found." });
     }
   } catch (error) {
-    return res.status(400).json({ message: "Topup successfully" });
+    return res.status(400).json({ message: error.message });
   }
 }
 

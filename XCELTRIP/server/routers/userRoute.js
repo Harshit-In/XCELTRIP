@@ -35,7 +35,7 @@ router.post('/otp_match', otp_match);
 router.post('/change_password', validateSignUpRequest, change_password);
 
 // pin issue and fund 
-router.post('/creacteTopup', creacteTopup);
+router.post('/createTopup', creacteTopup);
 router.post('/fundTransferUserToUser', fundTransferUserToUser);
 router.post('/currentInvestment', currentInvestment);
 
