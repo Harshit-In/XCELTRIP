@@ -89,7 +89,7 @@ async function userInfo(req, res) {
       User.findOne({ member_id: member_id }).then(async (data, error) => {
         if (error) return res.status(200).json({ message: error });
         if (data) {
-          const directChild = await  User.find({ sponsor_id: member_id })
+          const directChild = await  User.find({ sponsor_id: member_id }).sort({createdAt: -1})
           return res.status(200).json({ data, directChild });
         }
       });

@@ -62,7 +62,7 @@ async function referalCommition(member_id, pin_amount) {
 
       if (index == 0) {
         const sponser_per = percentage[data.level];
-        const sponser_profite = (pin_amount *  sponser_per)/100;
+        const sponser_profite = (pin_amount * sponser_per) / 100;
         // console.log("parent: ",sponser_per, sponser_profite, user.member_id)
         await User.updateOne(
           { member_id: user.member_id },
@@ -75,8 +75,11 @@ async function referalCommition(member_id, pin_amount) {
         );
         await createIncomeHistory(user.member_id, sponser_profite, incomeType);
       } else {
-        const sponser_per = percentage[percentage[data.level] - percentage[getAllParent[index - 1].level]];
-        const sponser_profite = (pin_amount *  sponser_per)/100;
+        const sponser_per =
+          percentage[
+            percentage[data.level] - percentage[getAllParent[index - 1].level]
+          ];
+        const sponser_profite = (pin_amount * sponser_per) / 100;
         // console.log("unparent: ",sponser_per, sponser_profite, user.member_id)
 
         await User.updateOne(
@@ -95,7 +98,6 @@ async function referalCommition(member_id, pin_amount) {
     console.log("Error From referalCommition", error.message);
   }
 }
-
 
 async function createCashbackSchema(member_id, amount) {
   try {
@@ -188,32 +190,36 @@ async function fundTransferUserToUser(req, res) {
     const User = require("../models/user");
     const { amount, user_id, downline_id } = req.body;
     const downline = await User.findOne({ member_id: downline_id });
-    const user = await User.findOne({ member_id: user_id });
-    const findDdownline = await findparent(downline_id);
-    const isDownline = findDdownline[0].referal.filter(
-      (d) => d.member_id == user.member_id
-    );
-    // console.log(isDownline);
-    if (isDownline.length > 0) {
-      await User.updateOne(
-        { member_id: downline_id },
-        {
-          $set: {
-            coin_wallet: Number(downline.coin_wallet) + Number(amount),
-          },
-        }
+    if (downline) {
+      const user = await User.findOne({ member_id: user_id });
+      const findDdownline = await findparent(downline_id);
+      const isDownline = findDdownline[0].referal.filter(
+        (d) => d.member_id == user.member_id
       );
-      await User.updateOne(
-        { member_id: user_id },
-        {
-          $set: {
-            coin_wallet: Number(user.coin_wallet) - Number(amount),
-          },
-        }
-      );
+      // console.log(isDownline);
+      if (isDownline.length > 0) {
+        await User.updateOne(
+          { member_id: downline_id },
+          {
+            $set: {
+              coin_wallet: Number(downline.coin_wallet) + Number(amount),
+            },
+          }
+        );
+        await User.updateOne(
+          { member_id: user_id },
+          {
+            $set: {
+              coin_wallet: Number(user.coin_wallet) - Number(amount),
+            },
+          }
+        );
+      }
+      await fundTransferHistory(user_id, downline_id, amount);
+      return res.status(200).json({ message: "Fund transfer successfully" });
+    } else {
+      return res.status(400).json({ message: `Fund transfer failed, downline[${downline_id}] does not exists.` });
     }
-    await fundTransferHistory(user_id, downline_id, amount)
-    return res.status(200).json({ message: "Fund transfer successfully" });
   } catch (error) {
     console.log(
       "Error From: pinissueController  >> fundTransferUserToUser",
@@ -250,9 +256,9 @@ async function fundTransferHistory(from, to, amount) {
 }
 
 async function currentInvestment(req, res) {
-  const History = require("../models/History")
+  const History = require("../models/History");
   const { member_id } = req.body;
-  if(member_id) {
+  if (member_id) {
     data = await History.aggregate([
       { $match: { member_id: member_id, income_type: "Topup Income" } },
       {
@@ -260,10 +266,9 @@ async function currentInvestment(req, res) {
           _id: "$member_id",
           totalInvestment: { $sum: "$amount" },
           Investment: { $push: "$$ROOT" },
-    
         },
       },
-    ])
+    ]);
   } else {
     data = await History.aggregate([
       { $match: { income_type: "Topup Income" } },
@@ -272,13 +277,12 @@ async function currentInvestment(req, res) {
           _id: "$member_id",
           totalInvestment: { $sum: "$amount" },
           Investment: { $push: "$$ROOT" },
-    
         },
       },
-    ])
+    ]);
   }
- 
-return res.status(200).json({data})
+
+  return res.status(200).json({ data });
 }
 
 module.exports = {
