@@ -15,7 +15,7 @@ async function createInvestment(req, res) {
       trans_hash,
       amount,
     });
-    invest.save((error, data) => {
+    invest.save(async(error, data) => {
       if (error) {
         console.log("Error from: userController >> signup", error.message);
         return res.status(400).json({
@@ -24,7 +24,13 @@ async function createInvestment(req, res) {
         });
       }
       if (data) {
-        // sendMobileOtp(contact, message)
+      const User = require('../models/user')
+      const user =await User.findOne({member_id: member_id})
+      await User.updateOne({member_id: member_id}, {
+        $set: {
+          coin_wallet: Number(user.coin_wallet) + Number(amount)
+        }
+      })
         return res.status(200).json({
           message: "investment fund successfully added",
           data: data,

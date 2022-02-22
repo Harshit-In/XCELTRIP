@@ -5,7 +5,7 @@ const investmentSchema = new mongoose.Schema(
     member_id: { type: String },
     trans_hash: { type: String },
     amount: { type: Number, default: 0 },
-    date: { type: Date, default: new Date.now() },
+    date: { type: Date, default:(new Date()).toLocaleDateString() },
   },
   { timestamps: true, collection: "investment" }
 );
