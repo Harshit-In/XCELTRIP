@@ -30,7 +30,7 @@ async function createInvestment(req, res) {
           { member_id: member_id },
           {
             $set: {
-              coin_wallet: Number(user.coin_wallet) + Number(amount),
+              coin_wallet: Number(user.bep20_wallet) + Number(amount),
             },
           }
         );
@@ -72,39 +72,60 @@ async function getcreateInvestment(req, res) {
 async function creacteTopup(req, res) {
   const User = require("../models/user");
   try {
-    const { member_id, amount } = req.body;
+    const { member_id, amount, coin_ratio } = req.body;
     const user = await User.findOne({ member_id: member_id });
-    console.log(user);
     if (user) {
       if (amount % 100 != 0) {
         return res
           .status(400)
           .json({ message: "Please Enter a valid amount " });
       }
-      if (user.coin_wallet >= amount) {
-        await User.updateOne(
-          { member_id: user.member_id },
-          {
-            $set: {
-              coin_wallet: parseInt(user.coin_wallet) - parseInt(amount / 2),
-              income_wallet:
-                parseInt(user.income_wallet) + parseInt(amount / 2),
-              activation_date: new Date().toISOString(),
-              status: 1,
-            },
-          }
-        );
-        const incomeType = "Topup Income";
-        await UpdateAllParent(member_id, 1, amount);
-        await referalCommition(user.member_id, amount);
-        await createCashbackSchema(member_id, amount);
-        await createIncomeHistory(member_id, amount, incomeType);
-        return res.status(200).json({ message: "Topup successfully" });
-      } else {
-        return res
-          .status(400)
-          .json({ message: "Insufficient Account Balance" });
+
+      if (coin_ratio == 100) {
+        if (user.bep20_wallet >= amount) {
+          await User.updateOne(
+            { member_id: user.member_id },
+            {
+              $set: {
+                investment: parseInt(user.investment) + parseInt(amount),
+                bep20_wallet: parseInt(user.bep20_wallet) - parseInt(amount),
+                activation_date: new Date().toISOString(),
+                status: 1,
+              },
+            }
+          );
+         
+        } else {
+          return res
+            .status(400)
+            .json({ message: "Insufficient Account Balance" });
+        }
+      } else if (coin_ratio == 50) {
+        if ((user.bep20_wallet >= amount/2) && (user.coin_wallet >= amount/2)) {
+          await User.updateOne(
+            { member_id: user.member_id },
+            {
+              $set: {
+                investment: parseInt(user.investment) + parseInt(amount),
+                bep20_wallet: parseInt(user.bep20_wallet) - parseInt(amount/2),
+                coin_wallet: parseInt(user.coin_wallet) - parseInt(amount/2),
+                activation_date: new Date().toISOString(),
+                status: 1,
+              },
+            }
+          );
+        } else {
+          return res
+            .status(400)
+            .json({ message: "Insufficient Account Balance" });
+        }
       }
+      const incomeType = "Topup Income";
+      await UpdateAllParent(member_id, 1, amount);
+      await referalCommition(user.member_id, amount);
+      await createCashbackSchema(member_id, amount);
+      await createIncomeHistory(member_id, amount, incomeType);
+      return res.status(200).json({ message: "Topup successfully" });
     } else {
       return res.status(400).json({ message: "User not found." });
     }

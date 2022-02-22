@@ -8,6 +8,8 @@ const userSchema = new mongoose.Schema(
     sponsor_id: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     hash_password: { type: String, required: true },
+    investment : { type: Number, default:0},
+    bep20_wallet: { type: Number, default:0},
     coin_wallet: { type: Number, default:0},
     income_wallet: { type: Number, default:0},
     level: { type: Number, default:0},
