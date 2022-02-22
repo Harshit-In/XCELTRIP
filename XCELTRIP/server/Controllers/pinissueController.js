@@ -117,7 +117,7 @@ async function creacteTopup(req, res) {
         } else {
           return res
             .status(400)
-            .json({ message: "Insufficient Account Balance" });
+            .json({ message: "Your coin wallet or BEP20 wallet have Insufficient balance" });
         }
       }
       const incomeType = "Topup Income";
@@ -154,9 +154,9 @@ async function referalCommition(member_id, pin_amount) {
           {
             $set: {
               income_wallet:
-                parseInt(user.income_wallet) + parseInt(sponser_profite / 2),
+                Number(user.income_wallet) + Number(sponser_profite / 2),
               coin_wallet:
-                parseInt(user.coin_wallet) + parseInt(sponser_profite / 2),
+              Number(user.coin_wallet) + Number(sponser_profite / 2),
             },
           }
         );
