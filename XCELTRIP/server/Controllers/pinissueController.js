@@ -54,7 +54,7 @@ async function createInvestment(req, res) {
 async function getcreateInvestment(req, res) {
   const Investment = require("../models/investment");
   try {
-    const investment = await Investment.findOne(req.body);
+    const investment = await Investment.find(req.body);
     return res.status(200).json({
       data: investment,
     });
