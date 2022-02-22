@@ -30,7 +30,7 @@ async function createInvestment(req, res) {
           { member_id: member_id },
           {
             $set: {
-              coin_wallet: Number(user.bep20_wallet) + Number(amount),
+              bep20_wallet: Number(user.bep20_wallet) + Number(amount),
             },
           }
         );
