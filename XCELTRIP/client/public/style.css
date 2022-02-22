@@ -58,7 +58,6 @@ body::-webkit-scrollbar-thumb {
 }
 
 .app-footer-bg {
-  padding: 60px 40px;
   background: #161f36;
 }
 
@@ -67,8 +66,19 @@ body::-webkit-scrollbar-thumb {
   padding: 20px 10px;
 }
 
-.foot-bottom p a {
-  color: #ffb20c;
+.foot-link {
+  color: #ffb20c !important;
+}
+
+.flink-icon {
+  background: #dca225;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  color: #161f36;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .page-title-area {
@@ -170,4 +180,9 @@ body::-webkit-scrollbar-thumb {
   background-image: url(../theme_files/assets/bg.webp);
   background-size: cover;
   background-position: 100%;
+}
+
+.scale:hover {
+  transform: scale(1.05, 1.05);
+  transition: all 0.5s;
 }

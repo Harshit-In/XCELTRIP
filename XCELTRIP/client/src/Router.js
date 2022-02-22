@@ -57,7 +57,7 @@ const Router = () => {
         <Footer />
       )}
       <div>
-        <Toaster />
+        <Toaster position="top-right"/>
       </div>
     </>
   );

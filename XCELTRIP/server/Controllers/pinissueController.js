@@ -5,6 +5,40 @@ const {
 } = require("../functions/function");
 const { updateUserInfo } = require("./userController");
 
+async function createInvestment(req, res) {
+  const Investment = require("../models/investment")
+  const { member_id, trans_hash, amount } = req.body;
+
+  try {
+    const invest = new Investment({
+      member_id: member_id,
+      trans_hash,
+      amount,
+    });
+    invest.save((error, data) => {
+      if (error) {
+        console.log("Error from: userController >> signup", error.message);
+        return res.status(400).json({
+          message: "Somthing went wrong",
+          error: error.message,
+        });
+      }
+      if (data) {
+        // sendMobileOtp(contact, message)
+        return res.status(200).json({
+          message: "investment fund successfully added",
+          data: data,
+        });
+      }
+    });
+  } catch (error) {
+    console.log("Error From: pinissueController >> createInvestment", error.message)
+    return res.status(400).json({
+    error: "somthing went wrong"
+    });
+  }
+}
+
 async function creacteTopup(req, res) {
   const User = require("../models/user");
   try {
@@ -218,7 +252,11 @@ async function fundTransferUserToUser(req, res) {
       await fundTransferHistory(user_id, downline_id, amount);
       return res.status(200).json({ message: "Fund transfer successfully" });
     } else {
-      return res.status(400).json({ message: `Fund transfer failed, downline[${downline_id}] does not exists.` });
+      return res
+        .status(400)
+        .json({
+          message: `Fund transfer failed, downline[${downline_id}] does not exists.`,
+        });
     }
   } catch (error) {
     console.log(
@@ -285,7 +323,10 @@ async function currentInvestment(req, res) {
   return res.status(200).json({ data });
 }
 
+
+
 module.exports = {
+  createInvestment,
   creacteTopup,
   referalCommition,
   currentInvestment,

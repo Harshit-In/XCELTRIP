@@ -1,17 +1,43 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import api from "../../utils/api";
 import NewTaskExport from "./NewTaskExport";
+import {
+  DataGrid,
+  GridActionsCellItem,
+  GridToolbarContainer,
+  GridToolbarExport,
+  gridClasses,
+  GridToolbarFilterButton,
+  GridToolbarColumnsButton,
+  GridSearchIcon,
+  GridFilterInputDate,
+} from "@mui/x-data-grid";
+import { Chip, Stack } from "@mui/material";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCheck,
+  faCheckDouble,
+  faChevronCircleUp,
+  faCoffee,
+  faIdBadge,
+} from "@fortawesome/free-solid-svg-icons";
 
 export default function DashboardHome() {
   const { isLoggedIn, userInfo } = useSelector((state) => state?.user?.value);
   const [userData, setUserData] = useState({});
-  const dispatch = useDispatch();
-  //const navigate = useNavigate();
-  console.log("LocalStorage :: ", userInfo);
-
+  const [directChilds, setDirectChilds] = useState([]);
+  const [tableData, setTableData] = useState([]);
+  const columns = [
+    { field: "member_id", headerName: "Member ID", width: 150 },
+    { field: "level", headerName: "Level", width: 200 },
+    { field: "amount", headerName: "Amount", width: 200 },
+    { field: "coin_wallet", headerName: "Coin Wallet", width: 200 },
+    { field: "income_wallet", headerName: "Income Wallet", width: 200 },
+    { field: "createdAt", headerName: "Joined On", type: "date", width: 150 },
+  ];
   const newJoinings = [
     { member_id: "XELL000001", name: "Demo User", img: "" },
     { member_id: "XELL000003", name: "Demo User", img: "" },
@@ -19,12 +45,43 @@ export default function DashboardHome() {
     { member_id: "XELL000004", name: "Demo User", img: "" },
   ];
 
+  const infoArray = [
+    { icon: "fas fa-wallet", field: "coin_wallet", label: "Coin Wallet" },
+    { icon: "fas fa-wallet", field: "income_wallet", label: "Income Wallet" },
+    { icon: "fas fa-coins", field: "direct_coin", label: "Direct Coins" },
+    { icon: "fas fa-coins", field: "total_coin", label: "Total Coins" },
+    { icon: "fas fa-coins", field: "total_coin", label: "Current Investment" },
+    { icon: "fas fa-users", field: "direct_members", label: "Direct Members" },
+    { icon: "fas fa-users", field: "total_members", label: "Total Members" },
+    { icon: "fas fa-coins", field: "total_coin", label: "Cashback Earned" },
+  ];
+
   async function getUsersInfo() {
     api
-      .post("userInfo", { member_id: userInfo.user.member_id })
+      .post("userInfo", { member_id: userInfo?.user?.member_id })
       .then((res) => {
         console.log("userInfo :: ", res.data.data);
         setUserData({ ...res.data.data });
+        setDirectChilds([...res.data.directChild]);
+      })
+      .catch((error) => {
+        toast.error(
+          error.response.data.message ??
+            error.message ??
+            "OOPs, Something went wrong."
+        );
+      });
+  }
+
+  async function getLevelIncome() {
+    api
+      .post("getIncomeHistory", {
+        member_id: userInfo?.user?.member_id,
+        income_type: "Incom from downline",
+      })
+      .then((res) => {
+        console.log("LevelIncome:: ", res.data.data);
+        setTableData([...res.data.data]);
       })
       .catch((error) => {
         toast.error(
@@ -37,68 +94,114 @@ export default function DashboardHome() {
 
   useEffect(async () => {
     await getUsersInfo();
+    await getLevelIncome();
   }, []);
   return (
     <>
-      <NewTaskExport />
       <div className="container-fluid py-4">
         <div className="row">
           <div className="col-lg-9">
-            <div className="card card-body border-0 shadow-sm mb-3">
-              <h6 className="">
-                Welcome back <strong>{userData?.member_id}</strong>
-              </h6>
-            </div>
+            <div className="row row-cols-1">
+              <div className="col mb-2">
+                <div className="card card-body border-0 shadow-sm">
+                  <div className="d-flex">
+                    <div className="d-flex">
+                      <div className="me-2">
+                        <img
+                          class="user-avatar md-avatar rounded-circle"
+                          alt="Image placeholder"
+                          src="/theme_files/assets/img/team/profile-picture-3.jpg"
+                        />
+                      </div>
+                      <div>
+                        <div style={{ fontSize: "16px", fontWeight: "bold" }}>
+                          {userInfo?.user?.member_id}
+                        </div>
+                        <div style={{ fontSize: "12px" }}>
+                          {userInfo?.user?.email}
+                        </div>
 
-            <div className="row ro-cols-4">
-              <div className="col">
-                <div className="card card-body border-0 shadow-sm">
-                  <h6 className="fw-bold my-0">Coin Wallet</h6>
-                  <div className="d-flex">
-                    <div>{userData.coin_wallet}</div>
+                        <div style={{ fontSize: "12px" }}>
+                          <span className="fw-bold text-uppercase">
+                            Sponsor ID :{" "}
+                          </span>
+                          {userData.sponsor_id}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div className="col">
-                <div className="card card-body border-0 shadow-sm">
-                  <h6 className="fw-bold my-0">Income Wallet</h6>
-                  <div className="d-flex">
-                    <div>{userData.income_wallet}</div>
+            </div>
+            <div className="row row-cols-4">
+              {infoArray.map((info) => (
+                <div className="col mb-2">
+                  <div className="card card-body border-0 shadow-sm">
+                    <h6 className="fw-bold my-0">{info.label}</h6>
+                    <div className="d-flex align-items-center">
+                      <div className="mr-2">
+                        <span className="flink-icon text-light">
+                          <span className={info.icon}></span>
+                        </span>
+                      </div>
+                      <div>
+                        <span className="fw-bold fs-5">
+                          {userData[info.field]}
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
+              ))}
+            </div>
+            <div className="my-2">
+              <div className="d-block mb-4 mb-md-0 mb-2">
+                <h2 className="h4 my-0">Level Incomes</h2>
+                <p className="mb-0">Your web analytics dashboard template.</p>
               </div>
-              <div className="col">
-                <div className="card card-body border-0 shadow-sm">
-                  <h6 className="fw-bold my-0">Direct Coins</h6>
-                  <div className="d-flex">
-                    <div>{userData.direct_coin}</div>
-                  </div>
-                </div>
-              </div>
-              <div className="col">
-                <div className="card card-body border-0 shadow-sm">
-                  <h6 className="fw-bold my-0">Total Coins</h6>
-                  <div className="d-flex">
-                    <div>{userData.total_coin}</div>
-                  </div>
-                </div>
-              </div>
+              <DataGrid
+                //loading={loadingData}
+                getRowId={(r) => r._id}
+                rows={tableData}
+                columns={columns}
+                //rowCount={totalUsers}
+                pageSize={10}
+                //rowsPerPageOptions={[10, 25, 25, 50, 100]}
+                //checkboxSelection
+                //paginationMode="server"
+                //onFilterModelChange={onFilterChange}
+                //onPageChange={handlePageChange}
+                autoHeight={true}
+                className="bg-white"
+                //components={{
+                //  Toolbar: CustomToolbar,
+                //}}
+              />
             </div>
           </div>
           <div className="col-lg-3">
-            <div className="card card-body border-0 shadow-sm">
+            <div className="card card-body border shadow-sm">
               <div className="d-flex mb-2 justify-content-between align-items-center">
                 <div style={{ fontSize: "13px", fontWeight: "bold" }}>
                   New Joinings..
                 </div>
 
                 <div>
-                  <Link to="" className="" style={{ fontSize: "12px", fontWeight: "bold" }}>View All</Link>
+                  <Link
+                    to="downlines"
+                    className="text-success"
+                    style={{ fontSize: "12px", fontWeight: "bold" }}
+                  >
+                    View All
+                  </Link>
                 </div>
               </div>
               <div>
-                {newJoinings.map((user) => (
-                  <Link to="" className="d-flex my-2 justify-content-between align-items-center user-item">
+                {directChilds.map((user) => (
+                  <Link
+                    to=""
+                    className="d-flex my-2 justify-content-between align-items-center user-item scale border rounded p-2"
+                  >
                     <div className="d-flex align-items-center">
                       <div className="me-2">
                         <img
@@ -111,11 +214,22 @@ export default function DashboardHome() {
                         <div style={{ fontSize: "13px", fontWeight: "bold" }}>
                           {user.member_id}
                         </div>
-                        <div style={{ fontSize: "10px" }}>{user.name}</div>
+                        <div style={{ fontSize: "10px" }}>{user.email}</div>
                       </div>
                     </div>
                     <div>
-                      <span className="fas fa-angle-right"></span>
+                      {/* <span className={userData.status == 1 ? "fas fa-badge-check" : "fas fa-badge" }></span> */}
+                      {user.status == 1 ? (
+                        <FontAwesomeIcon
+                          className="text-success"
+                          icon={faCheckDouble}
+                        />
+                      ) : (
+                        <FontAwesomeIcon
+                          className="text-warning"
+                          icon={faCheck}
+                        />
+                      )}
                     </div>
                   </Link>
                 ))}

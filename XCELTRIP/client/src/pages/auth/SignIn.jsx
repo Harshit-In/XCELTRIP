@@ -11,15 +11,27 @@ export default function SignIn() {
 
   function authenticateUser(e) {
     e.preventDefault();
-    const formData = getFormData(e.target)
-    console.log(formData);
-    api.post("/signin", formData).then((res)=>{
-      toast.success("Congratulations, you have successfully logged in.")
-      dispatch(login({ isLoggedIn: true, userInfo: res.data }));
-      navigate("../dashboard", { replace: true });
-    }).catch((error)=>{
-      toast.error(error?.response?.data?.message ?? error?.message ?? "OOPs something went wrong.");
-    })
+    const formData = getFormData(e.target);
+    const signinRes = api.post("/signin", formData);
+    toast
+      .promise(signinRes, {
+        loading: "Authenticating member.",
+        success: (data) => {
+          return `Congratulations, you have successfully logged in.`;
+        },
+        error: (err) => {
+          return (
+            err?.response?.data?.errors ??
+            err?.response?.data?.message ??
+            err?.message ??
+            "OOPs something went wrong."
+          );
+        },
+      })
+      .then((data) => {
+        dispatch(login({ isLoggedIn: true, userInfo: data.data }));
+        navigate("../dashboard", { replace: true });
+      });
   }
 
   return (
@@ -28,14 +40,23 @@ export default function SignIn() {
         <div className="container">
           <div
             className="row justify-content-center form-bg-image"
-            data-background-lg="/theme_files/assets/img/illustrations/signin.svg"
+            //data-background-lg="/theme_files/assets/img/illustrations/signin.svg"
+            style={{
+              backgroundImage:
+                "url(/theme_files/assets/img/illustrations/signin.svg)",
+            }}
           >
             <div className="col-12 d-flex align-items-center justify-content-center">
               <div className="signin-inner my-3 my-lg-0 bg-white shadow-soft border rounded border-light p-4 p-lg-5 w-100 fmxw-500">
                 <div className="text-center text-md-center mb-4 mt-md-0">
                   <h1 className="mb-0 h3">Sign in to our platform</h1>
                 </div>
-                <form className="mt-4" onSubmit={(e)=>{authenticateUser(e)}}>
+                <form
+                  className="mt-4"
+                  onSubmit={(e) => {
+                    authenticateUser(e);
+                  }}
+                >
                   <div className="form-group mb-4">
                     <label for="email">Your Email</label>
                     <div className="input-group">
@@ -86,14 +107,17 @@ export default function SignIn() {
                         </label>
                       </div>
                       <div>
-                        <Link to="/forgot-password" className="small text-right">
+                        <Link
+                          to="/forgot-password"
+                          className="small text-right"
+                        >
                           Lost password?
                         </Link>
                       </div>
                     </div>
                   </div>
                   <button type="submit" className="btn btn-block btn-primary">
-                    Sign in
+                    Sign In
                   </button>
                 </form>
                 <div className="mt-3 mb-4 text-center">
@@ -130,7 +154,7 @@ export default function SignIn() {
                 </div>
                 <div className="d-flex justify-content-center align-items-center mt-4">
                   <span className="font-weight-normal">
-                    Not registered? 
+                    Not registered?
                     <Link to="/signup" className="font-weight-bold">
                       Create account
                     </Link>

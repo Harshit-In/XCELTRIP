@@ -3,7 +3,7 @@ import pageContents from "../helpers/page_contents";
 export default function FAQ() {
   const pageContent = pageContents.faq;
   return (
-    <section>
+    <section className="section">
       {pageContent.title && (
         <div className="app-bg-color page-title-area">
           <h1 className="page-title text-center">{pageContent.title}</h1>

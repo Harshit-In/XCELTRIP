@@ -1,4 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import { logout } from "../../redux/User";
 
 export default function DashboardAreaNav() {
@@ -232,23 +233,23 @@ export default function DashboardAreaNav() {
                 </div>
               </a>
               <div className="dropdown-menu dashboard-dropdown dropdown-menu-right mt-2">
-                <a className="dropdown-item font-weight-bold" href="#">
+                <Link className="dropdown-item font-weight-bold" to="profile">
                   <span className="far fa-user-circle"></span>My Profile
-                </a>
-                <a className="dropdown-item font-weight-bold" href="#">
+                </Link>
+                <Link className="dropdown-item font-weight-bold" to="settings">
                   <span className="fas fa-cog"></span>Settings
-                </a>
-                <a className="dropdown-item font-weight-bold" href="#">
+                </Link>
+                <Link className="dropdown-item font-weight-bold" to="messages">
                   <span className="fas fa-envelope-open-text"></span>
                   Messages
-                </a>
-                <a className="dropdown-item font-weight-bold" href="#">
+                </Link>
+                <Link className="dropdown-item font-weight-bold" to="support">
                   <span className="fas fa-user-shield"></span>Support
-                </a>
+                </Link>
                 <div role="separator" className="dropdown-divider"></div>
-                <a
+                <Link
                   className="dropdown-item font-weight-bold"
-                  href="#"
+                  to="#"
                   onClick={(e) => {
                     e.preventDefault();
                     //localStorage.removeItem("exchange_inrx_userID");
@@ -257,7 +258,7 @@ export default function DashboardAreaNav() {
                 >
                   <span className="fas fa-sign-out-alt text-danger"></span>
                   Logout
-                </a>
+                </Link>
               </div>
             </li>
           </ul>

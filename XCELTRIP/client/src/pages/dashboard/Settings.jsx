@@ -1,4 +1,37 @@
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
+import api from "../../utils/api";
+//import Web3 from 'web3'
+
 export default function Settings() {
+  const { isLoggedIn, userInfo } = useSelector((state) => state?.user?.value);
+  const [userData, setUserData] = useState({});
+  const [directChilds, setDirectChilds] = useState([]);
+
+  async function getUsersInfo() {
+    api
+      .post("userInfo", { member_id: userInfo?.user?.member_id })
+      .then((res) => {
+        setUserData({ ...res.data.data });
+        setDirectChilds([...res.data.directChild]);
+      })
+      .catch((error) => {
+        toast.error(
+          error.response.data.message ??
+            error.message ??
+            "OOPs, Something went wrong."
+        );
+      });
+  }
+
+  useEffect(async () => {
+    await getUsersInfo();
+
+    /* Web3 */
+    //const web3 = new Web3('https://bsc-dataseed1.binance.org/')
+    //console.log("web3::",web3);
+  }, []);
   return (
     <>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
@@ -218,17 +251,17 @@ export default function Settings() {
               <div className="card border-light text-center p-0">
                 <div
                   className="profile-cover rounded-top"
-                  data-background="../assets/img/profile-cover.jpg"
+                  data-background="/theme_files/assets/img/profile-cover.jpg"
                 ></div>
                 <div className="card-body pb-5">
                   <img
-                    src="../assets/img/team/profile-picture-1.jpg"
+                    src="/theme_files/assets/img/team/profile-picture-1.jpg"
                     className="user-avatar large-avatar rounded-circle mx-auto mt-n7 mb-4"
                     alt="Neil Portrait"
                   />
-                  <h4 className="h3">Neil Sims</h4>
+                  <h6 className="h6">{userData?.email}</h6>
                   <h5 className="font-weight-normal">
-                    Senior Software Engineer
+                    Current Level : {userData.level}
                   </h5>
                   <p className="text-gray mb-4">New York, USA</p>
                   <a className="btn btn-sm btn-primary mr-2" href="#">
@@ -240,7 +273,8 @@ export default function Settings() {
                 </div>
               </div>
             </div>
-            <div className="col-12">
+            {/* Select6 Profile Picture */}
+            {/* <div className="col-12">
               <div className="card card-body bg-white border-light shadow-sm mb-4">
                 <h2 className="h5 mb-4">Select profile photo</h2>
                 <div className="d-xl-flex align-items-center">
@@ -248,7 +282,7 @@ export default function Settings() {
                     <div className="user-avatar xl-avatar mb-3">
                       <img
                         className="rounded"
-                        src="../assets/img/team/profile-picture-3.jpg"
+                        src="/theme_files/assets/img/team/profile-picture-3.jpg"
                         alt="change avatar"
                       />
                     </div>
@@ -273,7 +307,7 @@ export default function Settings() {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

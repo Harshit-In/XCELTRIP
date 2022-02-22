@@ -5,13 +5,20 @@ import DashboardFooter from "./DashboardFooter";
 import DashboardHome from "./DashboardHome";
 import DashboardSidebar from "./DashboardSidebar";
 import DashboardTrasactions from "./DashboardTransactions";
+import MyDownlines from "./MyDownlines";
+
 import Settings from "./Settings";
+import TopUpWallet from "./TopUpWallet";
+import Widthdraw from "./Widthdraw";
 
 export default function Dashboard() {
   const { page } = useParams();
   const pages = {
     settings: <Settings />,
+    topupwallet: <TopUpWallet />,
     transactions: <DashboardTrasactions />,
+    widthdraw: <Widthdraw />,
+    downlines: <MyDownlines />,
   };
   return (
     <>

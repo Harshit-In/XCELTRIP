@@ -3,7 +3,7 @@ import pageContents from "../helpers/page_contents";
 export default function Services() {
   const pageContent = pageContents.services;
   return (
-    <section>
+    <section className="section">
       {pageContent.title && (
         <div className="app-bg-color page-title-area">
           <h1 className="page-title text-center">{pageContent.title}</h1>
@@ -17,7 +17,7 @@ export default function Services() {
       {pageContent.sections && (
         <div className="container-fluid right-sec">
           <div class="container py-5">
-            <div class="row row-cols-4">
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4">
               {pageContent.sections.map((aboutSec, index) => (
                 <div class="col my-2">
                   <div className="card card-body text-center rounded h-100 rounded-card shadow border-0">

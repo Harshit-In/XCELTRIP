@@ -3,7 +3,7 @@ import pageContents from "../helpers/page_contents";
 export default function About() {
   const pageContent = pageContents.about;
   return (
-    <section>
+    <section className="">
       {pageContent.title && (
         <div className="app-bg-color page-title-area">
           <h1 className="page-title text-center">{pageContent.title}</h1>

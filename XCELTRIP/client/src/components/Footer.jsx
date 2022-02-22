@@ -1,7 +1,78 @@
+import { Link } from "react-router-dom";
+
 export default function Footer() {
+  const socialLinks = [
+    {
+      channel: "support@demo.com",
+      channelLink: "support@demo.com",
+      icon: "fas fa-envelope-open",
+    },
+    {
+      channel: "www.demo.com",
+      channelLink: "https://www.demo.com",
+      icon: "fas fa-globe",
+    },
+  ];
   return (
-    <footer className="footer py-6 bg-primary text-white">
-      <div className="container">
+    <footer className="app-footer-bg text-white">
+      <div className="container" style={{ padding: "60px 40px" }}>
+        <div className="row">
+          <div className="col-md-6 col-lg-4">Column</div>
+          <div className="col-md-6 col-lg-4">
+            <div className="nav-link d-flex align-items-start text-muted my-1 py-0">
+              <div className="me-2">
+                <span className="flink-icon">
+                  <span className="fas fa-map-marker-alt"></span>
+                </span>
+              </div>
+              <div>
+                <p className="my-0 py-0 foot-link">
+                  <strong className="fw-bold">BELCRYPTO</strong>
+                </p>
+                <p className="my-0 py-0 foot-link fs-6">
+                  <small>Global Exchangers HK Ltd</small>
+                </p>
+                <p className="my-0 py-0">
+                  No : 9/F , SilverCord Twr2, CausewayBay, Hong kong.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="col-md-6 col-lg-4">
+            <nav class="nav flex-column">
+              {socialLinks.map((item) => (
+                <Link
+                  className="nav-link d-flex align-items-center text-muted my-1 py-0"
+                  to={item.channelLink}
+                  target="_blank"
+                >
+                  <div className="me-2">
+                    <span className="flink-icon">
+                      <span className={item.icon}></span>
+                    </span>
+                  </div>
+                  <div>{item.channel}</div>
+                </Link>
+              ))}
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div className="container-fluid foot-bottom">
+        <div className="container d-flex justify-content-between align-items-center">
+          <div>Copyrights © 2022. All Rights Reserved</div>
+          <div>
+            <Link to="" className="foot-link">
+              Legal
+            </Link>{" "}
+            |{" "}
+            <Link to="" className="foot-link">
+              Terms &amp; Conditions
+            </Link>
+          </div>
+        </div>
+      </div>
+      {/* <div className="container">
         <div className="row">
           <div className="col-md-4">
             <img
@@ -174,7 +245,7 @@ export default function Footer() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </footer>
   );
 }

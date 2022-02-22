@@ -2,7 +2,7 @@ const express = require('express');
 const {
     requireSignin
 } = require('../common-middleware');
-const { creacteTopup, fundTransferUserToUser, currentInvestment } = require('../Controllers/pinissueController');
+const { creacteTopup, fundTransferUserToUser, currentInvestment, createInvestment } = require('../Controllers/pinissueController');
 
 
 const {
@@ -35,6 +35,7 @@ router.post('/otp_match', otp_match);
 router.post('/change_password', validateSignUpRequest, change_password);
 
 // pin issue and fund 
+router.post('/investment', createInvestment);
 router.post('/createTopup', creacteTopup);
 router.post('/fundTransferUserToUser', fundTransferUserToUser);
 router.post('/currentInvestment', currentInvestment);
