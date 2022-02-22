@@ -6,7 +6,7 @@ const {
 const { updateUserInfo } = require("./userController");
 
 async function createInvestment(req, res) {
-  const Investment = require("../models/investment")
+  const Investment = require("../models/investment");
   const { member_id, trans_hash, amount } = req.body;
 
   try {
@@ -15,7 +15,7 @@ async function createInvestment(req, res) {
       trans_hash,
       amount,
     });
-    invest.save(async(error, data) => {
+    invest.save(async (error, data) => {
       if (error) {
         console.log("Error from: userController >> signup", error.message);
         return res.status(400).json({
@@ -24,13 +24,16 @@ async function createInvestment(req, res) {
         });
       }
       if (data) {
-      const User = require('../models/user')
-      const user =await User.findOne({member_id: member_id})
-      await User.updateOne({member_id: member_id}, {
-        $set: {
-          coin_wallet: Number(user.coin_wallet) + Number(amount)
-        }
-      })
+        const User = require("../models/user");
+        const user = await User.findOne({ member_id: member_id });
+        await User.updateOne(
+          { member_id: member_id },
+          {
+            $set: {
+              coin_wallet: Number(user.coin_wallet) + Number(amount),
+            },
+          }
+        );
         return res.status(200).json({
           message: "investment fund successfully added",
           data: data,
@@ -38,9 +41,30 @@ async function createInvestment(req, res) {
       }
     });
   } catch (error) {
-    console.log("Error From: pinissueController >> createInvestment", error.message)
+    console.log(
+      "Error From: pinissueController >> createInvestment",
+      error.message
+    );
     return res.status(400).json({
-    error: "somthing went wrong"
+      error: "somthing went wrong",
+    });
+  }
+}
+
+async function getcreateInvestment(req, res) {
+  const Investment = require("../models/investment");
+  try {
+    const investment = await Investment.findOne(req.body);
+    return res.status(200).json({
+      data: investment,
+    });
+  } catch (error) {
+    console.log(
+      "Error From: pinissueController >> getcreateInvestment",
+      error.message
+    );
+    return res.status(400).json({
+      error: "somthing went wrong",
     });
   }
 }
@@ -109,7 +133,9 @@ async function referalCommition(member_id, pin_amount) {
           {
             $set: {
               income_wallet:
-                parseInt(user.income_wallet) + parseInt(sponser_profite),
+                parseInt(user.income_wallet) + parseInt(sponser_profite / 2),
+              coin_wallet:
+                parseInt(user.coin_wallet) + parseInt(sponser_profite / 2),
             },
           }
         );
@@ -258,11 +284,9 @@ async function fundTransferUserToUser(req, res) {
       await fundTransferHistory(user_id, downline_id, amount);
       return res.status(200).json({ message: "Fund transfer successfully" });
     } else {
-      return res
-        .status(400)
-        .json({
-          message: `Fund transfer failed, downline[${downline_id}] does not exists.`,
-        });
+      return res.status(400).json({
+        message: `Fund transfer failed, downline[${downline_id}] does not exists.`,
+      });
     }
   } catch (error) {
     console.log(
@@ -299,7 +323,7 @@ async function fundTransferHistory(from, to, amount) {
   }
 }
 
-async function currentInvestment(req, res) {
+async function getTopUpInvestment(req, res) {
   const History = require("../models/History");
   const { member_id } = req.body;
   if (member_id) {
@@ -329,12 +353,11 @@ async function currentInvestment(req, res) {
   return res.status(200).json({ data });
 }
 
-
-
 module.exports = {
   createInvestment,
+  getcreateInvestment,
   creacteTopup,
   referalCommition,
-  currentInvestment,
+  getTopUpInvestment,
   fundTransferUserToUser,
 };
