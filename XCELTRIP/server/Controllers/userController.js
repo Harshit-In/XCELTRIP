@@ -10,46 +10,51 @@ const { sendEmailOtp } = require("../functions/mailer");
 
 async function signup(req, res) {
   try {
-    const user = await User.findOne({ email: req.body.email })
-      if (user)
-        return res.status(400).json({ message: "user already registered" });
-  
-      const { email, sponsor_id, password, confirm_password } = req.body;
-      if (password !== confirm_password) {
+    const user = await User.findOne({ email: req.body.email });
+    if (user)
+      return res.status(400).json({ message: "user already registered" });
+
+    const { email, sponsor_id, password, confirm_password } = req.body;
+    if (password !== confirm_password) {
+      return res.status(400).json({
+        message: "Enter same password",
+      });
+    }
+    const hash = await bcrypt.hash(password, 10);
+    const get_Sponser = await getSponser(sponsor_id);
+    if (get_Sponser == false) {
+      return res
+        .status(400)
+        .json({
+          message:
+            "Invalid sponser Id or Sponser is blocked. Please enter a valid sponser Id",
+        });
+    }
+    const new_id = await getNextId();
+    const _user = new User({
+      member_id: new_id,
+      sponsor_id,
+      email,
+      hash_password: hash,
+    });
+    // const message = `Welcome to FastEarn,"${member_name}", you have been successfully registered with us. Your I'd is "${new_id}" and password is "${password}".Click to login : "{http://myfastearn.in/}" - MYFASTEARN`
+
+    _user.save((error, data) => {
+      if (error) {
+        console.log("Error from: userController >> signup", error.message);
         return res.status(400).json({
-          message: "Enter same password",
+          message: "Somthing went wrong",
+          error: error.message,
         });
       }
-      const hash = await bcrypt.hash(password, 10);
-          const get_Sponser = await getSponser(sponsor_id)
-         if(get_Sponser == false){
-             return res.status(400).json({message: "Invalid sponser Id or Sponser is blocked. Please enter a valid sponser Id"})
-         }
-      const new_id = await getNextId()
-      const _user = new User({
-        member_id: new_id,
-        sponsor_id,
-        email,
-        hash_password: hash,
-      });
-      // const message = `Welcome to FastEarn,"${member_name}", you have been successfully registered with us. Your I'd is "${new_id}" and password is "${password}".Click to login : "{http://myfastearn.in/}" - MYFASTEARN`
-
-      _user.save((error, data) => {
-        if (error) {
-          console.log("Error from: userController >> signup", error.message);
-          return res.status(400).json({
-            message: "Somthing went wrong",
-            error: error.message,
-          });
-        }
-        if (data) {
-          // sendMobileOtp(contact, message)
-          return res.status(200).json({
-            message: "user created successfully",
-            data: data,
-          });
-        }
-      });
+      if (data) {
+        // sendMobileOtp(contact, message)
+        return res.status(200).json({
+          message: "user created successfully",
+          data: data,
+        });
+      }
+    });
   } catch (error) {
     console.log("Error from userController >> signup: ", error.message);
     return res.status(400).json({ message: "Somthing went wrong" });
@@ -61,7 +66,6 @@ async function signin(req, res) {
     User.findOne({ email: req.body.email }).then(async (user, error) => {
       if (error) return res.status(400).json({ error });
       if (user) {
-        
         let isValid = bcrypt.compareSync(req.body.password, user.hash_password);
         if (isValid) {
           const { _id, email, member_id, sponsor_id } = user;
@@ -76,7 +80,7 @@ async function signin(req, res) {
               _id,
               email,
               member_id,
-              sponsor_id
+              sponsor_id,
             },
           });
         } else {
@@ -233,7 +237,6 @@ function sendOtp(email, otp) {
     const message = `Dear User, Your OTP for UserId ${contact} is ${otp} - TEARN`;
     // return sendMobileOtp(contact, message);
     return sendEmailOtp(email, otp);
-
   } catch (error) {
     console.log("Error from userController >> sendOtp: ", error.message);
     return res.status(400).json({ message: "Somthing went wrong" });
@@ -319,6 +322,31 @@ async function blockuser(req, res) {
   }
 }
 
+async function widthdrawl(req, res) {
+  const User = require("../models/user");
+  try {
+    const { member_id, amount } = req.body;
+    const user = await User.findOne({ member_id: member_id });
+    if (user.income_wallet < amount) {
+      return res.status(200).json({ message: "Insufficient Account Balance" });
+    }
+    await User.updateOne(
+      { member_id: member_id },
+      {
+        $set: {
+          widthdrawl: Number(user.income_wallet) + Number(amount),
+          income_wallet: Number(user.income_wallet) - Number(amount),
+        },
+      }
+    );
+    const incomeType = "widthdrawl";
+    await createIncomeHistory(member_id, amount, incomeType);
+    return res.status(200).json({ message: "widthdrawl successfully" });
+  } catch (error) {
+    console.log("Error from: userController >> widthdrawl");
+    return res.status(400).json({ message: "Somthing went wrong" });
+  }
+}
 
 module.exports = {
   signup,
@@ -329,4 +357,5 @@ module.exports = {
   forgetPassword,
   otp_match,
   change_password,
+  widthdrawl
 };

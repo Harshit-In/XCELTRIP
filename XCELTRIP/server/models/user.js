@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
+
 
 const userSchema = new mongoose.Schema(
   {
@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema(
     bep20_wallet: { type: Number, default:0},
     coin_wallet: { type: Number, default:0},
     income_wallet: { type: Number, default:0},
+    widthdrawl: { type: Number, default:0},
     level: { type: Number, default:0},
     status: { type: Number, default: 0},
     direct_coin: { type: Number, default: 0 },

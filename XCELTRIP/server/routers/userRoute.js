@@ -11,7 +11,8 @@ const {
     updateUserInfo,
     forgetPassword,
     otp_match,
-    change_password
+    change_password,
+    widthdrawl
 } = require('../Controllers/userController');
 const { diret_and_direct_childlength } = require('../functions/function');
 const {
@@ -40,6 +41,7 @@ router.post('/getcreateInvestment', getcreateInvestment);
 router.post('/createTopup', creacteTopup);
 router.post('/fundTransferUserToUser', fundTransferUserToUser);
 router.post('/currentInvestment', getTopUpInvestment);
+router.post('/widthdrawl', widthdrawl);
 
 
 // test rout
