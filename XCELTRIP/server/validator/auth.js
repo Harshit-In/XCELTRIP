@@ -8,7 +8,7 @@ exports.validateSignUpRequest = [
     check('password')
     .isLength({ min: 6})
     .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/, "i")
-    .withMessage('password must be at least 6 character long')
+    .withMessage('password must be at least 6 character long and must contains uppercase and lowercase letters.')
 
 ]
 
