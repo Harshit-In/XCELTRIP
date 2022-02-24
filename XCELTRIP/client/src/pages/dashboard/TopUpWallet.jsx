@@ -47,6 +47,7 @@ export default function TopUpWallet() {
     toast.promise(topupRes, {
       loading: "Topup in progress...",
       success: (data) => {
+        getLevelIncome();
         return `Congratulations, topup successful.`;
       },
       error: (err) => {
@@ -68,6 +69,7 @@ export default function TopUpWallet() {
     toast.promise(fundRes, {
       loading: "Fund transfer in progress...",
       success: (data) => {
+        getFundTransferHistory();
         return `Congratulations, you have successfully transfered fund.`;
       },
       error: (err) => {
@@ -127,7 +129,7 @@ export default function TopUpWallet() {
       <div className="row">
         {/* Wallet Topup */}
         <div className="col-lg-6">
-          <div className="d-block mb-4 mb-md-0 mb-2">
+          <div className="d-block mb-2">
             <h2 className="h4 my-0">Topup your Wallet</h2>
           </div>
           <form
@@ -140,6 +142,41 @@ export default function TopUpWallet() {
               name="member_id"
               value={userInfo?.user?.member_id}
             />
+            <div class="d-flex align-items-center">
+              <div className="mr-2">
+                <strong>Topup With : </strong>
+              </div>
+              <div className="mr-2">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="coin_ratio"
+                    id="exampleRadios1"
+                    value="100"
+                    checked
+                  />
+                  <label class="form-check-label m-0" for="exampleRadios1">
+                    100% Coins
+                  </label>
+                </div>
+              </div>
+              <div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="coin_ratio"
+                    id="exampleRadios2"
+                    value="50"
+                  />
+                  <label class="form-check-label m-0" for="exampleRadios2">
+                    50% Coins
+                  </label>
+                </div>
+              </div>
+            </div>
+
             <div class="input-group mb-3">
               <input
                 type="number"
@@ -163,7 +200,7 @@ export default function TopUpWallet() {
         </div>
         {/* FundTransfer */}
         <div className="col-lg-6">
-          <div className="d-block mb-4 mb-md-0 mb-2">
+          <div className="d-block mb-2">
             <h2 className="h4 my-0">Transfer Fund</h2>
           </div>
           <form

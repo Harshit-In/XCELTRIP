@@ -1,5 +1,6 @@
 const sidebarMenus = [
     {title: "Dashboard", icon:"fas fa-chart-pie", page:"/dashboard"},
+    {title: "Add Fund", icon:"fas fa-hand-holding-usd", page:"addfund"},
     {title: "TopUp Wallet", icon:"fas fa-hand-holding-usd", page:"topupwallet"},
     {title: "Transfer Fund", icon:"fas fa-hand-holding-usd", page:"topupwallet"},
     {title: "Widthdraw Amount", icon:"fas fa-hand-holding-usd", page:"widthdraw"},

@@ -6,7 +6,6 @@ const navbarMenus = {
     { title: "About", page: "/about" },
     { title: "Services", page: "/services" },
     { title: "FAQ", page: "/faq" },
-    { title: "Contact", page: "/contact" },
   ],
 };
 export default navbarMenus;

@@ -374,6 +374,32 @@ async function getTopUpInvestment(req, res) {
   return res.status(200).json({ data });
 }
 
+async function fundInvestmentToCoin(req, res) {
+  try {
+    const User = require("../models/user");
+    const { member_id, amount } = req.body;
+    const user = await User.findOne({ member_id: member_id });
+    await User.updateOne(
+      { member_id: member_id },
+      {
+        $set: {
+          coin_wallet: Number(user.coin_wallet) +  Number(amount),
+          investment: Number(user.investment) -  Number(amount),
+        },
+      }
+    );
+    const incomeType = "InvestmentToCoin"
+    await createIncomeHistory(member_id, amount, incomeType);
+  } catch (error) {
+    console.log(
+      "Error From: pinissueController  >> fundInvestmentToCoin",
+      error.message
+    );
+    return res.status(400).json({ message: "Somthing went Wrong" });
+  }
+}
+
+
 module.exports = {
   createInvestment,
   getcreateInvestment,
@@ -381,4 +407,5 @@ module.exports = {
   referalCommition,
   getTopUpInvestment,
   fundTransferUserToUser,
+  fundInvestmentToCoin
 };

@@ -23,12 +23,10 @@ async function signup(req, res) {
     const hash = await bcrypt.hash(password, 10);
     const get_Sponser = await getSponser(sponsor_id);
     if (get_Sponser == false) {
-      return res
-        .status(400)
-        .json({
-          message:
-            "Invalid sponser Id or Sponser is blocked. Please enter a valid sponser Id",
-        });
+      return res.status(400).json({
+        message:
+          "Invalid sponser Id or Sponser is blocked. Please enter a valid sponser Id",
+      });
     }
     const new_id = await getNextId();
     const _user = new User({
@@ -211,7 +209,7 @@ async function forgetPassword(req, res) {
           }
         );
         await sendOtp(user.email, otp);
-        return res.status(200).json({ message: "Otp send on your number" });
+        return res.status(200).json({ message: "Otp send on your email" });
       } else {
         const fopt = await new forget({
           email: user.email,
@@ -234,7 +232,7 @@ async function forgetPassword(req, res) {
 
 function sendOtp(email, otp) {
   try {
-    const message = `Dear User, Your OTP for UserId ${contact} is ${otp} - TEARN`;
+    // const message = `Dear User, Your OTP for UserId ${contact} is ${otp} - TEARN`;
     // return sendMobileOtp(contact, message);
     return sendEmailOtp(email, otp);
   } catch (error) {
@@ -266,11 +264,12 @@ async function change_password(req, res) {
     const User = require("../models/user");
     const { member_id, pass, confirm_pass } = req.body;
     if (pass == confirm_pass) {
+      const hash = await bcrypt.hash(pass, 10);
       await User.updateOne(
         { member_id: member_id },
         {
           $set: {
-            hash_password: confirm_pass,
+            hash_password: hash,
           },
         }
       );
@@ -325,20 +324,34 @@ async function blockuser(req, res) {
 async function widthdrawl(req, res) {
   const User = require("../models/user");
   try {
-    const { member_id, amount } = req.body;
+    const { member_id, amount, wallet_type } = req.body;
     const user = await User.findOne({ member_id: member_id });
+    switch (wallet_type) {
+      case "income_wallet":
+        await User.updateOne(
+          { member_id: member_id },
+          {
+            $set: {
+              widthdrawl: Number(user.income_wallet) + Number(amount),
+              income_wallet: Number(user.income_wallet) - Number(amount),
+            },
+          }
+        );
+      case "cashback_wallet":
+        await User.updateOne(
+          { member_id: member_id },
+          {
+            $set: {
+              widthdrawl: Number(user.income_wallet) + Number(amount),
+              cashback_wallet: Number(user.cashback_wallet) - Number(amount),
+            },
+          }
+        );
+    }
     if (user.income_wallet < amount) {
       return res.status(200).json({ message: "Insufficient Account Balance" });
     }
-    await User.updateOne(
-      { member_id: member_id },
-      {
-        $set: {
-          widthdrawl: Number(user.income_wallet) + Number(amount),
-          income_wallet: Number(user.income_wallet) - Number(amount),
-        },
-      }
-    );
+
     const incomeType = "widthdrawl";
     await createIncomeHistory(member_id, amount, incomeType);
     return res.status(200).json({ message: "widthdrawl successfully" });
@@ -357,5 +370,5 @@ module.exports = {
   forgetPassword,
   otp_match,
   change_password,
-  widthdrawl
+  widthdrawl,
 };

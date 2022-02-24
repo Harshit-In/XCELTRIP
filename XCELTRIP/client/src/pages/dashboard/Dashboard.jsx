@@ -1,5 +1,6 @@
 import { Route, Routes, useParams } from "react-router-dom";
 import DashboardNav from "../../components/DashboardNav";
+import AddFund from "./AddFund";
 import DashboardAreaNav from "./DashboardAreaNav";
 import DashboardFooter from "./DashboardFooter";
 import DashboardHome from "./DashboardHome";
@@ -19,6 +20,7 @@ export default function Dashboard() {
     transactions: <DashboardTrasactions />,
     widthdraw: <Widthdraw />,
     downlines: <MyDownlines />,
+    addfund: <AddFund />,
   };
   return (
     <>

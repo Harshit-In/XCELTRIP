@@ -46,11 +46,12 @@ export default function DashboardHome() {
   ];
 
   const infoArray = [
+    { icon: "fas fa-coins", field: "bep20_wallet", label: "BEP20 Coins" },
+    { icon: "fas fa-coins", field: "investment", label: "Current Investment" },
     { icon: "fas fa-wallet", field: "coin_wallet", label: "Coin Wallet" },
     { icon: "fas fa-wallet", field: "income_wallet", label: "Income Wallet" },
     { icon: "fas fa-coins", field: "direct_coin", label: "Direct Coins" },
     { icon: "fas fa-coins", field: "total_coin", label: "Total Coins" },
-    { icon: "fas fa-coins", field: "total_coin", label: "Current Investment" },
     { icon: "fas fa-users", field: "direct_members", label: "Direct Members" },
     { icon: "fas fa-users", field: "total_members", label: "Total Members" },
     { icon: "fas fa-coins", field: "total_coin", label: "Cashback Earned" },
