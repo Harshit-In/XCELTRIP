@@ -5,7 +5,7 @@ const smtpTransport = require('nodemailer-smtp-transport');
  */
 const testAccount = {
     user: 'harshit.inrx@gmail.com',
-    pass: 'Test@123',
+    pass: 'Test@1234',
     name: 'Globle DIFFI'
 }
 // const from = 'ankursingh0313@yahoo.com'; // if we want to send from aur account
