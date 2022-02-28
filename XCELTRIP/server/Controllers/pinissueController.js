@@ -116,19 +116,17 @@ async function creacteTopup(req, res) {
             }
           );
         } else {
-          return res
-            .status(400)
-            .json({
-              message:
-                "Your coin wallet or BEP20 wallet have Insufficient balance",
-            });
+          return res.status(400).json({
+            message:
+              "Your coin wallet or BEP20 wallet have Insufficient balance",
+          });
         }
       }
       const incomeType = "Topup Income";
 
-      await UpdateAllParent(member_id, 1, amount)
+      await referalCommition(user.member_id, amount)
         .then(() => {
-          referalCommition(user.member_id, amount);
+          UpdateAllParent(member_id, 1, amount);
         })
         .then(() => {
           createCashbackSchema(member_id, amount);
@@ -136,7 +134,9 @@ async function creacteTopup(req, res) {
         .then(() => {
           createIncomeHistory(member_id, amount, incomeType);
         })
-        .then(() => { return res.status(200).json({ message: "Topup successfully" })})
+        .then(() => {
+          return res.status(200).json({ message: "Topup successfully" });
+        });
     } else {
       return res.status(400).json({ message: "User not found." });
     }
@@ -411,7 +411,6 @@ async function fundInvestmentToCoin(req, res) {
     );
     const incomeType = "InvestmentToCoin";
     await createIncomeHistory(member_id, amount, incomeType);
-    return res.status(200).json({ message: `${amount} coins successfully transfered to your coin wallet.` });
   } catch (error) {
     console.log(
       "Error From: pinissueController  >> fundInvestmentToCoin",
