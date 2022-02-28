@@ -6,9 +6,9 @@ exports.validateSignUpRequest = [
       )
     .withMessage('Enter a valid email'),
     check('password')
-    .isLength({ min: 6})
-    .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/, "i")
-    .withMessage('password must be at least 6 character long and must contains uppercase and lowercase letters.')
+    .isLength({ min: 8})
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*]).{8,}$/)
+    .withMessage('password must be at least 8 character long and must contains at least one uppercase, lowercase, special character and number.')
 
 ]
 

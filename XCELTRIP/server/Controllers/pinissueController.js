@@ -95,21 +95,21 @@ async function creacteTopup(req, res) {
               },
             }
           );
-         
         } else {
           return res
             .status(400)
             .json({ message: "Insufficient Account Balance" });
         }
       } else if (coin_ratio == 50) {
-        if ((user.bep20_wallet >= amount/2) && (user.coin_wallet >= amount/2)) {
+        if (user.bep20_wallet >= amount / 2 && user.coin_wallet >= amount / 2) {
           await User.updateOne(
             { member_id: user.member_id },
             {
               $set: {
                 investment: parseInt(user.investment) + parseInt(amount),
-                bep20_wallet: parseInt(user.bep20_wallet) - parseInt(amount/2),
-                coin_wallet: parseInt(user.coin_wallet) - parseInt(amount/2),
+                bep20_wallet:
+                  parseInt(user.bep20_wallet) - parseInt(amount / 2),
+                coin_wallet: parseInt(user.coin_wallet) - parseInt(amount / 2),
                 activation_date: new Date().toISOString(),
                 status: 1,
               },
@@ -118,15 +118,25 @@ async function creacteTopup(req, res) {
         } else {
           return res
             .status(400)
-            .json({ message: "Your coin wallet or BEP20 wallet have Insufficient balance" });
+            .json({
+              message:
+                "Your coin wallet or BEP20 wallet have Insufficient balance",
+            });
         }
       }
       const incomeType = "Topup Income";
-      await UpdateAllParent(member_id, 1, amount);
-      await referalCommition(user.member_id, amount);
-      await createCashbackSchema(member_id, amount);
-      await createIncomeHistory(member_id, amount, incomeType);
-      return res.status(200).json({ message: "Topup successfully" });
+
+      await UpdateAllParent(member_id, 1, amount)
+        .then(() => {
+          referalCommition(user.member_id, amount);
+        })
+        .then(() => {
+          createCashbackSchema(member_id, amount);
+        })
+        .then(() => {
+          createIncomeHistory(member_id, amount, incomeType);
+        })
+        .then(() => { return res.status(200).json({ message: "Topup successfully" })})
     } else {
       return res.status(400).json({ message: "User not found." });
     }
@@ -145,7 +155,7 @@ async function referalCommition(member_id, pin_amount) {
     getAllParent.map(async (data, index) => {
       const percentage = [5, 10, 15, 20, 25, 30];
       const user = await User.findOne({ member_id: data.member_id });
-      console.log(data.member_id)
+      console.log(data.member_id);
       if (index == 0) {
         const sponser_per = percentage[data.level];
         const sponser_profite = (pin_amount * sponser_per) / 100;
@@ -156,8 +166,8 @@ async function referalCommition(member_id, pin_amount) {
             $set: {
               income_wallet:
                 Number(user.income_wallet) + Number(sponser_profite / 2),
-                coin_wallet:
-              Number(user.coin_wallet) + Number(sponser_profite / 2),
+              coin_wallet:
+                Number(user.coin_wallet) + Number(sponser_profite / 2),
             },
           }
         );
@@ -219,9 +229,8 @@ async function createCashbackSchema(member_id, amount) {
 async function getCashback(req, res) {
   try {
     const Cashback = require("../models/cashback");
-    const cash = await Cashback.find(req.body)
-    return res.status(200).json({Data: cash})
-   
+    const cash = await Cashback.find(req.body);
+    return res.status(200).json({ Data: cash });
   } catch (error) {
     console.log("Error from: getCashback", error.message);
   }
@@ -395,12 +404,12 @@ async function fundInvestmentToCoin(req, res) {
       { member_id: member_id },
       {
         $set: {
-          coin_wallet: Number(user.coin_wallet) +  Number(amount),
-          investment: Number(user.investment) -  Number(amount),
+          coin_wallet: Number(user.coin_wallet) + Number(amount),
+          investment: Number(user.investment) - Number(amount),
         },
       }
     );
-    const incomeType = "InvestmentToCoin"
+    const incomeType = "InvestmentToCoin";
     await createIncomeHistory(member_id, amount, incomeType);
   } catch (error) {
     console.log(
@@ -411,7 +420,6 @@ async function fundInvestmentToCoin(req, res) {
   }
 }
 
-
 module.exports = {
   createInvestment,
   getcreateInvestment,
@@ -420,5 +428,5 @@ module.exports = {
   referalCommition,
   getTopUpInvestment,
   fundTransferUserToUser,
-  fundInvestmentToCoin
+  fundInvestmentToCoin,
 };
