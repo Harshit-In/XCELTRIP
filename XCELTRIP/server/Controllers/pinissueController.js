@@ -145,7 +145,7 @@ async function referalCommition(member_id, pin_amount) {
     getAllParent.map(async (data, index) => {
       const percentage = [5, 10, 15, 20, 25, 30];
       const user = await User.findOne({ member_id: data.member_id });
-
+      console.log(data.member_id)
       if (index == 0) {
         const sponser_per = percentage[data.level];
         const sponser_profite = (pin_amount * sponser_per) / 100;
@@ -156,7 +156,7 @@ async function referalCommition(member_id, pin_amount) {
             $set: {
               income_wallet:
                 Number(user.income_wallet) + Number(sponser_profite / 2),
-              coin_wallet:
+                coin_wallet:
               Number(user.coin_wallet) + Number(sponser_profite / 2),
             },
           }
