@@ -2,7 +2,7 @@ const express = require('express');
 const {
     requireSignin
 } = require('../common-middleware');
-const { creacteTopup, fundTransferUserToUser, currentInvestment, createInvestment, getTopUpInvestment, getcreateInvestment, fundInvestmentToCoin } = require('../Controllers/pinissueController');
+const { creacteTopup, fundTransferUserToUser, currentInvestment, createInvestment, getTopUpInvestment, getcreateInvestment, fundInvestmentToCoin, getCashback } = require('../Controllers/pinissueController');
 
 
 const {
@@ -42,6 +42,7 @@ router.post('/createTopup', creacteTopup);
 router.post('/fundTransferUserToUser', fundTransferUserToUser);
 router.post('/currentInvestment', getTopUpInvestment);
 router.post('/widthdrawl', widthdrawl);
+router.post('/getCashback', getCashback);
 router.post('/fundInvestmentToCoin', fundInvestmentToCoin);
 
 

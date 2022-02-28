@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./redux/User";
@@ -17,18 +17,16 @@ const store = configureStore({
 });
 
 ReactDOM.render(
- 
+  <React.StrictMode>
     <Router>
-       <React.StrictMode>
       <Provider store={store}>
         <Suspense fallback={<Loading />}>
           <App />
         </Suspense>
       </Provider>
-      </React.StrictMode>,
-  document.getElementById("root")
-
     </Router>
+  </React.StrictMode>,
+  document.getElementById("root")
 );
 
 // If you want to start measuring performance in your app, pass a function

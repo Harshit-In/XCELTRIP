@@ -28,28 +28,28 @@ export default function Widthdraw() {
     { field: "income_wallet", headerName: "Income Wallet", width: 200 },
     { field: "createdAt", headerName: "Topup Date", type: "date", width: 150 },
   ];
-  
 
   async function widthdrawAmount(e) {
     e.preventDefault();
     const formData = getFormData(e.target);
     console.log(formData);
-    api
-      .post("/createTopup", formData)
-      .then((res) => {
+
+    const fundRes = api.post("/widthdrawl", formData);
+    toast.promise(fundRes, {
+      loading: "widthdrawl in progress...",
+      success: (data) => {
         e.target.reset();
-        toast.success("Congratulations, topup successful.");
-        //dispatch(login({ isLoggedIn: true, userInfo: res.data }));
-        //navigate("../dashboard", { replace: true });
-      })
-      .catch((error) => {
-        toast.error(
-          error?.response?.data?.errors ??
-            error?.response?.data?.message ??
-            error?.message ??
-            "OOPs something went wrong."
+        return `Congratulations, you have successfully widthdrawl.`;
+      },
+      error: (err) => {
+        return (
+          err?.response?.data?.errors ??
+          err?.response?.data?.message ??
+          err?.message ??
+          "OOPs something went wrong."
         );
-      });
+      },
+    });
   }
 
   async function getLevelIncome() {
@@ -103,6 +103,16 @@ export default function Widthdraw() {
                 min="0"
                 required
               />
+              <select
+                class="form-select"
+                id="inputGroupSelect03"
+                aria-label="Example select with button addon"
+                name="wallet_type"
+              >
+                <option selected disabled>Select Wallet</option>
+                <option value="income_wallet">Income Wallet</option>
+                <option value="cashback_wallet">Cashback Wallet</option>
+              </select>
               <button
                 class="btn btn-outline-secondary"
                 type="submit"

@@ -3,6 +3,7 @@ const sidebarMenus = [
     {title: "Add Fund", icon:"fas fa-hand-holding-usd", page:"addfund"},
     {title: "TopUp Wallet", icon:"fas fa-hand-holding-usd", page:"topupwallet"},
     {title: "Transfer Fund", icon:"fas fa-hand-holding-usd", page:"topupwallet"},
+    {title: "Level Incomes", icon:"fas fa-hand-holding-usd", page:"levelincomes"},
     {title: "Widthdraw Amount", icon:"fas fa-hand-holding-usd", page:"widthdraw"},
     {title: "My Downlines", icon:"fas fa-hand-holding-usd", page:"downlines"},
     {title: "Settings", icon:"fas fa-cog", page:"settings"},

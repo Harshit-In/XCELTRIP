@@ -3,6 +3,7 @@ const {
   UpdateAllParent,
   createIncomeHistory,
 } = require("../functions/function");
+const { findOne } = require("../models/user");
 const { updateUserInfo } = require("./userController");
 
 async function createInvestment(req, res) {
@@ -215,6 +216,17 @@ async function createCashbackSchema(member_id, amount) {
   }
 }
 
+async function getCashback(req, res) {
+  try {
+    const Cashback = require("../models/cashback");
+    const cash = await Cashback.find(req.body)
+    return res.status(200).json({Data: cash})
+   
+  } catch (error) {
+    console.log("Error from: getCashback", error.message);
+  }
+}
+
 async function incomDistribute(member_id) {
   const User = require("../models/user");
   try {
@@ -404,6 +416,7 @@ module.exports = {
   createInvestment,
   getcreateInvestment,
   creacteTopup,
+  getCashback,
   referalCommition,
   getTopUpInvestment,
   fundTransferUserToUser,

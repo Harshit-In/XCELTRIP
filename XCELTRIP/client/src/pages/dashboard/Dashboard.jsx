@@ -6,6 +6,7 @@ import DashboardFooter from "./DashboardFooter";
 import DashboardHome from "./DashboardHome";
 import DashboardSidebar from "./DashboardSidebar";
 import DashboardTrasactions from "./DashboardTransactions";
+import LevelIncomes from "./LevelIncomes";
 import MyDownlines from "./MyDownlines";
 
 import Settings from "./Settings";
@@ -21,6 +22,7 @@ export default function Dashboard() {
     widthdraw: <Widthdraw />,
     downlines: <MyDownlines />,
     addfund: <AddFund />,
+    levelincomes: <LevelIncomes />,
   };
   return (
     <>
