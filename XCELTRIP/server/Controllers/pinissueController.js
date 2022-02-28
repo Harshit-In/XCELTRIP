@@ -411,6 +411,7 @@ async function fundInvestmentToCoin(req, res) {
     );
     const incomeType = "InvestmentToCoin";
     await createIncomeHistory(member_id, amount, incomeType);
+    return res.status(200).json({ message: `${amount} coins successfully transfered to your coin wallet.` });
   } catch (error) {
     console.log(
       "Error From: pinissueController  >> fundInvestmentToCoin",
