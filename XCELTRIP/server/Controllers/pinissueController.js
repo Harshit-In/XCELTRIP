@@ -150,16 +150,18 @@ async function referalCommition(member_id, pin_amount) {
     const User = require("../models/user");
     const getAllParent = await incomDistribute(member_id);
     const incomeType = "Incom from downline";
+    console.log("parent: ", getAllParent)
     // console.log("getAllParent", getAllParent);
 
     getAllParent.map(async (data, index) => {
       const percentage = [5, 10, 15, 20, 25, 30];
       const user = await User.findOne({ member_id: data.member_id });
       console.log(data.member_id);
+      console.log(index)
       if (index == 0) {
         const sponser_per = percentage[data.level];
         const sponser_profite = (pin_amount * sponser_per) / 100;
-        // console.log("parent: ",sponser_per, sponser_profite, user.member_id)
+        console.log("parent: ",sponser_per, sponser_profite, user.member_id)
         await User.updateOne(
           { member_id: user.member_id },
           {
@@ -178,7 +180,7 @@ async function referalCommition(member_id, pin_amount) {
             percentage[data.level] - percentage[getAllParent[index - 1].level]
           ];
         const sponser_profite = (pin_amount * sponser_per) / 100;
-        // console.log("unparent: ",sponser_per, sponser_profite, user.member_id)
+        console.log("unparent: ",sponser_per, sponser_profite, user.member_id)
 
         await User.updateOne(
           { member_id: user.member_id },
@@ -264,22 +266,23 @@ async function incomDistribute(member_id) {
 
     if (data && data.length > 0) {
       // return data;
-
+      // console.log("referal",data )
       const referalData = data[0].referal;
       // console.log("referalData: ", referalData)
-      referalData.sort((a, b) => {
-        a.ParentNo > b.ParentNo ? 1 : -1;
-      });
-      let distinctData = [];
-      let lastPaidLevel = null;
-      for (num of referalData) {
-        if (num.ParentNo > lastPaidLevel) {
-          lastPaidLevel = num.ParentNo;
-          distinctData.push(num);
-        }
-      }
-      console.log("distinctData: ", distinctData);
-      return distinctData.filter((item) => item.ParentNo > 0);
+      // referalData.sort((a, b) => {
+      //   a.ParentNo < b.ParentNo ? 1 : -1;
+      // });
+      // console.log("Sort: ",referalData)
+      // let distinctData = [];
+      // let lastPaidLevel = null;
+      // for (num of referalData) {
+      //   if (num.ParentNo > lastPaidLevel) {
+      //     lastPaidLevel = num.ParentNo;
+      //     distinctData.push(num);
+      //   }
+      // }
+      // console.log("distinctData: ", distinctData);
+      return referalData.filter((item) => item.ParentNo > 0);
     } else {
       // console.log("Hello")
       return [];
