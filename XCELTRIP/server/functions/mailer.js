@@ -69,6 +69,17 @@ function sendEmailOtp(to, otp) {
     sendMail({ to, subject, html});
 }
 
+function UserRagistractionMail(to, User_id, password, transuction_password) {
+    console.log(to, User_id, password, transuction_password)
+    const subject = "Globle DIFFI Pool Account Varification Code";
+    const logo_url = 'Globle DIFFI Pool';
+    const website_url = 'https://Globle DIFFI Pool.io/';
+    const website_name = 'Globle DIFFI Pool';
+    const organisation_addr = '<p>211002 STPI Prayagraj</p><p> Uttar Pradesh, India</p>';
+    const title = 'Globle DIFFI Pool.io';
+    const html = generateUserRagistractionHTML(User_id, password, transuction_password, { logo: logo_url, website: website_url, name: website_name, address: organisation_addr, title});
+    sendMail({ to, subject, html});
+}
 
 function generateOtpHTML(otp, info ) {
   let html = '';
@@ -88,13 +99,31 @@ function generateOtpHTML(otp, info ) {
   return html;
 }
 
+function generateUserRagistractionHTML(User_id, password, transuction_password) {
+    let html = '';
+            html = `<div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
+                    <div style="margin:50px auto;width:70%;padding:20px 0">
+                        <div style="border-bottom:1px solid #eee">
+                           <h5 style="font-size:1.4em;color: #00466a;text-decoration:none;font-weight:600">GlobleDiffi</h5>
+                        </div>
+                        <p style="font-size:1.1em">Hi,</p>
+                        <p>Thank you for choosing Globle DIFFI Pool. Your userId: ${User_id}, password: ${password}, and transuction_password: ${transuction_password}</p>
+                      
+                        <p style="font-size:0.9em;">Regards,<br />Globle DIFFI Pool</p>
+                        <hr style="border:none;border-top:1px solid #eee" />
+                    </div>
+                </div>`;
+         
+    return html;
+  }
 
 
 
 
 
 module.exports = {
-  sendEmailOtp
+  sendEmailOtp,
+  UserRagistractionMail
 }
 
 

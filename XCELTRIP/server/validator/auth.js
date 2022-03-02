@@ -5,10 +5,10 @@ exports.validateSignUpRequest = [
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
       )
     .withMessage('Enter a valid email'),
-    check('password')
-    .isLength({ min: 8})
-    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*]).{8,}$/)
-    .withMessage('password must be at least 8 character long and must contains at least one uppercase, lowercase, special character and number.')
+    // check('password')
+    // .isLength({ min: 8})
+    // .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*]).{8,}$/)
+    // .withMessage('password must be at least 8 character long and must contains at least one uppercase, lowercase, special character and number.')
 
 ]
 
