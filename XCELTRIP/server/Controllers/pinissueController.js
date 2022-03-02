@@ -187,7 +187,9 @@ async function referalCommition(member_id, pin_amount) {
           {
             $set: {
               income_wallet:
-                parseInt(user.income_wallet) + parseInt(sponser_profite),
+                Number(user.income_wallet) + Number(sponser_profite / 2),
+              coin_wallet:
+                Number(user.coin_wallet) + Number(sponser_profite / 2),
             },
           }
         );
