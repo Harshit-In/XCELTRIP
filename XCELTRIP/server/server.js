@@ -12,7 +12,6 @@ const app = express();
 const userRoutes = require("./routers/userRoute");
 const adminRoutes = require("./routers/admin/adminRouter");
 
-
 const user = require("./models/user");
 const { main, sendOTP } = require("./functions/mailer");
 
@@ -43,23 +42,31 @@ mongoose
 app.use(bodyParser.json());
 app.use(fileupload({}));
 
-
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use("/api", userRoutes);
 app.use("/api", adminRoutes);
 
-
-
-
 // const to = "harshitdubey1996@gmail.com",
 // const otp = "1234567"
 
 // sendOTP("harshitdubey1996@gmail.com", 1234567)
-
-
-
+/* const { incomDistribute } = require("./Controllers/pinissueController");
+incomDistribute("XCEL1000009").then((allParents) => {
+  let dt = allParents;
+  dt.sort((a, b) => (a.ParentNo > b.ParentNo ? 1 : -1));
+  console.log(dt);
+  let distinctData = [];
+  let lastPaidLevel = null;
+  for (parent of dt) {
+    if (parent.level > lastPaidLevel || lastPaidLevel==null) {
+      lastPaidLevel = parent.level;
+      distinctData.push(parent);
+    }
+  }
+  console.log(distinctData);
+}); */
 
 app.listen(process.env.PORT, () => {
   console.log(`server is running on port ${process.env.PORT}`);

@@ -150,18 +150,29 @@ async function referalCommition(member_id, pin_amount) {
     const User = require("../models/user");
     const getAllParent = await incomDistribute(member_id);
     const incomeType = "Incom from downline";
-    console.log("parent: ", getAllParent)
+    //console.log("parent: ", getAllParent);
     // console.log("getAllParent", getAllParent);
+    let dt = getAllParent;
+    dt.sort((a, b) => (a.ParentNo > b.ParentNo ? 1 : -1));
+    let distinctData = [];
+    let lastPaidLevel = null;
+    for (parent of dt) {
+      if (parent.level > lastPaidLevel || lastPaidLevel == null) {
+        lastPaidLevel = parent.level;
+        distinctData.push(parent);
+      }
+    }
+    //console.log(distinctData);
 
-    getAllParent.map(async (data, index) => {
+    distinctData.map(async (data, index) => {
       const percentage = [5, 10, 15, 20, 25, 30];
       const user = await User.findOne({ member_id: data.member_id });
       console.log(data.member_id);
-      console.log(index)
+      console.log(index);
       if (index == 0) {
         const sponser_per = percentage[data.level];
         const sponser_profite = (pin_amount * sponser_per) / 100;
-        console.log("parent: ",sponser_per, sponser_profite, user.member_id)
+        console.log("parent: ", sponser_per, sponser_profite, user.member_id);
         await User.updateOne(
           { member_id: user.member_id },
           {
@@ -180,7 +191,7 @@ async function referalCommition(member_id, pin_amount) {
             percentage[data.level] - percentage[getAllParent[index - 1].level]
           ];
         const sponser_profite = (pin_amount * sponser_per) / 100;
-        console.log("unparent: ",sponser_per, sponser_profite, user.member_id)
+        console.log("unparent: ", sponser_per, sponser_profite, user.member_id);
 
         await User.updateOne(
           { member_id: user.member_id },
@@ -405,7 +416,7 @@ async function fundInvestmentToCoin(req, res) {
     const User = require("../models/user");
     const { member_id, amount } = req.body;
     const user = await User.findOne({ member_id: member_id });
-    if(user.investment >= amount) {
+    if (user.investment >= amount) {
       await User.updateOne(
         { member_id: member_id },
         {
@@ -417,10 +428,16 @@ async function fundInvestmentToCoin(req, res) {
       );
       const incomeType = "InvestmentToCoin";
       await createIncomeHistory(member_id, amount, incomeType);
-      return res.status(200).json({ message: `You have successfully transfered ${amount} coins to your wallet.` });
+      return res
+        .status(200)
+        .json({
+          message: `You have successfully transfered ${amount} coins to your wallet.`,
+        });
     } else {
-      return res.status(400).json({ message: "You do not have any investment." });
-    } 
+      return res
+        .status(400)
+        .json({ message: "You do not have any investment." });
+    }
   } catch (error) {
     console.log(
       "Error From: pinissueController  >> fundInvestmentToCoin",
@@ -439,4 +456,5 @@ module.exports = {
   getTopUpInvestment,
   fundTransferUserToUser,
   fundInvestmentToCoin,
+  incomDistribute,
 };
