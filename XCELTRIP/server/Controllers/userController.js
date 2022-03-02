@@ -4,22 +4,22 @@ const {
   getSponser,
   getNextId,
   sendMobileOtp,
+  generatePassword,
 } = require("../functions/function");
 const bcrypt = require("bcrypt");
-const { sendEmailOtp } = require("../functions/mailer");
+const { sendEmailOtp, UserRagistractionMail } = require("../functions/mailer");
 
 async function signup(req, res) {
+  console.log(req.body)
+
   try {
     const user = await User.findOne({ email: req.body.email });
     if (user)
       return res.status(400).json({ message: "user already registered" });
 
-    const { email, sponsor_id, password, confirm_password } = req.body;
-    if (password !== confirm_password) {
-      return res.status(400).json({
-        message: "Enter same password",
-      });
-    }
+      const { email, sponsor_id, full_name, xcelpay_wallet, country, mobile } = req.body;
+    const password = await generatePassword();
+    const transcation_password = await generatePassword();
     const hash = await bcrypt.hash(password, 10);
     const get_Sponser = await getSponser(sponsor_id);
     if (get_Sponser == false) {
@@ -31,11 +31,15 @@ async function signup(req, res) {
     const new_id = await getNextId();
     const _user = new User({
       member_id: new_id,
-      sponsor_id,
+      sponsor_id: sponsor_id,
       email,
       hash_password: hash,
+      transcation_password: transcation_password,
+      full_name,
+      xcelpay_wallet,
+      country,
+      mobile,
     });
-    // const message = `Welcome to FastEarn,"${member_name}", you have been successfully registered with us. Your I'd is "${new_id}" and password is "${password}".Click to login : "{http://myfastearn.in/}" - MYFASTEARN`
 
     _user.save((error, data) => {
       if (error) {
@@ -47,6 +51,7 @@ async function signup(req, res) {
       }
       if (data) {
         // sendMobileOtp(contact, message)
+        UserRagistractionMail(email, new_id, password, transcation_password);
         return res.status(200).json({
           message: "user created successfully",
           data: data,

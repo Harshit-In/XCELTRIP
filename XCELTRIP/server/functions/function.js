@@ -6,17 +6,22 @@ async function getNextId() {
   console.log(user)
   const old = user.member_id
   const n = parseInt(old.slice(4)) + 1
-  const next_id = "XCEL" + n
+  const next_id = "GDP" + n
   console.log(next_id)
   return next_id;
 }
 
-async function unique_id() {
-  const id =
-    Date.now().toString(30) +
-    ((Math.random() * 26 + 10) | 0).toString(36).toUpperCase();
-  return id;
+// async function unique_id() {
+//   const id =
+//     Date.now().toString(30) +
+//     ((Math.random() * 26 + 10) | 0).toString(36).toUpperCase();
+//   return id;
+// }
+async function generatePassword() {
+  const random_pass = (Math.random().toString(36).slice(-4).toUpperCase()) + "@" + (Math.random().toString(36).slice(-4))
+  return random_pass
 }
+
 async function getSponser(sponser){
   // console.log(sponser)
   const userName = await User.findOne({member_id: sponser, activeStatus: {$ne : 2} })
@@ -306,7 +311,6 @@ async function updateRoyltyLevel(member_id) {
 
 
 module.exports = {
-  unique_id,
   getNextId,
   getSponser,
   findparent,
@@ -314,5 +318,6 @@ module.exports = {
   sendMobileOtp,
   UpdateAllParent,
   createIncomeHistory,
+  generatePassword,
   diret_and_direct_childlength,
 };

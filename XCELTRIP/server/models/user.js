@@ -4,10 +4,13 @@ const mongoose = require("mongoose");
 const userSchema = new mongoose.Schema(
   {
     member_id: { type: String, unique: true },
-    member_name: { type: String },
+    full_name: { type: String },
     sponsor_id: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    hash_password: { type: String, required: true },
+    hash_password: { type: String },
+    xcelpay_wallet: {type: String, required: true, unique: true },
+    country: { type: String, required: true},
+    mobile: { type: Number, required: true, unique: true },
     investment : { type: Number, default:0},
     bep20_wallet: { type: Number, default:0},
     coin_wallet: { type: Number, default:0},
