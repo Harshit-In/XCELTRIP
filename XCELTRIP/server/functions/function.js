@@ -98,10 +98,11 @@ async function UpdateAllParent(member_id, status, amount) {
       case 1:
         referals.map(async (d) => {
           const user = await User.findOne({ member_id: d.member_id });
-          // console.log(user)
-          Update_user_level(
-            d.member_id,
-          ); // update user level
+        
+            // Update_user_level(
+            //   d.member_id,
+            // );
+          // update user level
           if (d.level == 1) {
             await User.updateOne(
               { member_id: d.member_id },
@@ -114,7 +115,11 @@ async function UpdateAllParent(member_id, status, amount) {
 
                 },
               }
-            );
+            ).then(() => {
+              Update_user_level(
+                d.member_id,
+              );
+            })
           } else {
             await User.updateOne(
               { member_id: d.member_id },
@@ -124,7 +129,11 @@ async function UpdateAllParent(member_id, status, amount) {
                   total_members: parseInt(user.total_members) + 1,
                 },
               }
-            );
+            ).then(() => {
+              Update_user_level(
+                d.member_id,
+              );
+            })
           }
         });
         break;
