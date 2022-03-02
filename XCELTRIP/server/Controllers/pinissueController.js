@@ -405,17 +405,22 @@ async function fundInvestmentToCoin(req, res) {
     const User = require("../models/user");
     const { member_id, amount } = req.body;
     const user = await User.findOne({ member_id: member_id });
-    await User.updateOne(
-      { member_id: member_id },
-      {
-        $set: {
-          coin_wallet: Number(user.coin_wallet) + Number(amount),
-          investment: Number(user.investment) - Number(amount),
-        },
-      }
-    );
-    const incomeType = "InvestmentToCoin";
-    await createIncomeHistory(member_id, amount, incomeType);
+    if(user.investment >= amount) {
+      await User.updateOne(
+        { member_id: member_id },
+        {
+          $set: {
+            coin_wallet: Number(user.coin_wallet) + Number(amount),
+            investment: Number(user.investment) - Number(amount),
+          },
+        }
+      );
+      const incomeType = "InvestmentToCoin";
+      await createIncomeHistory(member_id, amount, incomeType);
+      return res.status(200).json({ message: `You have successfully transfered ${amount} coins to your wallet.` });
+    } else {
+      return res.status(400).json({ message: "You do not have any investment." });
+    } 
   } catch (error) {
     console.log(
       "Error From: pinissueController  >> fundInvestmentToCoin",
