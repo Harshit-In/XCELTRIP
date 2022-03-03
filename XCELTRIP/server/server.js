@@ -14,6 +14,8 @@ const adminRoutes = require("./routers/admin/adminRouter");
 
 const user = require("./models/user");
 const { main, sendOTP } = require("./functions/mailer");
+const { createIncomeHistory } = require("./functions/function");
+const { rCm } = require("./Controllers/pinissueController");
 
 // mongodb+srv://${process.env.MONGO_DB_USER}:${process.env.MONGO_DB_PASSWORD}@cluster0.fqkuj.mongodb.net/${process.env.MONGO_DB_DATABASE}?retryWrites=true&w=majority
 
@@ -67,6 +69,10 @@ incomDistribute("XCEL1000009").then((allParents) => {
   }
   console.log(distinctData);
 }); */
+
+
+
+//rCm("XCEL1000004", 1000);
 
 app.listen(process.env.PORT, () => {
   console.log(`server is running on port ${process.env.PORT}`);
