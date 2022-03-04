@@ -5,7 +5,7 @@ async function getNextId() {
   const user = await User.findOne({}).sort({createdAt: -1});
   console.log(user)
   const old = user.member_id
-  const n = parseInt(old.slice(4)) + 1
+  const n = parseInt(old.slice(3)) + 1
   const next_id = "GDP" + n
   console.log(next_id)
   return next_id;
