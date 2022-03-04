@@ -11,6 +11,7 @@ import MyDownlines from "./MyDownlines";
 
 import Settings from "./Settings";
 import TopUpWallet from "./TopUpWallet";
+import TransferFund from "./TransferFund";
 import Widthdraw from "./Widthdraw";
 
 export default function Dashboard() {
@@ -18,6 +19,7 @@ export default function Dashboard() {
   const pages = {
     settings: <Settings />,
     topupwallet: <TopUpWallet />,
+    transferfund: <TransferFund />,
     transactions: <DashboardTrasactions />,
     widthdraw: <Widthdraw />,
     downlines: <MyDownlines />,

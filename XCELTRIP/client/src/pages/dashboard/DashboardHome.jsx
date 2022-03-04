@@ -25,6 +25,7 @@ import {
   faIdBadge,
 } from "@fortawesome/free-solid-svg-icons";
 import { getFormData } from "../../helpers/helpers";
+import { ranks } from "./data";
 
 export default function DashboardHome() {
   const { isLoggedIn, userInfo } = useSelector((state) => state?.user?.value);
@@ -47,16 +48,25 @@ export default function DashboardHome() {
   ];
 
   const infoArray = [
-    { icon: "fas fa-coins", field: "bep20_wallet", label: "BEP20 Coins" },
-    { icon: "fas fa-coins", field: "investment", label: "Current Investment" },
-    { icon: "fas fa-wallet", field: "coin_wallet", label: "Coin Wallet" },
-    { icon: "fas fa-wallet", field: "income_wallet", label: "Income Wallet" },
+    { icon: "fas fa-coins", field: "bep20_wallet", label: "Smart Wallet" },
+    { icon: "fas fa-coins", field: "investment", label: "Inexpress Wallet" },
+    { icon: "fas fa-wallet", field: "coin_wallet", label: "Vibration Wallet" },
+    {
+      icon: "fas fa-wallet",
+      field: "income_wallet",
+      label: "Cashoneer Wallet",
+    },
     { icon: "fas fa-coins", field: "direct_coin", label: "Direct Coins" },
     { icon: "fas fa-coins", field: "total_coin", label: "Total Coins" },
     { icon: "fas fa-users", field: "direct_members", label: "Direct Members" },
     { icon: "fas fa-users", field: "total_members", label: "Total Members" },
-    { icon: "fas fa-coins", field: "total_coin", label: "Cashback Earned" },
+    {
+      icon: "fas fa-coins",
+      field: "cashback_earned",
+      label: "Moneypal Wallet",
+    },
   ];
+  const percentage = [5, 10, 15, 20, 25, 30];
 
   async function transferToCoinWallet(e) {
     e.preventDefault();
@@ -114,6 +124,8 @@ export default function DashboardHome() {
       });
   }
 
+  
+
   useEffect(async () => {
     await getUsersInfo();
     await getLevelIncome();
@@ -125,7 +137,7 @@ export default function DashboardHome() {
           <div className="col-lg-9">
             <div className="row row-cols-1">
               <div className="col-md-4 mb-2">
-                <div className="card card-body border-0 shadow-sm">
+                <div className="card card-body border-0 shadow-sm px-2 mb-2">
                   <div className="d-flex">
                     <div className="d-flex">
                       <div className="me-2">
@@ -139,16 +151,25 @@ export default function DashboardHome() {
                         <div style={{ fontSize: "16px", fontWeight: "bold" }}>
                           {userInfo?.user?.member_id}
                         </div>
-                        <div style={{ fontSize: "12px" }}>
+                        <div className="fw-bold" style={{ fontSize: "13px" }}>
                           {userInfo?.user?.email}
                         </div>
 
-                        <div style={{ fontSize: "12px" }}>
-                          <span className="fw-bold text-uppercase">
-                            Sponsor ID :{" "}
-                          </span>
-                          {userData.sponsor_id}
-                        </div>
+
+                        <table className="table table-borderless">
+                          <tr>
+                            <th className="p-1">Sponsor ID</th>
+                            <td className="p-1">{`${userData.sponsor_id}`}</td>
+                          </tr>
+                          <tr>
+                            <th className="p-1">Current Level</th>
+                            <td className="p-1">{`${ranks[userData.level]}` ?? "Not Available"}</td>
+                          </tr>
+                          <tr>
+                            <th className="p-1">Income Ratio</th>
+                            <td className="p-1">{`${percentage[userData.level]}%` ?? 0}</td>
+                          </tr>
+                        </table>
                       </div>
                     </div>
                   </div>
@@ -168,7 +189,7 @@ export default function DashboardHome() {
                           </div>
                           <div>
                             <span className="fw-bold fs-5">
-                              {userData[info.field]}
+                              {userData[info.field] ?? 0}
                             </span>
                           </div>
                         </div>
@@ -184,7 +205,7 @@ export default function DashboardHome() {
             <div className="card card-body border shadow-sm mb-2">
               <div className="d-flex mb-2 justify-content-between align-items-center">
                 <div style={{ fontSize: "13px", fontWeight: "bold" }}>
-                  Transfer BEP20 to CoinWallet
+                  Transfer from Inexpress Wallet to Vibration Wallet
                 </div>
               </div>
               <div>

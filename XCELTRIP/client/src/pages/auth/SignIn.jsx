@@ -4,34 +4,45 @@ import { Link, useNavigate } from "react-router-dom";
 import { getFormData } from "../../helpers/helpers";
 import { login } from "../../redux/User";
 import api from "../../utils/api";
+import ReCAPTCHA from "react-google-recaptcha";
+import { createRef } from "react";
 
 export default function SignIn() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const recaptchaRef = createRef();
+  const TEST_SITE_KEY = "";
 
   function authenticateUser(e) {
     e.preventDefault();
-    const formData = getFormData(e.target);
-    const signinRes = api.post("/signin", formData);
-    toast
-      .promise(signinRes, {
-        loading: "Authenticating member.",
-        success: (data) => {
-          return `Congratulations, you have successfully logged in.`;
-        },
-        error: (err) => {
-          return (
-            err?.response?.data?.errors ??
-            err?.response?.data?.message ??
-            err?.message ??
-            "OOPs something went wrong."
-          );
-        },
-      })
-      .then((data) => {
-        dispatch(login({ isLoggedIn: true, userInfo: data.data }));
-        navigate("../dashboard", { replace: true });
-      });
+    const recaptchaValue = recaptchaRef.current.getValue();
+    console.log("recaptcha", recaptchaValue);
+    //e.target.onSubmit(recaptchaValue);
+    if (recaptchaValue) {
+      const formData = getFormData(e.target);
+      const signinRes = api.post("/signin", formData);
+      toast
+        .promise(signinRes, {
+          loading: "Authenticating member.",
+          success: (data) => {
+            return `Congratulations, you have successfully logged in.`;
+          },
+          error: (err) => {
+            return (
+              err?.response?.data?.errors ??
+              err?.response?.data?.message ??
+              err?.message ??
+              "OOPs something went wrong."
+            );
+          },
+        })
+        .then((data) => {
+          dispatch(login({ isLoggedIn: true, userInfo: data.data }));
+          navigate("../dashboard", { replace: true });
+        });
+    } else {
+      toast.error("Please verify captcha.")
+    }
   }
 
   return (
@@ -116,11 +127,23 @@ export default function SignIn() {
                       </div>
                     </div>
                   </div>
+
+                  <div className="form-group mb-4">
+                    <ReCAPTCHA
+                      ref={recaptchaRef}
+                      sitekey="6LfZoqweAAAAADv45cRiERxVOzNE6ZlWbYtl3tcN"
+                      theme="dark"
+                      onChange={(t) => {
+                        console.log("cap", t);
+                      }}
+                    />
+                  </div>
+
                   <button type="submit" className="btn btn-block btn-primary">
                     Sign In
                   </button>
                 </form>
-                <div className="mt-3 mb-4 text-center">
+                {/*  <div className="mt-3 mb-4 text-center">
                   <span className="font-weight-normal">or login with</span>
                 </div>
                 <div className="btn-wrapper my-4 text-center">
@@ -151,7 +174,8 @@ export default function SignIn() {
                   >
                     <span aria-hidden="true" className="fab fa-github"></span>
                   </button>
-                </div>
+                </div> */}
+
                 <div className="d-flex justify-content-center align-items-center mt-4">
                   <span className="font-weight-normal">
                     Not registered?

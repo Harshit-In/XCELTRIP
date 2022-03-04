@@ -86,17 +86,17 @@ async function creacteTopup(req, res) {
 
       if (coin_ratio == 100) {
         if (user.bep20_wallet >= amount) {
-          await User.updateOne(
-            { member_id: user.member_id },
-            {
-              $set: {
-                investment: parseInt(user.investment) + parseInt(amount),
-                bep20_wallet: parseInt(user.bep20_wallet) - parseInt(amount),
-                activation_date: new Date().toISOString(),
-                status: 1,
-              },
-            }
-          );
+          // await User.updateOne(
+          //   { member_id: user.member_id },
+          //   {
+          //     $set: {
+          //       investment: parseInt(user.investment) + parseInt(amount),
+          //       bep20_wallet: parseInt(user.bep20_wallet) - parseInt(amount),
+          //       activation_date: new Date().toISOString(),
+          //       status: 1,
+          //     },
+          //   }
+          // );
         } else {
           return res
             .status(400)
@@ -274,29 +274,18 @@ async function referalCommition(member_id, pin_amount) {
     const User = require("../models/user");
     const getAllParent = await incomDistribute(member_id);
     const incomeType = "Incom from downline";
-    //console.log("parent: ", getAllParent);
+    console.log("parent: ", getAllParent)
     // console.log("getAllParent", getAllParent);
-    let dt = getAllParent;
-    dt.sort((a, b) => (a.ParentNo > b.ParentNo ? 1 : -1));
-    let distinctData = [];
-    let lastPaidLevel = null;
-    for (parent of dt) {
-      if (parent.level > lastPaidLevel || lastPaidLevel == null) {
-        lastPaidLevel = parent.level;
-        distinctData.push(parent);
-      }
-    }
-    //console.log(distinctData);
 
-    distinctData.map(async (data, index) => {
+    getAllParent.map(async (data, index) => {
       const percentage = [5, 10, 15, 20, 25, 30];
       const user = await User.findOne({ member_id: data.member_id });
       console.log(data.member_id);
-      console.log(index);
+      console.log(index)
       if (index == 0) {
         const sponser_per = percentage[data.level];
         const sponser_profite = (pin_amount * sponser_per) / 100;
-        console.log("parent: ", sponser_per, sponser_profite, user.member_id);
+        console.log("parent: ",sponser_per, sponser_profite, user.member_id)
         await User.updateOne(
           { member_id: user.member_id },
           {
@@ -314,8 +303,9 @@ async function referalCommition(member_id, pin_amount) {
           percentage[
             percentage[data.level] - percentage[getAllParent[index - 1].level]
           ];
+          console.log("Data: ", data.level, percentage[getAllParent[index - 1].level])
         const sponser_profite = (pin_amount * sponser_per) / 100;
-        console.log("unparent: ", sponser_per, sponser_profite, user.member_id);
+        console.log("unparent: ",sponser_per, sponser_profite, user.member_id)
 
         await User.updateOne(
           { member_id: user.member_id },
@@ -405,20 +395,20 @@ async function incomDistribute(member_id) {
       // return data;
       // console.log("referal",data )
       const referalData = data[0].referal;
-      // console.log("referalData: ", referalData)
-      // referalData.sort((a, b) => {
-      //   a.ParentNo < b.ParentNo ? 1 : -1;
-      // });
-      // console.log("Sort: ",referalData)
-      // let distinctData = [];
-      // let lastPaidLevel = null;
-      // for (num of referalData) {
-      //   if (num.ParentNo > lastPaidLevel) {
-      //     lastPaidLevel = num.ParentNo;
-      //     distinctData.push(num);
-      //   }
-      // }
-      // console.log("distinctData: ", distinctData);
+      console.log("referalData: ", referalData)
+      referalData.sort((a, b) => {
+        a.ParentNo < b.ParentNo ? 1 : -1;
+      });
+      console.log("Sort: ",referalData)
+      let distinctData = [];
+      let lastPaidLevel = null;
+      for (num of referalData) {
+        if (num.ParentNo > lastPaidLevel) {
+          lastPaidLevel = num.ParentNo;
+          distinctData.push(num);
+        }
+      }
+      console.log("distinctData: ", distinctData);
       return referalData.filter((item) => item.ParentNo > 0);
     } else {
       // console.log("Hello")
@@ -540,7 +530,7 @@ async function fundInvestmentToCoin(req, res) {
     const User = require("../models/user");
     const { member_id, amount } = req.body;
     const user = await User.findOne({ member_id: member_id });
-    if (user.investment >= amount) {
+    if(user.investment >= amount) {
       await User.updateOne(
         { member_id: member_id },
         {
@@ -552,16 +542,10 @@ async function fundInvestmentToCoin(req, res) {
       );
       const incomeType = "InvestmentToCoin";
       await createIncomeHistory(member_id, amount, incomeType);
-      return res
-        .status(200)
-        .json({
-          message: `You have successfully transfered ${amount} coins to your wallet.`,
-        });
+      return res.status(200).json({ message: `You have successfully transfered ${amount} coins to your wallet.` });
     } else {
-      return res
-        .status(400)
-        .json({ message: "You do not have any investment." });
-    }
+      return res.status(400).json({ message: "You do not have any investment." });
+    } 
   } catch (error) {
     console.log(
       "Error From: pinissueController  >> fundInvestmentToCoin",
