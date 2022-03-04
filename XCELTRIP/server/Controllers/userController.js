@@ -5,6 +5,7 @@ const {
   getNextId,
   sendMobileOtp,
   generatePassword,
+  createIncomeHistory,
 } = require("../functions/function");
 const bcrypt = require("bcrypt");
 const { sendEmailOtp, UserRagistractionMail } = require("../functions/mailer");
@@ -331,37 +332,43 @@ async function widthdrawl(req, res) {
   try {
     const { member_id, amount, wallet_type } = req.body;
     const user = await User.findOne({ member_id: member_id });
+  
+   
     switch (wallet_type) {
       case "income_wallet":
+        if (user.income_wallet < amount) {
+          return res.status(200).json({ message: `Insufficient Account Balance in ${wallet_type}` });
+        }
         await User.updateOne(
           { member_id: member_id },
           {
             $set: {
-              widthdrawl: Number(user.income_wallet) + Number(amount),
+              widthdrawl: Number(user.widthdrawl) + Number(amount),
               income_wallet: Number(user.income_wallet) - Number(amount),
             },
           }
         );
+      break;
       case "cashback_wallet":
+        if (user.cashback_wallet < amount) {
+          return res.status(200).json({ message: `Insufficient Account Balance in ${wallet_type}` });
+        }
         await User.updateOne(
           { member_id: member_id },
           {
             $set: {
-              widthdrawl: Number(user.income_wallet) + Number(amount),
+              widthdrawl: Number(user.widthdrawl) + Number(amount),
               cashback_wallet: Number(user.cashback_wallet) - Number(amount),
             },
           }
         );
+      break;
     }
-    if (user.income_wallet < amount) {
-      return res.status(200).json({ message: "Insufficient Account Balance" });
-    }
-
     const incomeType = "widthdrawl";
     await createIncomeHistory(member_id, amount, incomeType);
     return res.status(200).json({ message: "widthdrawl successfully" });
   } catch (error) {
-    console.log("Error from: userController >> widthdrawl");
+    console.log("Error from: userController >> widthdrawl", error);
     return res.status(400).json({ message: "Somthing went wrong" });
   }
 }
