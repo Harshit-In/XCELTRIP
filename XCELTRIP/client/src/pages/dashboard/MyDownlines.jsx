@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import api from "../../utils/api";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
+import Tree from "react-hierarchy-tree-graph";
 import { getFormData } from "../../helpers/helpers";
 
 export default function MyDownlines() {
@@ -68,40 +69,39 @@ export default function MyDownlines() {
       });
   }
   
+  const myTreeData = [
+    {
+      name: 'Top Level',
+      attributes: {
+        keyA: 'val A',
+        keyB: 'val B',
+        keyC: 'val C',
+      },
+      children: [
+        {
+          name: 'Level 2: A',
+          attributes: {
+            keyA: 'val A',
+            keyB: 'val B',
+            keyC: 'val C',
+          },
+        },
+        {
+          name: 'Level 2: B',
+        },
+      ],
+    },
+  ];
 
   useEffect(async () => {
     await getLevelIncome();
   }, []);
   return (
     <div className="container-fluid">
-      <div className="my-3">
-       
-      </div>
-      {/* Widthdrawal History */}
-      <div className="my-3">
-        <div className="d-block mb-4 mb-md-0 mb-2">
-          <h2 className="h4 my-0">Downlines</h2>
-          <p className="mb-0">All your downlines are here...</p>
+      {/*  */}
+      <div id="treeWrapper">
+          <Tree data={myTreeData} />
         </div>
-        <DataGrid
-          //loading={loadingData}
-          getRowId={(r) => r._id}
-          rows={tableData}
-          columns={topupColumns}
-          //rowCount={totalUsers}
-          pageSize={10}
-          //rowsPerPageOptions={[10, 25, 25, 50, 100]}
-          //checkboxSelection
-          //paginationMode="server"
-          //onFilterModelChange={onFilterChange}
-          //onPageChange={handlePageChange}
-          autoHeight={true}
-          className="bg-white"
-          //components={{
-          //  Toolbar: CustomToolbar,
-          //}}
-        />
-      </div>
     </div>
   );
 }

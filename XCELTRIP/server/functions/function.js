@@ -185,7 +185,7 @@ async function Update_user_level(member_id) {
     const userInfo = await user.findOne({ member_id: member_id });
     const currentLevel = userInfo.level;
     /* Update Lavel */
-    let newLevel = 0
+    let newLevel = currentLevel ? currentLevel : 0;
     if (userInfo.direct_coin >= 10000 && currentLevel < 5) {
       if (currentLevel == 4 && ( userInfo.direct_coin >= 500000 ||userInfo.total_coin >= 10000000)) {
         updateRoyltyLevel(member_id)
