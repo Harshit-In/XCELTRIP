@@ -6,6 +6,7 @@ const {
   userInfo,
   getIncomeHistory,
   getFundTransferHistory,
+  getDashboardData,
   
 } = require("../../Controllers/admin/adminController");
 const { blockuser } = require("../../Controllers/userController");
@@ -17,6 +18,7 @@ router.post("/admin/blockuser", blockuser); // block user
 router.post("/userInfo", userInfo);
 router.post("/getIncomeHistory", getIncomeHistory); // getIncome_History
 router.post("/getFundTransferHistory", getFundTransferHistory); // getFundTransferHistory
+router.get("/dashboarddata", getDashboardData);
 
 
 

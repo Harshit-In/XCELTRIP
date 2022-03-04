@@ -163,6 +163,48 @@ async function getFundTransferHistory(req, res) {
   }
 }
 
+async function getDashboardData(req, res) {
+  const UserModal = require("../../models/user");
+  const HistoryModal = require("../../models/History")
+  const levelWiseMemberCount = await UserModal.aggregate([
+    {
+      $group: {
+        _id:{ level: "$level"},
+        memberLevel: { $first: "$level" },
+        membersCount: {$sum : 1}
+      }
+    }
+  ])
+  const membersCount = await UserModal.aggregate([
+    {
+      $group: {
+        _id:{ level: "$status"},
+        memberStatus: { $first: "$status" },
+        membersCount: {$sum : 1}
+      }
+    }
+  ])
+  const totalInvestment = await UserModal.aggregate([
+    {
+      $group: {
+        _id:null,
+        totalInvestment: {$sum :  "$investment" }
+      }
+    }
+  ])
+
+  const totalWidthdrawl = await UserModal.aggregate([
+    {$match:{income_type: "widthdrawl"}},
+    {
+      $group: {
+        _id:null,
+        totalWidthdrawl: {$sum :  "$amount" }
+      }
+    }
+  ])
+  return res.status(200).json({levelWiseMemberCount, membersCount, totalInvestment, totalWidthdrawl}); 
+}
+
 
 
 module.exports = {
@@ -170,5 +212,6 @@ module.exports = {
   signin,
   userInfo,
   getIncomeHistory,
-  getFundTransferHistory
+  getFundTransferHistory,
+  getDashboardData
 };
