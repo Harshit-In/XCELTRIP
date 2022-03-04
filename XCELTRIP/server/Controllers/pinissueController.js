@@ -6,6 +6,8 @@ const {
 const { findOne } = require("../models/user");
 const { updateUserInfo } = require("./userController");
 
+
+
 async function createInvestment(req, res) {
   const Investment = require("../models/investment");
   const { member_id, trans_hash, amount } = req.body;
@@ -124,7 +126,7 @@ async function creacteTopup(req, res) {
       }
       const incomeType = "Topup Income";
 
-      await referalCommition(user.member_id, amount)
+      await rCm(user.member_id, amount)
         .then(() => {
           UpdateAllParent(member_id, 1, amount);
         })
@@ -144,6 +146,7 @@ async function creacteTopup(req, res) {
     return res.status(400).json({ message: error.message });
   }
 }
+
 
 async function rCm(memberID, amount) {
   try {
@@ -264,6 +267,7 @@ async function rCm(memberID, amount) {
     console.log("rCm function :: ",err.message);
   }
 }
+
 
 async function referalCommition(member_id, pin_amount) {
   try {
