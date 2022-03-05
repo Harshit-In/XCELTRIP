@@ -36,7 +36,7 @@ async function signup(req, res) {
       email,
       password: password,
       hash_password: hash,
-      transcation_password: transcation_password,
+      txn_password: transcation_password,
       full_name,
       xcelpay_wallet,
       country,
