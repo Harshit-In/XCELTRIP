@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema(
     full_name: { type: String },
     sponsor_id: { type: String, required: true },
     email: { type: String, required: true, unique: true },
+    password: { type: String },
     hash_password: { type: String },
     xcelpay_wallet: {type: String, required: true, unique: true },
     country: { type: String, required: true},

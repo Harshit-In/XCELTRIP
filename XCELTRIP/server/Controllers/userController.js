@@ -34,6 +34,7 @@ async function signup(req, res) {
       member_id: new_id,
       sponsor_id: sponsor_id,
       email,
+      password: password,
       hash_password: hash,
       transcation_password: transcation_password,
       full_name,
