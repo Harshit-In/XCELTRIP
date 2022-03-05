@@ -5,7 +5,7 @@ async function getNextId() {
   const user = await User.findOne({}).sort({createdAt: -1});
   console.log(user)
   const old = user.member_id
-  const n = parseInt(old.slice(3)) + 1
+  const n = parseInt(old.slice(3)) + (Math.floor(Math.random() * 100)).toString()
   const next_id = "GDP" + n
   console.log(next_id)
   return next_id;
@@ -18,7 +18,7 @@ async function getNextId() {
 //   return id;
 // }
 async function generatePassword() {
-  const random_pass = (Math.random().toString(36).slice(-4).toUpperCase()) + "@" + (Math.random().toString(36).slice(-4))
+  const random_pass = (Math.floor(Math.random() * 1000000) + 1000000).toString()
   return random_pass
 }
 
