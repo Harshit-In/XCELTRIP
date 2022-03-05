@@ -555,6 +555,10 @@ async function fundInvestmentToCoin(req, res) {
   }
 }
 
+async function valaidateTransaction() {
+  
+} 
+
 module.exports = {
   createInvestment,
   getcreateInvestment,
