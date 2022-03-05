@@ -28,12 +28,12 @@ const router = express.Router();
 
 
 // authantication 
-router.post('/signup', validateSignUpRequest, isRequestValidated, signup);
+router.post('/signup',  signup);
 router.post('/signin', validateSignInRequest, isRequestValidated, signin);
 router.post('/updateUserInfo', requireSignin, updateUserInfo);
 router.post('/forgot', forgetPassword);
 router.post('/otp_match', otp_match);
-router.post('/change_password', validateSignUpRequest, change_password);
+router.post('/change_password', validateSignUpRequest, isRequestValidated, change_password);
 
 // pin issue and fund 
 router.post('/investment', createInvestment);
