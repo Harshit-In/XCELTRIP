@@ -124,8 +124,6 @@ export default function DashboardHome() {
       });
   }
 
-  
-
   useEffect(async () => {
     await getUsersInfo();
     await getLevelIncome();
@@ -155,7 +153,6 @@ export default function DashboardHome() {
                           {userInfo?.user?.email}
                         </div>
 
-
                         <table className="table table-borderless">
                           <tr>
                             <th className="p-1">Sponsor ID</th>
@@ -163,11 +160,15 @@ export default function DashboardHome() {
                           </tr>
                           <tr>
                             <th className="p-1">Current Level</th>
-                            <td className="p-1">{`${ranks[userData.level]}` ?? "Not Available"}</td>
+                            <td className="p-1">
+                              {`${ranks[userData.level]}` ?? "Not Available"}
+                            </td>
                           </tr>
                           <tr>
                             <th className="p-1">Income Ratio</th>
-                            <td className="p-1">{`${percentage[userData.level]}%` ?? 0}</td>
+                            <td className="p-1">
+                              {`${percentage[userData.level]}%` ?? 0}
+                            </td>
                           </tr>
                         </table>
                       </div>
@@ -230,75 +231,35 @@ export default function DashboardHome() {
                       min="0"
                       required
                     />
-                    <button
+                    {/* <button
                       class="btn btn-outline-secondary"
                       type="submit"
                       id="button-addon2"
                     >
                       Transfer
+                    </button> */}
+                  </div>
+
+                  <div class="input-group mb-3">
+                    <input
+                      type="password"
+                      name="txn_password"
+                      class="form-control"
+                      placeholder="Transaction Password"
+                      aria-label="Transaction Password"
+                      aria-describedby="button-addon2"
+                      min="0"
+                      required
+                    />
+                    <button
+                      class="btn btn-outline-secondary"
+                      type="submit"
+                      id="button-addon2"
+                    >
+                      Make Transaction
                     </button>
                   </div>
                 </form>
-              </div>
-            </div>
-          </div>
-        </div>
-        {/*  */}
-        <div className="row">
-          <div className="col-lg-3">
-            <div className="card card-body border shadow-sm">
-              <div className="d-flex mb-2 justify-content-between align-items-center">
-                <div style={{ fontSize: "13px", fontWeight: "bold" }}>
-                  New Joinings..
-                </div>
-
-                <div>
-                  <Link
-                    to="downlines"
-                    className="text-success"
-                    style={{ fontSize: "12px", fontWeight: "bold" }}
-                  >
-                    View All
-                  </Link>
-                </div>
-              </div>
-              <div>
-                {directChilds.map((user) => (
-                  <Link
-                    to=""
-                    className="d-flex my-2 justify-content-between align-items-center user-item scale border rounded p-2"
-                  >
-                    <div className="d-flex align-items-center">
-                      <div className="me-2">
-                        <img
-                          class="user-avatar md-avatar rounded-circle"
-                          alt="Image placeholder"
-                          src="/theme_files/assets/img/team/profile-picture-3.jpg"
-                        />
-                      </div>
-                      <div>
-                        <div style={{ fontSize: "13px", fontWeight: "bold" }}>
-                          {user.member_id}
-                        </div>
-                        <div style={{ fontSize: "10px" }}>{user.email}</div>
-                      </div>
-                    </div>
-                    <div>
-                      {/* <span className={userData.status == 1 ? "fas fa-badge-check" : "fas fa-badge" }></span> */}
-                      {user.status == 1 ? (
-                        <FontAwesomeIcon
-                          className="text-success"
-                          icon={faCheckDouble}
-                        />
-                      ) : (
-                        <FontAwesomeIcon
-                          className="text-warning"
-                          icon={faCheck}
-                        />
-                      )}
-                    </div>
-                  </Link>
-                ))}
               </div>
             </div>
           </div>

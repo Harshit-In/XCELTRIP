@@ -141,12 +141,32 @@ export default function TopUpWallet() {
                 min="0"
                 required
               />
-              <button
+              {/* <button
                 class="btn btn-outline-secondary"
                 type="submit"
                 id="button-addon2"
               >
                 Topup Wallet
+              </button> */}
+            </div>
+
+            <div class="input-group mb-3">
+              <input
+                type="password"
+                name="txn_password"
+                class="form-control"
+                placeholder="Transaction Password"
+                aria-label="Transaction Password"
+                aria-describedby="button-addon2"
+                min="0"
+                required
+              />
+              <button
+                class="btn btn-outline-secondary"
+                type="submit"
+                id="button-addon2"
+              >
+                Make Transaction
               </button>
             </div>
           </form>

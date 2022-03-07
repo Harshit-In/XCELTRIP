@@ -5,18 +5,51 @@ const pageContents = {
     description: "",
     sections: [
       {
-        banner: "/theme_files/assets/img-1.webp",
+        banner: "/theme_files/yamgo/paid-daily-activities.png",
         descriptions: [
           {
-            title: "What is GCChub?",
-            subtitle: "A Bridge Connecting Right Projects with Right People",
+            title: "Why GCChub?",
+            subtitle: "Leap Into The Future Of Finance",
             description:
-              "GCChub identifies the right projects that have high growth potential and connects them with a single, large, and powerful community, thereby aiding the development of both the people and the project. GCChub is a decade long dream of a few crypto enthusiasts which started with people in the order of tens and has now grown to become a globally recognized community with thousands of members from multiple countries. It is the culmination of the efforts of people who’ve learned through experience and pooled in their resources, knowledge to establish a unified and organized community for the development of one and the whole.",
+              "The future of finance or in the words of the IMF, the ‘next step in the evolution of money,’ is crypto, and we believe GCChub will lead us to that future. GCChub brings you information as and when they happen, guides you through the latest developments in the industry, and helps make decisions based on facts and expert opinions within the community. Whether it be trading strategies, market developments, technological developments, government policies, or anything related to crypto, you get to know it all through our experts and make informed decisions.",
           },
         ],
       },
       {
-        banner: "/theme_files/assets/img-2.webp",
+        banner: "/theme_files/yamgo/yamgo-earn-daily-rewards.png",
+        descriptions: [
+          {
+            title: "Why GCChub?",
+            subtitle: "Leap Into The Future Of Finance",
+            description:
+              "The future of finance or in the words of the IMF, the ‘next step in the evolution of money,’ is crypto, and we believe GCChub will lead us to that future. GCChub brings you information as and when they happen, guides you through the latest developments in the industry, and helps make decisions based on facts and expert opinions within the community. Whether it be trading strategies, market developments, technological developments, government policies, or anything related to crypto, you get to know it all through our experts and make informed decisions.",
+          },
+        ],
+      },
+      {
+        banner: "/theme_files/yamgo/how-it-works.png",
+        descriptions: [
+          {
+            title: "Why GCChub?",
+            subtitle: "Leap Into The Future Of Finance",
+            description:
+              "The future of finance or in the words of the IMF, the ‘next step in the evolution of money,’ is crypto, and we believe GCChub will lead us to that future. GCChub brings you information as and when they happen, guides you through the latest developments in the industry, and helps make decisions based on facts and expert opinions within the community. Whether it be trading strategies, market developments, technological developments, government policies, or anything related to crypto, you get to know it all through our experts and make informed decisions.",
+          },
+        ],
+      },
+      {
+        banner: "/theme_files/yamgo/yamgo-sign-up.png",
+        descriptions: [
+          {
+            title: "Why GCChub?",
+            subtitle: "Leap Into The Future Of Finance",
+            description:
+              "The future of finance or in the words of the IMF, the ‘next step in the evolution of money,’ is crypto, and we believe GCChub will lead us to that future. GCChub brings you information as and when they happen, guides you through the latest developments in the industry, and helps make decisions based on facts and expert opinions within the community. Whether it be trading strategies, market developments, technological developments, government policies, or anything related to crypto, you get to know it all through our experts and make informed decisions.",
+          },
+        ],
+      },
+      {
+        banner: "/theme_files/yamgo/free-hbar.png",
         descriptions: [
           {
             title: "Why GCChub?",
