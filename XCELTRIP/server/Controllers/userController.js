@@ -6,6 +6,7 @@ const {
   sendMobileOtp,
   generatePassword,
   createIncomeHistory,
+  updateParentTeam,
 } = require("../functions/function");
 const bcrypt = require("bcrypt");
 const { sendEmailOtp, UserRagistractionMail } = require("../functions/mailer");
@@ -43,7 +44,7 @@ async function signup(req, res) {
       mobile,
     });
 
-    _user.save((error, data) => {
+    _user.save(async(error, data) => {
       if (error) {
         console.log("Error from: userController >> signup", error.message);
         return res.status(400).json({
@@ -53,7 +54,8 @@ async function signup(req, res) {
       }
       if (data) {
         // sendMobileOtp(contact, message)
-        UserRagistractionMail(email, new_id, password, transcation_password);
+        await UserRagistractionMail(email, new_id, password, transcation_password);
+        await updateParentTeam(new_id, 1)
         return res.status(200).json({
           message: "user created successfully",
           data: data,

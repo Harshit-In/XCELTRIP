@@ -24,7 +24,7 @@ exports.isRequestValidated = (req, res, next) => {
   next();
 };
 
-exports.validateTransaction = async (req, res, next) => {
+exports.validateTransaction = async(req, res, next) => {
   const UserModal = require("../models/user");
   const { member_id, txn_password } = req.body;
   const user = await UserModal.findOne({
@@ -40,4 +40,5 @@ exports.validateTransaction = async (req, res, next) => {
     });
   }
   next();
+  
 };

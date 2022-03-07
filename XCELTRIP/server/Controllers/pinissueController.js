@@ -86,17 +86,17 @@ async function creacteTopup(req, res) {
 
       if (coin_ratio == 100) {
         if (user.bep20_wallet >= amount) {
-          // await User.updateOne(
-          //   { member_id: user.member_id },
-          //   {
-          //     $set: {
-          //       investment: parseInt(user.investment) + parseInt(amount),
-          //       bep20_wallet: parseInt(user.bep20_wallet) - parseInt(amount),
-          //       activation_date: new Date().toISOString(),
-          //       status: 1,
-          //     },
-          //   }
-          // );
+          await User.updateOne(
+            { member_id: user.member_id },
+            {
+              $set: {
+                investment: parseInt(user.investment) + parseInt(amount),
+                bep20_wallet: parseInt(user.bep20_wallet) - parseInt(amount),
+                activation_date: new Date().toISOString(),
+                status: 1,
+              },
+            }
+          );
         } else {
           return res
             .status(400)

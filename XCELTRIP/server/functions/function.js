@@ -5,7 +5,7 @@ async function getNextId() {
   const user = await User.findOne({}).sort({createdAt: -1});
   console.log(user)
   const old = user.member_id
-  const n = parseInt(old.slice(3)) + (Math.floor(Math.random() * 100)).toString()
+  const n = parseInt(old.slice(3)) + Number((Math.floor(Math.random() * 100)).toString())
   const next_id = "GDP" + n
   console.log(next_id)
   return next_id;
@@ -95,7 +95,6 @@ async function findparent(member_id) {
 async function UpdateAllParent(member_id, status, amount) {
   try {
     const User = require("../models/user");
-
     const Allparent = await findparent(member_id);
     const referals = Allparent[0].referal.filter((item) => item.level != 0);
     // console.log(referals);
@@ -115,9 +114,6 @@ async function UpdateAllParent(member_id, status, amount) {
                 $set: {
                   direct_coin: parseInt(user.direct_coin) + parseInt(amount),
                   total_coin: parseInt(user.total_coin) + parseInt(amount),
-                  direct_members: parseInt(user.direct_members) + 1,
-                  total_members: parseInt(user.total_members) + 1,
-
                 },
               }
             ).then(() => {
@@ -131,7 +127,6 @@ async function UpdateAllParent(member_id, status, amount) {
               {
                 $set: {
                   total_coin: parseInt(user.total_coin) + parseInt(amount),
-                  total_members: parseInt(user.total_members) + 1,
                 },
               }
             ).then(() => {
@@ -152,8 +147,6 @@ async function UpdateAllParent(member_id, status, amount) {
                 $set: {
                   direct_coin: parseInt(user.direct_coin) - parseInt(amount),
                   total_coin: parseInt(user.total_coin) - parseInt(amount),
-                  direct_members: parseInt(user.direct_members) - 1,
-                  total_members: parseInt(user.total_members) - 1,
                 },
               }
             );
@@ -163,7 +156,6 @@ async function UpdateAllParent(member_id, status, amount) {
               {
                 $set: {
                   total_coin: parseInt(user.total_coin) - parseInt(amount),
-                  total_members: parseInt(user.total_members) - 1,
                 },
               }
             );
@@ -188,20 +180,20 @@ async function Update_user_level(member_id) {
     let newLevel = currentLevel ? currentLevel : 0;
     if (userInfo.direct_coin >= 10000 && currentLevel < 5) {
       if (( userInfo.direct_coin >= 500000 && userInfo.total_coin >= 10000000)) {
-        updateRoyltyLevel(member_id)
+        await createRoyltySchema(member_id, 5)
         newLevel = 5;
       }
-      if (( userInfo.direct_coin >= 100000 && userInfo.total_coin >= 2500000)) {
-        createRoyltySchema(member_id)
+      else if (( userInfo.direct_coin >= 100000 && userInfo.total_coin >= 2500000)) {
+        await createRoyltySchema(member_id, 4)
         newLevel = 4;
       }
-      if (( userInfo.direct_coin >= 50000 && userInfo.total_coin >= 500000)) {
+      else if (( userInfo.direct_coin >= 50000 && userInfo.total_coin >= 500000)) {
         newLevel = 3;
       }
-      if (( userInfo.direct_coin >= 25000 && userInfo.total_coin >= 100000)) {
+      else if (( userInfo.direct_coin >= 25000 && userInfo.total_coin >= 100000)) {
         newLevel = 2;
       }
-      if (( userInfo.direct_coin >= 10000 && userInfo.total_coin >= 50000)) {
+      else if (( userInfo.direct_coin >= 10000 && userInfo.total_coin >= 50000)) {
         newLevel = 1;
       }
     }
@@ -274,41 +266,116 @@ async function createIncomeHistory(member_id, amount, incomeType) {
     }
 }
 
-async function createRoyltySchema(member_id){
+async function createRoyltySchema(member_id, level){
   try{
     const Royalty = require("../models/royalty")
     const User = require("../models/user")
+    const incomeType = "royalty"
     const user = await User.findOne({ member_id: member_id})
-    const royalty = new Royalty({
-      member_id: member_id,
-      level: user.level,
-      income_type: incomeType,
-      royalty_amount,
-    })
-    royalty.save((error, data) => {
-      if (error) {
-        console.log("Error from: function.js >> createIncomeHistory", error);
-      }
-      if (data) {
-        console.log("success");
-      }
-    });
+    if(!user) {
+      await Royalty.updateOne({member_id: member_id},{
+        $set: {
+          level: 5
+        }
+      })
+    } else {
+      const royalty = new Royalty({
+        member_id: member_id,
+        level: level,
+        income_type: incomeType,
+      })
+      royalty.save((error, data) => {
+        if (error) {
+          console.log("Error from: function.js >> createIncomeHistory", error);
+        }
+        if (data) {
+          console.log("data: ", data)
+          console.log("royalty Schema create successfully ");
+        }
+      });
+    }
 
   } catch(error) {
     console.log("Error from: function.js >> createIncomeHistory", error.message)
   }
 }
 
-async function updateRoyltyLevel(member_id) {
-  const Royalty = require("../models/royalty")
-  await updateOne({member_id: member_id},{
-    $set: {
-      level: 5
+// async function updateRoyltyLevel(member_id) {
+//   const Royalty = require("../models/royalty")
+//   await Royalty.updateOne({member_id: member_id},{
+//     $set: {
+//       level: 5
+//     }
+//   })
+// }
+
+
+async function updateParentTeam(member_id, status) {
+  try {
+    const User = require("../models/user");
+    const Allparent = await findparent(member_id);
+    const referals = Allparent[0].referal.filter((item) => item.level != 0);
+    // console.log(referals);
+    switch (status) {
+      case 1:
+        referals.map(async (d) => {
+          const user = await User.findOne({ member_id: d.member_id });
+          if (d.level == 1) {
+            await User.updateOne(
+              { member_id: d.member_id },
+              {
+                $set: {
+                  direct_members: parseInt(user.direct_members) + 1,
+                  total_members: parseInt(user.total_members) + 1,
+
+                },
+              }
+            )
+          } else {
+            await User.updateOne(
+              { member_id: d.member_id },
+              {
+                $set: {
+                  total_members: parseInt(user.total_members) + 1,
+                },
+              }
+            )
+          }
+        });
+        break;
+      case -1:
+        referals.map(async (d) => {
+          const user = await User.findOne({ member_id: d.member_id });
+          if (d.level == 0) {
+            await User.updateOne(
+              { member_id: d.member_id },
+              {
+                $set: {
+                  direct_members: parseInt(user.direct_members) - 1,
+                  total_members: parseInt(user.total_members) - 1,
+                },
+              }
+            );
+          } else {
+            await User.updateOne(
+              { member_id: d.member_id },
+              {
+                $set: {
+                  total_members: parseInt(user.total_members) - 1,
+                },
+              }
+            );
+          }
+        });
+        break;
     }
-  })
+  } catch (error) {
+    return console.log(
+      "Error from: functions >> function >> updateParentTeam ",
+      error.message
+    );
+  }
 }
-
-
 
 module.exports = {
   getNextId,
@@ -319,5 +386,6 @@ module.exports = {
   UpdateAllParent,
   createIncomeHistory,
   generatePassword,
+  updateParentTeam,
   diret_and_direct_childlength,
 };
