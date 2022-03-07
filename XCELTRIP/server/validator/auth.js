@@ -24,20 +24,20 @@ exports.isRequestValidated = (req, res, next) => {
   next();
 };
 
-exports.validateTransaction = (req, res, next) => {
+exports.validateTransaction = async (req, res, next) => {
   const UserModal = require("../models/user");
   const { member_id, txn_password } = req.body;
   const user = await UserModal.findOne({
     member_id: member_id,
     txn_password: txn_password,
   });
-  if (user) {
-    next();
-  }
-  return res
+  if (!user) {
+    return res
     .status(400)
     .json({
       message:
         "Transaction verification failed, incorrect transaction password try again.",
     });
+  }
+  next();
 };
