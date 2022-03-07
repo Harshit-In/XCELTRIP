@@ -187,21 +187,21 @@ async function Update_user_level(member_id) {
     /* Update Lavel */
     let newLevel = currentLevel ? currentLevel : 0;
     if (userInfo.direct_coin >= 10000 && currentLevel < 5) {
-      if (currentLevel == 4 && ( userInfo.direct_coin >= 500000 && userInfo.total_coin >= 10000000)) {
+      if (( userInfo.direct_coin >= 500000 && userInfo.total_coin >= 10000000)) {
         updateRoyltyLevel(member_id)
         newLevel = 5;
       }
-      if (currentLevel == 3 && ( userInfo.direct_coin >= 100000 && userInfo.total_coin >= 2500000)) {
+      if (( userInfo.direct_coin >= 100000 && userInfo.total_coin >= 2500000)) {
         createRoyltySchema(member_id)
         newLevel = 4;
       }
-      if (currentLevel == 2 && ( userInfo.direct_coin >= 50000 && userInfo.total_coin >= 500000)) {
+      if (( userInfo.direct_coin >= 50000 && userInfo.total_coin >= 500000)) {
         newLevel = 3;
       }
-      if (currentLevel == 1 && ( userInfo.direct_coin >= 25000 && userInfo.total_coin >= 100000)) {
+      if (( userInfo.direct_coin >= 25000 && userInfo.total_coin >= 100000)) {
         newLevel = 2;
       }
-      if (currentLevel == 0 && ( userInfo.direct_coin >= 10000 && userInfo.total_coin >= 50000)) {
+      if (( userInfo.direct_coin >= 10000 && userInfo.total_coin >= 50000)) {
         newLevel = 1;
       }
     }
