@@ -40,8 +40,9 @@ body::-webkit-scrollbar-thumb {
   background-color: #172238 !important;
 }
 
-.navbar-nav .nav-item .nav-link:hover {
-  color: #9effe2 !important;
+.app-nav.navbar-nav .nav-item .nav-link:hover {
+  /* color: #9effe2 !important; */
+  background-color: rgba(0, 0, 0, .1);
 }
 
 .font-dongle {
@@ -63,6 +64,8 @@ body::-webkit-scrollbar-thumb {
 
 .foot-bottom {
   background: #1d2949;
+  background-color: #003d6b !important;
+  color: #bdbdbd !important;
   padding: 20px 10px;
 }
 
@@ -185,4 +188,44 @@ body::-webkit-scrollbar-thumb {
 .scale:hover {
   transform: scale(1.05, 1.05);
   transition: all 0.5s;
+}
+
+.font-righteous {
+  font-family: 'Righteous', cursive;
+  color: #003d6b !important;
+  /* font-family: 'Fredoka One', cursive;
+  font-family: 'Rowdies', cursive;
+  font-family: 'Shizuru', cursive; */
+}
+
+.app-para {
+  font-size: 20px;
+}
+
+.yamgo-blue.darken-3 {
+  background-color: #003d6b !important;
+  color: white !important;
+}
+
+.yamgo-blue {
+  background-color: #0062ab !important;
+}
+
+.yamgo-blue:hover {
+  background: #005291 !important;
+}
+
+.btn.orange:hover {
+  background: #f57c00 !important;
+}
+
+.orange {
+  background-color: #f79f19 !important;
+  color: black !important;
+}
+
+.app-footer {
+  color: #bdbdbd;
+  background-color: #0b1f36;
+  padding: 128px  0 !important;
 }

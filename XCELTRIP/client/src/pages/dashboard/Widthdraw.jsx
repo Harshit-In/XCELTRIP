@@ -56,7 +56,7 @@ export default function Widthdraw() {
     api
       .post("getIncomeHistory", {
         member_id: userInfo?.user?.member_id,
-        income_type: "Topup Income",
+        income_type: "widthdrawl",
       })
       .then((res) => {
         console.log("LevelIncome:: ", res.data.data);
@@ -80,7 +80,7 @@ export default function Widthdraw() {
         {/* Widthdrawl Form */}
         <div className="col-lg-6">
           <div className="d-block mb-4 mb-md-0 mb-2">
-            <h2 className="h4 my-0">Widthdraw Amount</h2>
+            <h2 className="h4 my-0">Withdraw Amount</h2>
           </div>
           <form
             onSubmit={(e) => {
@@ -113,12 +113,32 @@ export default function Widthdraw() {
                 <option value="income_wallet">Income Wallet</option>
                 <option value="cashback_wallet">Cashback Wallet</option>
               </select>
-              <button
+              {/* <button
                 class="btn btn-outline-secondary"
                 type="submit"
                 id="button-addon2"
               >
                 Widthdraw
+              </button> */}
+            </div>
+
+            <div class="input-group mb-3">
+              <input
+                type="password"
+                name="txn_password"
+                class="form-control"
+                placeholder="Transaction Password"
+                aria-label="Transaction Password"
+                aria-describedby="button-addon2"
+                min="0"
+                required
+              />
+              <button
+                class="btn btn-outline-secondary"
+                type="submit"
+                id="button-addon2"
+              >
+                Make Transaction
               </button>
             </div>
           </form>
@@ -127,8 +147,8 @@ export default function Widthdraw() {
       {/* Widthdrawal History */}
       <div className="my-3">
         <div className="d-block mb-4 mb-md-0 mb-2">
-          <h2 className="h4 my-0">Widthdraw History</h2>
-          <p className="mb-0">All your widthdrawals are here...</p>
+          <h2 className="h4 my-0">Withdraw History</h2>
+          <p className="mb-0">All your withdrawals are here...</p>
         </div>
         <DataGrid
           //loading={loadingData}
