@@ -50,6 +50,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/api", userRoutes);
 app.use("/api", adminRoutes);
 
+cron.schedule("0 0 * * *", async () => {
+  //await generateDailyCashback();
+});
+
+
 // const to = "harshitdubey1996@gmail.com",
 // const otp = "1234567"
 
