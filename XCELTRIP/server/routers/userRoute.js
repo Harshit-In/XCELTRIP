@@ -41,11 +41,7 @@ router.post("/change_password", validateSignUpRequest, isRequestValidated, chang
 router.post("/investment", createInvestment);
 router.post("/getcreateInvestment", getcreateInvestment);
 router.post("/createTopup", validateTransaction, creacteTopup);
-router.post(
-  "/fundTransferUserToUser",
-  validateTransaction,
-  fundTransferUserToUser
-);
+router.post("/fundTransferUserToUser", validateTransaction, fundTransferUserToUser);
 router.post("/currentInvestment", validateTransaction, getTopUpInvestment);
 router.post("/widthdrawl", validateTransaction, widthdrawl);
 router.post("/getCashback", getCashback);

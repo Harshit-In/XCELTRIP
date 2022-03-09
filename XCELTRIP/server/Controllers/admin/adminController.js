@@ -232,7 +232,7 @@ async function generateDailyCashback() {
       const User = require("../../models/user");
       const chackback = await Cashback.find({ paidMonth: { $lt: 18 } });
       const incomeType = "chackback";
-      let a = chackback.map((data) => {
+      let a = chackback.map(async(data) => {
         await Cashback.updateOne(
           { member_id: member_id },
           {

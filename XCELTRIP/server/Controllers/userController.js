@@ -70,7 +70,9 @@ async function signup(req, res) {
 
 async function signin(req, res) {
   try {
-    User.findOne({ email: req.body.email }).then(async (user, error) => {
+    const email = req.body.email 
+   const  query =  { 'email': { $regex: new RegExp(`^${email}$`), $options: 'i' } };
+    User.findOne(query).then(async (user, error) => {
       if (error) return res.status(400).json({ error });
       if (user) {
         let isValid = bcrypt.compareSync(req.body.password, user.hash_password);
