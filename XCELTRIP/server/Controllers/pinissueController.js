@@ -432,10 +432,15 @@ async function fundTransferUserToUser(req, res) {
       const user = await User.findOne({ member_id: user_id });
       const findDdownline = await findparent(downline_id);
       const isDownline = findDdownline[0].referal.filter(
-        (d) => d.member_id == user.member_id
+        (d) => d.level > 0 && d.member_id == user.member_id
       );
       // console.log(isDownline);
       if (isDownline.length > 0) {
+        if(user.coin_wallet < amount){
+          return res.status(400).json({
+            message: `Insufficient balance.`,
+          });
+        }
         await User.updateOne(
           { member_id: downline_id },
           {
@@ -452,9 +457,14 @@ async function fundTransferUserToUser(req, res) {
             },
           }
         );
+        await fundTransferHistory(user_id, downline_id, amount);
+        return res.status(200).json({ message: "Fund transfer successfully" , isDownline});
+      } else {
+        return res.status(400).json({
+          message: `Fund transfer failed, downline[${downline_id}] does not exists.`,
+        });
       }
-      await fundTransferHistory(user_id, downline_id, amount);
-      return res.status(200).json({ message: "Fund transfer successfully" });
+    
     } else {
       return res.status(400).json({
         message: `Fund transfer failed, downline[${downline_id}] does not exists.`,
