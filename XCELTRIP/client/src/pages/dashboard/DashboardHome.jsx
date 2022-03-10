@@ -56,8 +56,8 @@ export default function DashboardHome() {
       field: "income_wallet",
       label: "Cashoneer Wallet",
     },
-    { icon: "fas fa-coins", field: "direct_coin", label: "Direct Coins" },
-    { icon: "fas fa-coins", field: "total_coin", label: "Total Coins" },
+    { icon: "fas fa-coins", field: "direct_coin", label: "Direct Business" },
+    { icon: "fas fa-coins", field: "total_coin", label: "Total Business" },
     { icon: "fas fa-users", field: "direct_members", label: "Direct Members" },
     { icon: "fas fa-users", field: "total_members", label: "Total Members" },
     {
@@ -132,9 +132,9 @@ export default function DashboardHome() {
     <>
       <div className="container-fluid py-4">
         <div className="row">
-          <div className="col-lg-9">
-            <div className="row row-cols-1">
-              <div className="col-md-4 mb-2">
+          <div className="col-lg-12 col-xl-12">
+            <div className="row">
+              <div className="col-md-12 col-lg-12 col-xl-4 mb-2">
                 <div className="card card-body border-0 shadow-sm px-2 mb-2">
                   <div className="d-flex">
                     <div className="d-flex">
@@ -152,35 +152,61 @@ export default function DashboardHome() {
                         <div className="fw-bold" style={{ fontSize: "13px" }}>
                           {userInfo?.user?.email}
                         </div>
-
-                        <table className="table table-borderless">
-                          <tr>
-                            <th className="p-1">Sponsor ID</th>
-                            <td className="p-1">{`${userData.sponsor_id}`}</td>
-                          </tr>
-                          <tr>
-                            <th className="p-1">Current Level</th>
-                            <td className="p-1">
-                              {`${ranks[userData.level]}` ?? "Not Available"}
-                            </td>
-                          </tr>
-                          <tr>
-                            <th className="p-1">Income Ratio</th>
-                            <td className="p-1">
-                              {`${percentage[userData.level]}%` ?? 0}
-                            </td>
-                          </tr>
-                        </table>
+                        <div className="fw-bold" style={{ fontSize: "13px" }}>
+                          Sponsor ID : {userData?.sponsor_id}
+                        </div>
+                        {userData.investment > 1000 && (
+                          <>
+                            <div
+                              className="fw-bold"
+                              style={{ fontSize: "13px" }}
+                            >
+                              Present Rank : {ranks[userData.level]}
+                            </div>
+                            <div
+                              className="fw-bold"
+                              style={{ fontSize: "13px" }}
+                            >
+                              Differential Level :{" "}
+                              {`${percentage[userData.level]}%` ??
+                                "Not Available"}
+                            </div>
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>
                 </div>
+                {/*  <div className="card card-body border-0 shadow-sm px-2 mb-2">
+                  <div className="d-flex">
+                    <div className="d-flex">
+                      <div className="me-2">
+                        <img
+                          class="user-avatar md-avatar rounded-circle"
+                          alt="Image placeholder"
+                          src="/theme_files/assets/img/team/profile-picture-3.jpg"
+                        />
+                      </div>
+                      <div>
+                        <div className="fw-bold" style={{ fontSize: "13px" }}>
+                          Member ID : {userData?.member_id}
+                        </div>
+                        <div className="fw-bold" style={{ fontSize: "13px" }}>
+                          Password : {userData?.password}
+                        </div>
+                        <div className="fw-bold" style={{ fontSize: "13px" }}>
+                          Transaction Password : {userData?.txn_password}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div> */}
               </div>
               <div className="col-md">
-                <div className="row row-cols-3">
+                <div className="row row-cols-md-2 row-cols-lg-2 row-cols-xl-3">
                   {infoArray.map((info) => (
                     <div className="col mb-2">
-                      <div className="card card-body border-0 shadow-sm">
+                      <div className="card card-body border-0 shadow-sm h-100">
                         <h6 className="fw-bold my-0">{info.label}</h6>
                         <div className="d-flex align-items-center">
                           <div className="mr-2">
@@ -201,7 +227,9 @@ export default function DashboardHome() {
               </div>
             </div>
           </div>
-          <div className="col-lg-3">
+        </div>
+        <div className="row">
+          <div className="col-lg-4">
             {/* WalletTransfer */}
             <div className="card card-body border shadow-sm mb-2">
               <div className="d-flex mb-2 justify-content-between align-items-center">

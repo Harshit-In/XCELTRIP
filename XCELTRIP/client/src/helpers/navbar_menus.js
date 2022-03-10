@@ -1,11 +1,15 @@
 const navbarMenus = {
   //leftMenu: [{ title: "Dashboard", page: "/dashboard" }],
   rightMenu: [
-    { title: "Login", page: "/signin" },
+    { title: "Technology", page: "/" },
+    { title: "Use Cases", page: "/usecases" },
+    { title: "Wallet", page: "/wallet" },
     { title: "Register", page: "/signup" },
-    { title: "About", page: "/about" },
+    { title: "Login", page: "/signin" },
+    
+    /* { title: "About", page: "/about" },
     { title: "Services", page: "/services" },
-    { title: "FAQ", page: "/faq" },
+    { title: "FAQ", page: "/faq" }, */
   ],
 };
 export default navbarMenus;

@@ -78,7 +78,7 @@ export default function AddFund() {
         {/* Widthdrawl Form */}
         <div className="col-lg-6">
           <div className="d-block mb-4 mb-md-0 mb-2">
-            <h2 className="h4 my-0">Add Fund</h2>
+            <h2 className="h4 my-0">Deposit XLD Coin</h2>
           </div>
           <form
             onSubmit={(e) => {

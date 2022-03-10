@@ -252,7 +252,7 @@ export default function DashboardAreaNav() {
                   to="#"
                   onClick={(e) => {
                     e.preventDefault();
-                    //localStorage.removeItem("exchange_inrx_userID");
+                    localStorage.removeItem("xceltrip_user");
                     dispatch(logout());
                   }}
                 >

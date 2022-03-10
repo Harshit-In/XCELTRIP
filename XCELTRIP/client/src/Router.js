@@ -20,6 +20,9 @@ import About from "./pages/About";
 import Services from "./pages/Services";
 import FAQ from "./pages/Faq";
 import needHeaderFooter from "./helpers/need_header_footer";
+import Terms from "./pages/Terms";
+import UseCases from "./pages/UseCases";
+import Wallet from "./pages/Wallet";
 
 const Router = () => {
   const location = useLocation();
@@ -36,8 +39,11 @@ const Router = () => {
       <Routes>
         <Route exact path="/" element={<Home />} />
         <Route exact path="/about" element={<About />} />
+        <Route exact path="/usecases" element={<UseCases />} />
+        <Route exact path="/wallet" element={<Wallet />} />
         <Route exact path="/services" element={<Services />} />
         <Route exact path="/faq" element={<FAQ />} />
+        <Route exact path="/terms" element={<Terms />} />
         <Route exact path="/signin" element={<SignIn />} />
         <Route exact path="/signup" element={<SignUp />} />
         <Route exact path="/forgot-password" element={<ForgotPassword />} />

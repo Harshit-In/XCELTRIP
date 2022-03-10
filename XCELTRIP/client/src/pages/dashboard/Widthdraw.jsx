@@ -110,8 +110,8 @@ export default function Widthdraw() {
                 name="wallet_type"
               >
                 <option selected disabled>Select Wallet</option>
-                <option value="income_wallet">Income Wallet</option>
-                <option value="cashback_wallet">Cashback Wallet</option>
+                <option value="income_wallet">Cashoneer Wallet</option>
+                <option value="cashback_wallet">Moneypal Wallet</option>
               </select>
               {/* <button
                 class="btn btn-outline-secondary"

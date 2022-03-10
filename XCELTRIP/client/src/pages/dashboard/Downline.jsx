@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../../utils/api";
+import { ranks } from "./data";
 
 export default function Downline(props) {
   const [childData, setChildData] = useState([]);
@@ -23,17 +24,20 @@ export default function Downline(props) {
   return (
     <>
       <div
-        className="card card-body mb-2 position-relative"
+        className="card card-body mb-2 py-2 position-relative"
         style={{ minWidth: "400px", maxWidth: "400px" }}
       >
         <div className="d-flex justify-content-between">
           <div>
             <div className="fw-bold" style={{ fontSize: "14px" }}>
-              {userInfo?.member_id ?? "Member ID"}
+              {userInfo?.member_id ?? "Member ID"} {`[ Rank : ${ranks[userInfo.level] } ]`}
             </div>
             <div className="fw-bold" style={{ fontSize: "12px" }}>
               {userInfo?.full_name ?? "Name Not Available"}{" "}
               {`[${userInfo?.email}]`}
+            </div>
+            <div className="fw-bold" style={{ fontSize: "12px" }}>
+              Total Business : {userInfo.total_coin ?? 0}
             </div>
           </div>
           <div
@@ -56,7 +60,7 @@ export default function Downline(props) {
         )}
       </div>
       {showTeam && childData && childData.length > 0 && (
-        <div className="border-start ps-2">
+        <div className="border-start ps-3">
           {childData.map((child) => (
             <Downline memberID={child.member_id} />
           ))}

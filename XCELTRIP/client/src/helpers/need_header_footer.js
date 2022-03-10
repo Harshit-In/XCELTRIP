@@ -3,7 +3,10 @@ const needHeaderFooter = {
     "/signin": false,
     "/signup": false,
     "/about": true,
+    "/usecases": true,
+    "/wallet": true,
     "/services": true,
-    "/faq": true
+    "/faq": true,
+    "/terms": true
 }
 export default needHeaderFooter;

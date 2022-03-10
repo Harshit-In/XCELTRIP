@@ -11,6 +11,7 @@ import MyDownlines from "./MyDownlines";
 
 import Settings from "./Settings";
 import TopUpWallet from "./TopUpWallet";
+import TransactionHistory from "./TransactionHistory";
 import TransferFund from "./TransferFund";
 import Widthdraw from "./Widthdraw";
 
@@ -21,6 +22,7 @@ export default function Dashboard() {
     topupwallet: <TopUpWallet />,
     transferfund: <TransferFund />,
     transactions: <DashboardTrasactions />,
+    transactionhistory: <TransactionHistory />,
     widthdraw: <Widthdraw />,
     downlines: <MyDownlines />,
     addfund: <AddFund />,

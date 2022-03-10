@@ -41,17 +41,26 @@ export default function Home(props) {
         <div className="container">
           <div className="row align-items-center">
             <div className="col-md">
-              <h1 className="font-righteous mb-4">Get Paid for Life</h1>
+              <h1 className="font-righteous mb-4">
+                Bull or Bear, Enjoy Guaranteed Yields
+              </h1>
               <p className="app-para mb-4">
-              Earn rewards and get money-like crypto assets for the things you already do
+              Stake and Grow your Crypto assets 
+
               </p>
               <div>
-                <Link to="/signup" className="btn yamgo-blue darken-3 me-3 rounded shadow-sm py-3 px-5 fw-bold">
-                  SIGN UP
+                <Link
+                  to="/signup"
+                  className="btn yamgo-blue darken-3 me-3 rounded shadow-sm py-3 px-5 fw-bold"
+                >
+                  Register
                 </Link>
 
-                <Link to="/signup" className="btn orange rounded shadow-sm py-3 px-5 fw-bold">
-                  SIGN IN
+                <Link
+                  to="/signin"
+                  className="btn orange rounded shadow-sm py-3 px-5 fw-bold"
+                >
+                  Login
                 </Link>
               </div>
             </div>
@@ -61,7 +70,7 @@ export default function Home(props) {
           </div>
         </div>
       </section>
-      
+
       {/* community section */}
       {/* <section className="container-fluid py-5">
         <div className="container">
@@ -108,8 +117,8 @@ export default function Home(props) {
                     <div
                       className={
                         index % 2 == 0
-                          ? "col-md order-first"
-                          : "col-md order-last"
+                          ? "col-md-4 order-first"
+                          : "col-md-4 order-last"
                       }
                     >
                       <img src={aboutSec.banner} />
@@ -125,9 +134,15 @@ export default function Home(props) {
                     >
                       {aboutSec.descriptions.map((desc) => (
                         <div className="mb-2">
-                          {desc.title && <h1 className="my-0 font-righteous mb-4">{desc.title}</h1>}
+                          {desc.title && (
+                            <h1 className="my-0 font-righteous mb-4">
+                              {desc.title}
+                            </h1>
+                          )}
                           {desc.subtitle && (
-                            <h5 className="my-0 font-righteous mb-2">{desc.subtitle}</h5>
+                            <h5 className="my-0 font-righteous mb-2">
+                              {desc.subtitle}
+                            </h5>
                           )}
                           {desc.description && (
                             <p className="my-0 app-para">{desc.description}</p>

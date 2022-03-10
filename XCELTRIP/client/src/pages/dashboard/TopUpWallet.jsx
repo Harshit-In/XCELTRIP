@@ -83,7 +83,7 @@ export default function TopUpWallet() {
         {/* Wallet Topup */}
         <div className="col-lg-6">
           <div className="d-block mb-2">
-            <h2 className="h4 my-0">Topup your Wallet</h2>
+            <h2 className="h4 my-0">Stake Coins</h2>
           </div>
           <form
             onSubmit={(e) => {

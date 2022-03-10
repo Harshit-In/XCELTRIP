@@ -1,10 +1,10 @@
 import pageContents from "../helpers/page_contents";
 
-export default function About() {
-  const pageContent = pageContents.about;
+export default function UseCases() {
+  const pageContent = pageContents.usecases;
   return (
     <section className="">
-      {pageContent.title && (
+      {/* {pageContent.title && (
         <div className="app-bg-color page-title-area">
           <h1 className="page-title text-center">{pageContent.title}</h1>
           {pageContent.description && (
@@ -13,7 +13,7 @@ export default function About() {
             </p>
           )}
         </div>
-      )}
+      )} */}
       {pageContent.sections &&
         pageContent.sections.map((aboutSec, index) => (
           <div className={index %2 == 0 ? "contsiner-fluid left-sec" : "container-fluid right-sec"}>
@@ -30,7 +30,7 @@ export default function About() {
                       <div className="mb-2">
                         {desc.title && <h1 className="my-0 font-righteous mb-2">{desc.title}</h1>}
                         {desc.subtitle && (
-                          <h5 className="my-0">{desc.subtitle}</h5>
+                          <h5 className="my-0 font-righteous mb-2">{desc.subtitle}</h5>
                         )}
                         {desc.description && (
                           <p className="my-0 app-para">{desc.description}</p>

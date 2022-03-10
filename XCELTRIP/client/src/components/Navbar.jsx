@@ -6,7 +6,7 @@ export default function Navbar() {
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow py-0 sticky-top">
       <div class="container">
         <Link class="navbar-brand py-0" to="/">
-          <img src="/theme_files/assets/bluelogo.png" alt="" style={{height:"40px"}}/>
+          <img src="/theme_files/assets/asset-00.png" alt="" style={{height:"40px"}}/>
         </Link>
         <button
           class="navbar-toggler"

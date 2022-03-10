@@ -17,7 +17,7 @@ import Tree from "react-hierarchy-tree-graph";
 import { getFormData } from "../../helpers/helpers";
 import { OrgDiagram } from "basicprimitivesreact";
 import { PageFitMode, Enabled } from "basicprimitives";
-import Downline from "./Downkline";
+import Downline from "./Downline";
 
 export default function MyDownlines() {
   const { isLoggedIn, userInfo } = useSelector((state) => state?.user?.value);

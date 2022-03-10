@@ -1,10 +1,11 @@
 const sidebarMenus = [
     {title: "Dashboard", icon:"fas fa-chart-pie", page:"/dashboard"},
-    {title: "Add Fund", icon:"fas fa-hand-holding-usd", page:"addfund"},
-    {title: "TopUp Wallet", icon:"fas fa-hand-holding-usd", page:"topupwallet"},
-    {title: "Transfer Fund", icon:"fas fa-hand-holding-usd", page:"transferfund"},
+    {title: "Deposit XLD Coin", icon:"fas fa-hand-holding-usd", page:"addfund"},
+    {title: "Stake Coin", icon:"fas fa-hand-holding-usd", page:"topupwallet"},
+    {title: "Transfer Vibration Wallet", icon:"fas fa-hand-holding-usd", page:"transferfund"},
+    {title: "Transaction History", icon:"fas fa-hand-holding-usd", page:"transactionhistory"},
     {title: "Level Incomes", icon:"fas fa-hand-holding-usd", page:"levelincomes"},
-    {title: "Widthdraw Amount", icon:"fas fa-hand-holding-usd", page:"widthdraw"},
+    {title: "Withdraw Amount", icon:"fas fa-hand-holding-usd", page:"widthdraw"},
     {title: "My Team", icon:"fas fa-hand-holding-usd", page:"downlines"},
     {title: "Settings", icon:"fas fa-cog", page:"settings"},
     /* {title: "Page Examples", icon:"far fa-file-alt", childrens:[

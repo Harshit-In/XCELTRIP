@@ -1,9 +1,9 @@
 const ranks = [
-    "Executive Rank",
-    "Manager Rank",
     "Promoter Rank",
-    "Team Leader",
-    "Vice President",
-    "President"
+    "Manager Rank",
+    "Senior Manager Rank",
+    "Director Rank",
+    "Vice President Rank",
+    "President Rank"
 ];
 module.exports = { ranks };

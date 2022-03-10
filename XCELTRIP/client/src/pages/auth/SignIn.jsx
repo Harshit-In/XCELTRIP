@@ -37,6 +37,8 @@ export default function SignIn() {
           },
         })
         .then((data) => {
+          const uData = { isLoggedIn: true, userInfo: data.data }; 
+          localStorage.setItem("xceltrip_user", JSON.stringify(uData));
           dispatch(login({ isLoggedIn: true, userInfo: data.data }));
           navigate("../dashboard", { replace: true });
         });

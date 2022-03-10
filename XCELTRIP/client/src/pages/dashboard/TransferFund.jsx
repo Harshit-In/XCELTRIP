@@ -19,7 +19,8 @@ export default function TransferFund() {
   const { isLoggedIn, userInfo } = useSelector((state) => state?.user?.value);
   const [tableData, setTableData] = useState([]);
   const [fundHistory, setFundHistory] = useState([]);
-  
+  const [isMemberVerified, setIsMemberVerified] = useState(null);
+
   const fundColumns = [
     { field: "from", headerName: "Transfered From", width: 150 },
     { field: "to", headerName: "Transfered To", width: 200 },
@@ -72,6 +73,28 @@ export default function TransferFund() {
       });
   }
 
+  async function verifyMemberID(memberID) {
+    if (memberID.length > 0) {
+      const fundRes = api.post("/userInfo", {member_id: memberID});
+      toast.promise(fundRes, {
+        loading: "Verifying member to transfer amount...",
+        success: (data) => {
+          setIsMemberVerified({...data.data.data})
+          return `MemberID verified successfully.`;
+        },
+        error: (err) => {
+          setIsMemberVerified(null);
+          return (
+            err?.response?.data?.errors ??
+            err?.response?.data?.message ??
+            err?.message ??
+            "OOPs something went wrong."
+          );
+        },
+      });
+    }
+  }
+
   useEffect(async () => {
     await getFundTransferHistory();
   }, []);
@@ -81,7 +104,7 @@ export default function TransferFund() {
         {/* FundTransfer */}
         <div className="col-lg-6">
           <div className="d-block mb-2">
-            <h2 className="h4 my-0">Transfer Fund</h2>
+            <h2 className="h4 my-0">Transfer Vibration Wallet</h2>
           </div>
           <form
             onSubmit={(e) => {
@@ -93,6 +116,11 @@ export default function TransferFund() {
               name="user_id"
               value={userInfo?.user?.member_id}
             />
+            <input
+              type="hidden"
+              name="member_id"
+              value={userInfo?.user?.member_id}
+            />
             <div className="form-group mb-2">
               <input
                 type="text"
@@ -102,7 +130,11 @@ export default function TransferFund() {
                 aria-label="Member ID"
                 aria-describedby="fund_transfer"
                 required
+                onBlur={(e) => {
+                  verifyMemberID(e.target.value);
+                }}
               />
+              {isMemberVerified && <div className="fw-bold text-success" style={{fontSize: "12px"}}>Member Name : {isMemberVerified?.full_name ?? "Name not available"}</div>}
             </div>
 
             <div class="input-group mb-3">
