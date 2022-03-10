@@ -10,6 +10,7 @@ const {
   fundInvestmentToCoin,
   getCashback,
 } = require("../Controllers/pinissueController");
+const { supportTicket } = require("../Controllers/support");
 
 const {
   signup,
@@ -46,6 +47,10 @@ router.post("/currentInvestment", validateTransaction, getTopUpInvestment);
 router.post("/widthdrawl", validateTransaction, widthdrawl);
 router.post("/getCashback", getCashback);
 router.post("/fundInvestmentToCoin", fundInvestmentToCoin);
+
+// supportTicket
+router.post('/supportTicket', supportTicket);
+
 
 // test rout
 router.post("/diret_and_direct_childlength", diret_and_direct_childlength);

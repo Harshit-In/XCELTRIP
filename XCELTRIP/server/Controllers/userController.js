@@ -273,17 +273,32 @@ async function otp_match(req, res) {
 async function change_password(req, res) {
   try {
     const User = require("../models/user");
-    const { member_id, pass, confirm_pass } = req.body;
+    const { member_id, pass, confirm_pass, password_type} = req.body;
+    const hash = await bcrypt.hash(pass, 10);
+
     if (pass == confirm_pass) {
-      const hash = await bcrypt.hash(pass, 10);
-      await User.updateOne(
-        { member_id: member_id },
-        {
-          $set: {
-            hash_password: hash,
-          },
-        }
-      );
+      switch (password_type) {
+        case "password":
+          await User.updateOne(
+            { member_id: member_id },
+            {
+              $set: {
+                hash_password: hash,
+              },
+            }
+          );
+
+        case "txn_password": 
+          await User.updateOne(
+            { member_id: member_id },
+            {
+              $set: {
+                txn_password: hash,
+              },
+            }
+          ); 
+      }
+     
       res.status(200).json({ message: "Password Successfully Updated" });
     } else {
       res.status(400).json({ message: "Password Do not Match" });
