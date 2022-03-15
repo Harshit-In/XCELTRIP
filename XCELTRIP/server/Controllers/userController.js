@@ -382,6 +382,20 @@ async function widthdrawl(req, res) {
   }
 }
 
+async function manualFundRequest(req, res) {
+  try {
+    const manualFundRequestModel = require("../models/manualFundRequests");
+    const newRequest = await manualFundRequestModel.insert(req.body);
+    if(newRequest) {
+      res.status(200).json({message: "Request to add fund has been placed successfully.", fundReq: newRequest});
+    } else {
+      res.status(400).json({message: "Something went wrong."});
+    }
+  } catch (error) {
+    res.status(400).json({message: "Something went wrong."});
+  }
+}
+
 module.exports = {
   signup,
   signin,
@@ -392,4 +406,5 @@ module.exports = {
   otp_match,
   change_password,
   widthdrawl,
+  manualFundRequest
 };

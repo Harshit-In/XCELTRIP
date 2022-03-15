@@ -20,6 +20,7 @@ const {
   otp_match,
   change_password,
   widthdrawl,
+  manualFundRequest,
 } = require("../Controllers/userController");
 const { diret_and_direct_childlength } = require("../functions/function");
 const {
@@ -54,5 +55,6 @@ router.post('/supportTicket', supportTicket);
 
 // test rout
 router.post("/diret_and_direct_childlength", diret_and_direct_childlength);
+router.post("/add_manual_fund", manualFundRequest)
 
 module.exports = router;
