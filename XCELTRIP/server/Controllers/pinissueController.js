@@ -579,5 +579,6 @@ module.exports = {
   fundTransferUserToUser,
   fundInvestmentToCoin,
   incomDistribute,
+  fundTransferHistory,
   rCm
 };

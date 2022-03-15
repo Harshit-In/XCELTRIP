@@ -233,7 +233,7 @@ async function generateDailyCashback() {
       const User = require("../../models/user");
       const chackback = await Cashback.find({ paidMonth: { $lt: 18 } });
       const incomeType = "chackback";
-      let a = chackback.map(async(data) => {
+      let a = chackback.map(async (data) => {
         await Cashback.updateOne(
           { member_id: member_id },
           {
@@ -270,12 +270,70 @@ async function generateDailyCashback() {
   }
 }
 
+async function adminTouser(req, res) {
+  try {
+    const Admin = require("../../models/admin");
+    const {
+      fundTransferHistory,
+    } = require("../../Controllers/pinissueController");
+    const { member_id, amount, wallet_type } = req.body;
+    const user = await User.findOne({ member_id: member_id });
+    switch (wallet_type) {
+      case "bep20_wallet":
+        await User.updateOne(
+          { member_id: member_id },
+          {
+            $set: {
+              bep20_wallet: Number(user.bep20_wallet) + Number(amount),
+            },
+          }
+        );
+        break;
+      case "coin_wallet":
+        await User.updateOne(
+          { member_id: member_id },
+          {
+            $set: {
+              coin_wallet: Number(user.coin_wallet) + Number(amount),
+            },
+          }
+        );
+        break;
+    }
+    await fundTransferHistory("Admin", member_id, amount);
+    return res.status(200).json({ message: "fund transfer successfully" });
+  } catch (error) {
+    console.log("Error from: adminController >> adminTouser", error);
+    return res.status(400).json({ message: "Somthing went wrong" });
+  }
+}
+
+async function updateUserLevelByAdmin(req, res) {
+  const user = require("../../models/user");
+  try {
+    const { member_id, level } = req.body;
+    user.updateOne(
+      { member_id: member_id },
+      {
+        $set: {
+          level: level,
+        },
+      }
+    );
+    return res.status(200).json({ message: "level update successfully" });
+  } catch (error) {
+    console.log("Error from: adminController >> updateUserLevelByAdmin", error);
+    return res.status(400).json({ message: "Somthing went wrong" });
+  }
+}
+
 module.exports = {
   signup,
   signin,
   userInfo,
   getIncomeHistory,
-  getFundTransferHistory,
+  adminTouser,
+  updateUserLevelByAdmin,
   getDashboardData,
-  generateDailyCashback
+  generateDailyCashback,
 };
