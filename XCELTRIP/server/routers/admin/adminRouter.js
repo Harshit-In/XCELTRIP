@@ -9,6 +9,9 @@ const {
   getDashboardData,
   adminTouser,
   updateUserLevelByAdmin,
+  updateOwnerWalletAddress,
+  getWithdrawlRequest,
+  approveWithdrawlRequest,
   
 } = require("../../Controllers/admin/adminController");
 const { support_ticket_admin_reply, getsupportTicket, delete_ticket } = require("../../Controllers/support");
@@ -25,7 +28,9 @@ router.get("/dashboarddata", getDashboardData);
 router.get("/credit_wallet", adminTouser);  // fund transfer by admin
 router.get("/update_rank", updateUserLevelByAdmin); // level update by admin
 
-
+router.post("/update_owner_address", updateOwnerWalletAddress)
+router.post("/all_withdrawl_requests", getWithdrawlRequest)
+router.post("/approve_withdrawl_request", approveWithdrawlRequest)
 // support ticket
 router.post("/admin/support_ticket_admin_reply", support_ticket_admin_reply);
 router.post("/getsupportTicket", getsupportTicket);

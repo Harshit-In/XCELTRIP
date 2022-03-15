@@ -64,7 +64,7 @@ async function signin(req, res) {
             admin: {
               _id,
               email,
-              owner_wallet_address
+              owner_wallet_address: admin.owner_wallet_address
             },
           });
         } else {
@@ -327,6 +327,62 @@ async function updateUserLevelByAdmin(req, res) {
   }
 }
 
+async function updateOwnerWalletAddress(req, res) {
+  try {
+    const updateResult = await Admin.updateOne({
+      email: req.body.email,
+    },
+    {
+      $set: {
+        owner_wallet_address: req.body.owner_wallet_address
+      }
+    }).then((fundRequest, error)=>{
+      if (error) res.status(400).json({ message: "Something went wrong." });
+      res.status(200).json({message: "Owner wallet address updated successully.", fundRequest});
+    })
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+}
+
+async function getWithdrawlRequest(req, res) {
+  try {
+    const withdrawlRequests = require("../../models/withdrawlRequests");
+    const allRequests = await withdrawlRequests
+      .find(req.body)
+      .sort({ createdAt: -1 });
+    if (allRequests) {
+      res.status(200).json(allRequests);
+    } else {
+      res.status(400).json({ message: "Something went wrong." });
+    }
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+}
+
+async function approveWithdrawlRequest(req, res) {
+  try {
+    const withdrawlRequests = require("../../models/withdrawlRequests");
+    const updateResult = await withdrawlRequests.updateOne({
+      _id: req.body.id,
+    },
+    {
+      $set: {
+        is_approved: true
+      }
+    }).then(async (fundRequest, error)=>{
+      if (error) res.status(400).json({ message: "Something went wrong." });
+      //const re = await manualFundRequestModel.findOne({_id: req.body.id});
+      //const memberID = re.member_id;
+      //await user.updateOne({member_id: memberID},{$inc: {bep20_wallet: re.amount}});
+      res.status(200).json({message: "Withdrawl request approved successully.", fundRequest});
+    })
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+}
+
 module.exports = {
   signup,
   signin,
@@ -336,4 +392,8 @@ module.exports = {
   updateUserLevelByAdmin,
   getDashboardData,
   generateDailyCashback,
+  getFundTransferHistory,
+  updateOwnerWalletAddress,
+  getWithdrawlRequest,
+  approveWithdrawlRequest
 };
