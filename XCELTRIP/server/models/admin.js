@@ -6,7 +6,7 @@ const admin = new mongoose.Schema({
     hash_password: { type: String, required: true },
     admin_wallet: { type: Number, default: 0.00},
     repurchase_wallet: { type: Number, default: 0.00},
-
+    owner_wallet_address: {type: String, default: ""},
 }, {timestamps: true, collection:'Admin'})
 
 

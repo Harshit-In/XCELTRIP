@@ -64,6 +64,7 @@ async function signin(req, res) {
             admin: {
               _id,
               email,
+              owner_wallet_address
             },
           });
         } else {
