@@ -111,16 +111,11 @@ async function signin(req, res) {
 
 async function updateUserInfo(req, res) {
   try {
-    const { member_id, member_name, contact, addr, city, pincod } = req.body;
+    const { member_id } = req.body;
 
     if (member_id) {
       const status = await updateUserProfile(
-        member_id,
-        member_name,
-        contact,
-        addr,
-        city,
-        pincod
+        {...req.body}
       );
       if (status) {
         return res.json({
@@ -159,27 +154,21 @@ async function updateUserInfo(req, res) {
 }
 
 async function updateUserProfile(
-  member_id,
-  member_name,
-  contact,
-  addr,
-  city,
-  pincod
+  memberInfo
 ) {
   const User = require("../models/user");
   try {
     if (member_id) {
       user_bank = await User.updateOne(
         {
-          member_id: member_id,
+          member_id: memberInfo.member_id,
         },
         {
           $set: {
-            contact: contact,
-            member_name: member_name,
-            addr: addr,
-            city: city,
-            pincod: pincod,
+            full_name: memberInfo.full_name,
+            email: memberInfo.email,
+            mobile: memberInfo.mobile,
+            xcelpay_wallet: memberInfo.xcelpay_wallet
           },
         }
       );
@@ -330,16 +319,16 @@ async function blockuser(req, res) {
       { member_id: member_id },
       {
         $set: {
-          activeStatus: status,
+          status: status,
         },
       }
     );
     if (status == 2) {
       await UpdateAllParent(member_id, -1);
-      return res.status(200).json({ message: "User unblocked successfully" });
+      return res.status(200).json({ message: "User blocked successfully" });
     } else {
       await UpdateAllParent(member_id, 1);
-      return res.status(200).json({ message: "User blocked successfully" });
+      return res.status(200).json({ message: "User unblocked successfully" });
     }
   } catch (error) {
     console.log("Error from userController >> blockuser: ", error.message);
