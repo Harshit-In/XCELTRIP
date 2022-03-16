@@ -273,6 +273,7 @@ async function generateDailyCashback() {
 async function adminTouser(req, res) {
   try {
     const Admin = require("../../models/admin");
+    const User = require("../../models/user");
     const {
       fundTransferHistory,
     } = require("../../Controllers/pinissueController");
