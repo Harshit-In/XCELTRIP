@@ -1,12 +1,13 @@
 const mongoose = require("mongoose");
 const admin = new mongoose.Schema({
     admin_name: { type: String },
-    owner_address: { type: String },
     email: { type: String },
     hash_password: { type: String, required: true },
     admin_wallet: { type: Number, default: 0.00},
     repurchase_wallet: { type: Number, default: 0.00},
-    owner_wallet_address: {type: String, default: ""},
+    owner_wallet_address: {type: String, default: ''},
+    min_topup_amount: {type: Number, default: 1000},
+    max_topup_amount: {type: Number, default: 10000},
 }, {timestamps: true, collection:'Admin'})
 
 

@@ -57,7 +57,7 @@ async function createInvestment(req, res) {
 async function getcreateInvestment(req, res) {
   const Investment = require("../models/investment");
   try {
-    const investment = await Investment.find(req.body);
+    const investment = await Investment.find(req.body).sort({createdAt: -1});
     return res.status(200).json({
       data: investment,
     });
@@ -74,74 +74,93 @@ async function getcreateInvestment(req, res) {
 
 async function creacteTopup(req, res) {
   const User = require("../models/user");
+  const Admin = require("../models/admin");
   try {
     const { member_id, amount, coin_ratio } = req.body;
-    const user = await User.findOne({ member_id: member_id });
-    if (user) {
-      if (amount % 100 != 0) {
-        return res
-          .status(400)
-          .json({ message: "Please Enter a valid amount " });
-      }
-
-      if (coin_ratio == 100) {
-        if (user.bep20_wallet >= amount) {
-          await User.updateOne(
-            { member_id: user.member_id },
-            {
-              $set: {
-                investment: parseInt(user.investment) + parseInt(amount),
-                bep20_wallet: parseInt(user.bep20_wallet) - parseInt(amount),
-                activation_date: new Date().toISOString(),
-                status: 1,
-              },
+    const {min_topup_amount, max_topup_amount} = await Admin.findOne();
+    console.log(min_topup_amount, max_topup_amount);
+    if(amount >= min_topup_amount && amount <= max_topup_amount) {
+        const user = await User.findOne({ member_id: member_id });
+        if (user) {
+          if (amount % 100 != 0) {
+            return res
+              .status(400)
+              .json({ message: "Please Enter a valid amount " });
+          }
+    
+          if (coin_ratio == 100) {
+            if (user.bep20_wallet >= amount) {
+              await User.updateOne(
+                { member_id: user.member_id },
+                {
+                  $set: {
+                    investment: parseInt(user.investment) + parseInt(amount),
+                    bep20_wallet: parseInt(user.bep20_wallet) - parseInt(amount),
+                    activation_date: new Date().toISOString(),
+                    status: 1,
+                  },
+                }
+              );
+            } else {
+              return res
+                .status(400)
+                .json({ message: "Insufficient Account Balance" });
             }
-          );
-        } else {
-          return res
-            .status(400)
-            .json({ message: "Insufficient Account Balance" });
-        }
-      } else if (coin_ratio == 50) {
-        if (user.bep20_wallet >= amount / 2 && user.coin_wallet >= amount / 2) {
-          await User.updateOne(
-            { member_id: user.member_id },
-            {
-              $set: {
-                investment: parseInt(user.investment) + parseInt(amount),
-                bep20_wallet:
-                  parseInt(user.bep20_wallet) - parseInt(amount / 2),
-                coin_wallet: parseInt(user.coin_wallet) - parseInt(amount / 2),
-                activation_date: new Date().toISOString(),
-                status: 1,
-              },
+          } else if (coin_ratio == 50) {
+            if (user.bep20_wallet >= amount / 2 && user.coin_wallet >= amount / 2) {
+              await User.updateOne(
+                { member_id: user.member_id },
+                {
+                  $set: {
+                    investment: parseInt(user.investment) + parseInt(amount),
+                    bep20_wallet:
+                      parseInt(user.bep20_wallet) - parseInt(amount / 2),
+                    coin_wallet: parseInt(user.coin_wallet) - parseInt(amount / 2),
+                    activation_date: new Date().toISOString(),
+                    status: 1,
+                  },
+                }
+              );
+            } else {
+              return res.status(400).json({
+                message:
+                  "Your coin wallet or BEP20 wallet have Insufficient balance",
+              });
             }
-          );
+          }
+          
+          if(user.level == -1) {
+              await User.updateOne(
+                { member_id: user.member_id },
+                {
+                  $set: {
+                    level: 0
+                  },
+                }
+              );
+          }
+          const incomeType = "ID Activation";
+    
+          await rCm(user.member_id, amount)
+            .then(() => {
+              UpdateAllParent(member_id, 1, amount);
+            })
+            .then(() => {
+              createCashbackSchema(member_id, amount);
+            })
+            .then(() => {
+              createIncomeHistory(member_id, amount, incomeType);
+            })
+            .then(() => {
+              return res.status(200).json({ message: "Topup successfully" });
+            });
         } else {
-          return res.status(400).json({
-            message:
-              "Your coin wallet or BEP20 wallet have Insufficient balance",
-          });
+          return res.status(400).json({ message: "User not found." });
         }
-      }
-      const incomeType = "Topup Income";
-
-      await rCm(user.member_id, amount)
-        .then(() => {
-          UpdateAllParent(member_id, 1, amount);
-        })
-        .then(() => {
-          createCashbackSchema(member_id, amount);
-        })
-        .then(() => {
-          createIncomeHistory(member_id, amount, incomeType);
-        })
-        .then(() => {
-          return res.status(200).json({ message: "Topup successfully" });
-        });
     } else {
-      return res.status(400).json({ message: "User not found." });
+        return res.status(400).json({ message: `You can topup minimum ${min_topup_amount} and maximum ${max_topup_amount} coins.` });
     }
+    
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
@@ -153,7 +172,7 @@ async function rCm(memberID, amount) {
     const percentage = [5, 10, 15, 20, 25, 30];
     const UserModal = require("../models/user");
     const getAllParent = await incomDistribute(memberID);
-    const incomeType = "Incom from downline";
+    const incomeType = "Rank Bonus";
     //console.log("parent: ", getAllParent);
     // console.log("getAllParent", getAllParent);
     let dt = getAllParent;
@@ -254,7 +273,7 @@ async function rCm(memberID, amount) {
             $set: updateInfo,
           }
         ).then(async () => {
-          const incomeType = "Income from downline";
+          const incomeType = "Rank Bonus";
           await createIncomeHistory(
             parent.member_id,
             sponsorProfit,
@@ -273,7 +292,7 @@ async function referalCommition(member_id, pin_amount) {
   try {
     const User = require("../models/user");
     const getAllParent = await incomDistribute(member_id);
-    const incomeType = "Incom from downline";
+    const incomeType = "Rank Bonus";
     console.log("parent: ", getAllParent)
     // console.log("getAllParent", getAllParent);
 
@@ -409,7 +428,7 @@ async function incomDistribute(member_id) {
         }
       }
       console.log("distinctData: ", distinctData);
-      return referalData.filter((item) => item.ParentNo > 0);
+      return referalData.filter((item) => item.ParentNo > 0 && item.level > -1);
     } else {
       // console.log("Hello")
       return [];
@@ -550,7 +569,7 @@ async function fundInvestmentToCoin(req, res) {
           },
         }
       );
-      const incomeType = "InvestmentToCoin";
+      const incomeType = "Transfer Coin";
       await createIncomeHistory(member_id, amount, incomeType);
       return res.status(200).json({ message: `You have successfully transfered ${amount} coins to your wallet.` });
     } else {
@@ -579,6 +598,6 @@ module.exports = {
   fundTransferUserToUser,
   fundInvestmentToCoin,
   incomDistribute,
-  fundTransferHistory,
-  rCm
+  rCm,
+  fundTransferHistory
 };

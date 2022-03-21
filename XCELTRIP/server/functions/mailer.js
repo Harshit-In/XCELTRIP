@@ -8,13 +8,12 @@ const testAccount = {
     pass: 'Test@1234',
     name: 'Globle DIFFI'
 }
-// const from = 'ankursingh0313@yahoo.com'; // if we want to send from aur account
-// const testAccount = await nodemailer.createTestAccount();
+
 let transporter = nodemailer.createTransport(smtpTransport({
-    // service: 'webmail', // if we want to youse servece
-    host: 'smtp.gmail.com',
+    // service: 'Gmail', // if we want to youse servece
+    host: 'mail.myfastearn.in',
     port: 465,
-    secureConnection: false,
+    // secureConnection: false,
     tls: {
         rejectUnauthorized: false
     },

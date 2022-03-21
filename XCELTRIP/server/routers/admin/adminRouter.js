@@ -7,14 +7,15 @@ const {
   getIncomeHistory,
   getFundTransferHistory,
   getDashboardData,
+  getOwnerWalletAddress,
   adminTouser,
   updateUserLevelByAdmin,
   updateOwnerWalletAddress,
   getWithdrawlRequest,
   approveWithdrawlRequest,
+  changeMinMaxTopupAmount
   
 } = require("../../Controllers/admin/adminController");
-const { support_ticket_admin_reply, getsupportTicket, delete_ticket } = require("../../Controllers/support");
 const { blockuser } = require("../../Controllers/userController");
 
 
@@ -25,17 +26,13 @@ router.post("/userInfo", userInfo);
 router.post("/getIncomeHistory", getIncomeHistory); // getIncome_History
 router.post("/getFundTransferHistory", getFundTransferHistory); // getFundTransferHistory
 router.get("/dashboarddata", getDashboardData);
-router.get("/credit_wallet", adminTouser);  // fund transfer by admin
-router.get("/update_rank", updateUserLevelByAdmin); // level update by admin
-
+router.get("/getOwnerWalletAddress", getOwnerWalletAddress);
+router.post("/credit_wallet", adminTouser);  // fund transfer by admin
+router.post("/update_rank", updateUserLevelByAdmin); // level update by admin
 router.post("/update_owner_address", updateOwnerWalletAddress)
 router.post("/all_withdrawl_requests", getWithdrawlRequest)
 router.post("/approve_withdrawl_request", approveWithdrawlRequest)
-// support ticket
-router.post("/admin/support_ticket_admin_reply", support_ticket_admin_reply);
-router.post("/getsupportTicket", getsupportTicket);
-router.post("/delete_ticket", delete_ticket);
-
+router.post("/change_min_max_topup_amount", changeMinMaxTopupAmount)
 
 
 
