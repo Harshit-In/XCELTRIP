@@ -21,7 +21,9 @@ const {
   widthdrawl,
   manualFundRequest,
   getManualFundRequest,
-  approveFundRequest
+  approveFundRequest,
+  supportRequest,
+  getSupportRequest
 } = require("../Controllers/userController");
 const { diret_and_direct_childlength } = require("../functions/function");
 const {
@@ -59,5 +61,8 @@ router.post("/diret_and_direct_childlength", diret_and_direct_childlength);
 router.post("/add_manual_fund", manualFundRequest)
 router.post("/all_manual_fund_requests", getManualFundRequest)
 router.post("/approve_fund_request", approveFundRequest)
+
+router.post("/place_support_request", supportRequest);
+router.post('/getSupportRequests', getSupportRequest);
 
 module.exports = router;

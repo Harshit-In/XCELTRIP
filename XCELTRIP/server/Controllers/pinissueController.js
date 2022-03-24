@@ -405,6 +405,7 @@ async function incomDistribute(member_id) {
           sponsor_id: 1,
           "referal.level": 1,
           "referal.member_id": 1,
+          "referal.investment": 1,
           "referal.ParentNo": 1,
         },
       },
@@ -413,22 +414,27 @@ async function incomDistribute(member_id) {
     if (data && data.length > 0) {
       // return data;
       // console.log("referal",data )
-      const referalData = data[0].referal;
-      console.log("referalData: ", referalData)
-      referalData.sort((a, b) => {
-        a.ParentNo < b.ParentNo ? 1 : -1;
-      });
-      console.log("Sort: ",referalData)
+      let referalData = data[0].referal;
+      //console.log("referalData: ", referalData)
+      const rD = [];
+      //console.log("totalLength : ",referalData.length)
+      for(let i=0; i<referalData.length ; i++) {
+        rD.push(referalData.filter((item)=>{return item.ParentNo == i})[0]);
+      }
+      console.log("Sort: ", rD);
       let distinctData = [];
-      let lastPaidLevel = null;
-      for (num of referalData) {
-        if (num.ParentNo > lastPaidLevel) {
-          lastPaidLevel = num.ParentNo;
+      let lastPaidLevel = rD[0].level;
+      for (num of rD) {
+        if (num.level > lastPaidLevel) {
+          lastPaidLevel = num.level;
           distinctData.push(num);
         }
       }
-      console.log("distinctData: ", distinctData);
-      return referalData.filter((item) => item.ParentNo > 0 && item.level > -1);
+      
+      //return referalData.filter((item) => item.ParentNo > 0 && item.level > -1 && item.investment > 0);//
+      const parentsToBePaid = distinctData.filter((item) => item.ParentNo > 0 && item.level > -1);
+      console.log("distinctData: ", distinctData, parentsToBePaid);
+      return parentsToBePaid;
     } else {
       // console.log("Hello")
       return [];

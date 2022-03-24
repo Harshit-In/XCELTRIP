@@ -239,31 +239,33 @@ async function diret_and_direct_childlength(req, res) {
 }
 
 
-async function createIncomeHistory(member_id, amount, incomeType) {
-    try{
-      const History = require("../models/History")
-      const User = require("../models/user")
-      const user = await User.findOne({ member_id: member_id})
-      const history = new History({
-        member_id: member_id,
-        amount: amount,
-        income_type: incomeType,
-        coin_wallet: user.coin_wallet,
-        income_wallet: user.income_wallet,
-        level: user.level
-      })
-      history.save((error, data) => {
-        if (error) {
-          console.log("Error from: function.js >> createIncomeHistory", error);
-        }
-        if (data) {
-          console.log("success");
-        }
-      });
+async function createIncomeHistory(member_id, amount, incomeType, incomeFrom="") {
+  try{
+    const History = require("../models/History")
+    const User = require("../models/user")
+    const user = await User.findOne({ member_id: member_id})
+    const history = new History({
+      member_id: member_id,
+      income_from: incomeFrom,
+      amount: amount,
+      income_type: incomeType,
+      investment: user.investment,
+      coin_wallet: user.coin_wallet,
+      income_wallet: user.income_wallet,
+      level: user.level
+    })
+    history.save((error, data) => {
+      if (error) {
+        console.log("Error from: function.js >> createIncomeHistory", error);
+      }
+      if (data) {
+        console.log("success");
+      }
+    });
 
-    } catch(error) {
-      console.log("Error from: function.js >> createIncomeHistory", error.message)
-    }
+  } catch(error) {
+    console.log("Error from: function.js >> createIncomeHistory", error.message)
+  }
 }
 
 async function createRoyltySchema(member_id, level){

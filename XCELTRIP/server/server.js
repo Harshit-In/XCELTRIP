@@ -56,28 +56,15 @@ cron.schedule("0 0 * * *", async () => {
   //await generateDailyCashback();
 });
 
-
 // const to = "harshitdubey1996@gmail.com",
 // const otp = "1234567"
 
 // sendOTP("harshitdubey1996@gmail.com", 1234567)
 /* const { incomDistribute } = require("./Controllers/pinissueController");
-incomDistribute("XCEL1000009").then((allParents) => {
-  let dt = allParents;
-  dt.sort((a, b) => (a.ParentNo > b.ParentNo ? 1 : -1));
-  console.log(dt);
-  let distinctData = [];
-  let lastPaidLevel = null;
-  for (parent of dt) {
-    if (parent.level > lastPaidLevel || lastPaidLevel==null) {
-      lastPaidLevel = parent.level;
-      distinctData.push(parent);
-    }
-  }
-  console.log(distinctData);
+const mID= "GDP1005185";//"GDP1005056";//"GDP1005185";//"GDP1004804"
+incomDistribute(mID).then((allParents) => {
+  console.log("All Parent to be paid :: ", allParents);
 }); */
-
-
 
 //rCm("XCEL1000004", 1000);
 
