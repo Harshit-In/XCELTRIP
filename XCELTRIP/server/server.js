@@ -60,11 +60,126 @@ cron.schedule("0 0 * * *", async () => {
 // const otp = "1234567"
 
 // sendOTP("harshitdubey1996@gmail.com", 1234567)
-/* const { incomDistribute } = require("./Controllers/pinissueController");
-const mID= "GDP1005185";//"GDP1005056";//"GDP1005185";//"GDP1004804"
-incomDistribute(mID).then((allParents) => {
-  console.log("All Parent to be paid :: ", allParents);
-}); */
+async function distributeIncome() {
+  const { incomDistribute } = require("./Controllers/pinissueController");
+  const mID = "GDP1005185"; //"GDP1005056";//"GDP1005185";//"GDP1004804"
+  const HistoryModel = require("./models/History");
+  const allTopups = await HistoryModel.find({
+    member_id: mID,
+    income_type: "ID Activation",
+  });
+  console.log("AllTopups", allTopups);
+  incomDistribute(mID).then((allParents) => {
+    console.log("All Parent to be paid :: ", allParents);
+    for (topup of allTopups) {
+      const topupAmount = topup.amount;
+      console.log("topUpAmount", topupAmount);
+      const percentage = [5, 10, 15, 20, 25, 30];
+      const UserModal = require("./models/user");
+      const incomeType = "Rank Bonus";
+      allParents.forEach((parent, index) => {
+        let rcPer;
+        let rcAmount;
+        let diffPer;
+        let diffAmount;
+        let incomeWallet;
+        let coinWallet;
+        let sponsorProfit;
+
+        if (parent.ParentNo == 1) {
+          rcPer = percentage[parent.level];
+          rcAmount = (topupAmount * rcPer) / 100;
+          sponsorProfit = rcAmount;
+          incomeWallet = Number(rcAmount / 2);
+          coinWallet = Number(rcAmount / 2);
+          console.log(
+            parent,
+            "Direct Parent ::",
+            "rcPer :: ",
+            rcPer,
+            "rcAmount :: ",
+            rcAmount,
+            "amount :: ",
+            topupAmount,
+            "incomeWallet :: ",
+            incomeWallet,
+            "coinWallet :: ",
+            coinWallet
+          );
+        } else {
+          rcPer = percentage[parent.level];
+          if (allParents[index - 1]) {
+            diffPer =
+              percentage[parent.level] -
+              percentage[allParents[index - 1].level];
+          } else {
+            diffPer = percentage[parent.level];
+          }
+
+          rcAmount = (topupAmount * rcPer) / 100;
+          diffAmount = (topupAmount * diffPer) / 100;
+          sponsorProfit = diffAmount;
+          incomeWallet = Number(diffAmount / 2);
+          coinWallet = Number(diffAmount / 2);
+          console.log(
+            parent,
+            "InDirect Parent :: ",
+            "diffPer :: ",
+            diffPer,
+            "rcPer :: ",
+            rcPer,
+            "diffAmount :: ",
+            diffAmount,
+            "rcAmount :: ",
+            rcAmount,
+            "amount :: ",
+            topupAmount,
+            "incomeWallet :: ",
+            incomeWallet,
+            "coinWallet :: ",
+            coinWallet
+          );
+        }
+
+        /* UserModal.findOne({ member_id: parent.member_id }).then(
+          (parentInfo) => {
+            //console.log(parentInfo);
+            const newIncomeWallet =
+              Number(parentInfo.income_wallet) + incomeWallet;
+            const newCoinWallet = Number(parentInfo.coin_wallet) + coinWallet;
+            const updateInfo = {
+              income_wallet: newIncomeWallet,
+              coin_wallet: newCoinWallet,
+            };
+            console.log(
+              "oldCoinWallet",
+              parentInfo.coin_wallet,
+              "oldIncomeWallet",
+              parentInfo.income_wallet,
+              updateInfo
+            );
+            UserModal.updateOne(
+              { member_id: parent.member_id },
+              {
+                $set: updateInfo,
+              }
+            ).then(async () => {
+              const incomeType = "Rank Bonus";
+              await createIncomeHistory(
+                parent.member_id,
+                sponsorProfit,
+                incomeType,
+                memberID
+              );
+            });
+          }
+        ); */
+      });
+    }
+  });
+}
+
+distributeIncome();
 
 //rCm("XCEL1000004", 1000);
 

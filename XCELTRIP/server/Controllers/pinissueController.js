@@ -171,11 +171,11 @@ async function rCm(memberID, amount) {
   try {
     const percentage = [5, 10, 15, 20, 25, 30];
     const UserModal = require("../models/user");
-    const getAllParent = await incomDistribute(memberID);
+    const allParents = await incomDistribute(memberID);
     const incomeType = "Rank Bonus";
     //console.log("parent: ", getAllParent);
     // console.log("getAllParent", getAllParent);
-    let dt = getAllParent;
+   /*  let dt = getAllParent;
     dt.sort((a, b) => (a.ParentNo > b.ParentNo ? 1 : -1));
     let distinctData = [];
     let lastPaidLevel = null;
@@ -185,7 +185,7 @@ async function rCm(memberID, amount) {
         distinctData.push(parent);
       }
     }
-    console.log("All DistinctParents", distinctData);
+    console.log("All DistinctParents", distinctData); */
     /*  distinctData = [
       { member_id: "XCEL1000006", level: 0, ParentNo: 1 },
       { member_id: "XCEL1000005", level: 2, ParentNo: 2 },
@@ -193,7 +193,8 @@ async function rCm(memberID, amount) {
       { member_id: "XCEL1000002", level: 5, ParentNo: 5 },
     ]; */
     //console.log("All DistinctParents", distinctData);
-    distinctData.forEach((parent, index) => {
+    console.log(allParents);
+    allParents.forEach((parent, index) => {
       //console.log(`index: ${index}, parent : `, parent);
       let rcPer;
       let rcAmount;
@@ -209,7 +210,7 @@ async function rCm(memberID, amount) {
         sponsorProfit = rcAmount;
         incomeWallet = Number(rcAmount / 2);
         coinWallet = Number(rcAmount / 2);
-        console.log(
+        /* console.log(
           parent,
           "Direct Parent ::",
           "rcPer :: ",
@@ -222,17 +223,23 @@ async function rCm(memberID, amount) {
           incomeWallet,
           "coinWallet :: ",
           coinWallet
-        );
+        ); */
       } else {
         rcPer = percentage[parent.level];
-        diffPer =
-          percentage[parent.level] - percentage[distinctData[index - 1].level];
+        if(allParents[index - 1]) {
+          diffPer =
+          percentage[parent.level] - percentage[allParents[index - 1].level];
+        } else {
+          diffPer =
+          percentage[parent.level];
+        }
+        
         rcAmount = (amount * rcPer) / 100;
         diffAmount = (amount * diffPer) / 100;
         sponsorProfit = diffAmount;
         incomeWallet = Number(diffAmount / 2);
         coinWallet = Number(diffAmount / 2);
-        console.log(
+        /* console.log(
           parent,
           "InDirect Parent :: ",
           "diffPer :: ",
@@ -249,7 +256,7 @@ async function rCm(memberID, amount) {
           incomeWallet,
           "coinWallet :: ",
           coinWallet
-        );
+        ); */
       }
 
       UserModal.findOne({ member_id: parent.member_id }).then((parentInfo) => {
@@ -260,13 +267,13 @@ async function rCm(memberID, amount) {
           income_wallet: newIncomeWallet,
           coin_wallet: newCoinWallet,
         };
-        console.log(
+        /* console.log(
           "oldCoinWallet",
           parentInfo.coin_wallet,
           "oldIncomeWallet",
           parentInfo.income_wallet,
           updateInfo
-        );
+        ); */
         UserModal.updateOne(
           { member_id: parent.member_id },
           {
@@ -277,7 +284,8 @@ async function rCm(memberID, amount) {
           await createIncomeHistory(
             parent.member_id,
             sponsorProfit,
-            incomeType
+            incomeType,
+            memberID
           );
         });
       });
@@ -423,8 +431,8 @@ async function incomDistribute(member_id) {
       }
       console.log("Sort: ", rD);
       let distinctData = [];
-      let lastPaidLevel = rD[0].level;
-      for (num of rD) {
+      let lastPaidLevel = -1;
+      for (num of rD.slice(1)) {
         if (num.level > lastPaidLevel) {
           lastPaidLevel = num.level;
           distinctData.push(num);
