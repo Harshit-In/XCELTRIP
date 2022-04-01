@@ -183,21 +183,27 @@ async function distributeIncome() {
 
 //rCm("XCEL1000004", 1000);
 
-var ses = require('node-ses')
-  , client = ses.createClient({key: 'ses-smtp-user.20220324-152647', secret: 'BLyEulm2Hu9HjwJFwF6tHxGyNCnnDwMN4QkvKJDCvr5p'});
- 
+var ses = require("node-ses"),
+  client = ses.createClient({
+    key: "AKIA45GDMVHKSC4R4C4T",
+    secret: "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",
+  });
+console.log(client)
 // Give SES the details and let it construct the message for you.
-client.sendEmail({
-   to: 'karunendumishra@gmail.com'
- , from: 'test@gdp.com'
- //, cc: 'theWickedWitch@nerds.net'
- //, bcc: ['canAlsoBe@nArray.com', 'forrealz@.org']
- , subject: 'greetings'
- , message: 'your <b>message</b> goes here'
- , altText: 'plain text'
-}, function (err, data, res) {
-  console.log(err, data, res);
-});
+client.sendEmail(
+  {
+    to: "karunendumishra@gmail.com",
+    from: "noreply@globaldefipool.com",
+    //, cc: 'theWickedWitch@nerds.net'
+    //, bcc: ['canAlsoBe@nArray.com', 'forrealz@.org']
+    subject: "greetings",
+    message: "your <b>message</b> goes here",
+    altText: "plain text",
+  },
+  function (err, data, res) {
+    console.log(err, data, res);
+  }
+);
 
 app.listen(process.env.PORT, () => {
   console.log(`server is running on port ${process.env.PORT}`);
