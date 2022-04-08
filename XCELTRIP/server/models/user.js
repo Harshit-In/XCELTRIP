@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema(
     hash_password: { type: String },
     txn_password: { type: String },
     xcelpay_wallet: {type: String, required: true, unique: true },
+    deposit_wallet: {type: String, unique: true },
     //country: { type: String, required: true},
     mobile: { type: Number, required: true, unique: true },
     investment : { type: Number, default:0},
