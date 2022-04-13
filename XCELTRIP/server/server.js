@@ -190,10 +190,10 @@ var ses = require("node-ses"),
   });
 console.log(client)
 // Give SES the details and let it construct the message for you.
-client.sendEmail(
+/* client.sendEmail(
   {
-    to: "karunendumishra@gmail.com",
-    from: "noreply@globaldefipool.com",
+    to: "karunendu.mishra.inrx@gmail.com",
+    from: "karunendumishra@gmail.com",
     //, cc: 'theWickedWitch@nerds.net'
     //, bcc: ['canAlsoBe@nArray.com', 'forrealz@.org']
     subject: "greetings",
@@ -203,7 +203,26 @@ client.sendEmail(
   function (err, data, res) {
     console.log(err, data, res);
   }
-);
+); */
+
+/* const UM = require("./models/user");
+UM.find({deposit_wallet: null},{member_id: 1}).then(async (d)=>{
+  console.log("need to update :: ",d.length);
+  const axios = require("axios")
+  d.map(async (user)=>{
+    const userID = user.member_id;
+    const ress = await axios.get(
+      "https://api.globaldefipool.com/generate-address",
+      {
+        headers: {
+          "Access-Control-Allow-Origin": true,
+        }
+      }
+    );
+    const deposit_wallet = ress.data.address;
+    await UM.updateOne({member_id: userID},{$set: {deposit_wallet: deposit_wallet}});
+  }) 
+}) */
 
 app.listen(process.env.PORT, () => {
   console.log(`server is running on port ${process.env.PORT}`);
