@@ -52,14 +52,20 @@ export default function Footer() {
                 />
               </div>
               <p>
-                Founded in 2005, Yamgo is a UK-based technology company building
-                a consumer-first rewards, incentivisation and fintech platform
-                for advertising, media, retail and beyond.
+                Founded in 2022, GDP is a U.S. based technology company with
+                staking rewards growing a community around the XcelDefi token.
+                We provide rewards and an incentivized affiliate program that
+                helps users from our community benefit from our efforts.GDP
+                provides a sustainable staking platform for users all over the
+                world.
               </p>
             </div>
             <div className="col-md-6 col-lg-4">
               <h1 className="font-righteous text-white">Office</h1>
-              <p>Technium 1, Kings Road, Swansea, SA1 8PH</p>
+              <p>
+                Global Defi Pool Corporate U.S. Office 2727 Lyndon B Johnson,
+                Farmers Branch, Tx 75234, (Dallas, TX USA)
+              </p>
             </div>
             <div className="col-md-6 col-lg-4">
               <nav class="nav flex-column">
@@ -91,12 +97,12 @@ export default function Footer() {
           </div>
         </div>
       </footer>
-      <div className="container-fluid foot-bottom">
+      {/* <div className="container-fluid foot-bottom">
         <div className="container d-flex justify-content-between align-items-center">
           <div>Copyrights © 2022. All Rights Reserved</div>
           <div>Registered in England and Wales Company Number: 3597254</div>
         </div>
-      </div>
+      </div> */}
     </>
   );
 }

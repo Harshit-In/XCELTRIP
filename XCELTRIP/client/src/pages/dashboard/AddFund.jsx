@@ -24,7 +24,7 @@ export default function AddFund() {
     { field: "member_id", headerName: "Member ID", width: 150 },
     { field: "trans_hash", headerName: "Transaction ID", width: 150 },
     { field: "amount", headerName: "Amount", width: 200 },
-    { field: "createdAt", headerName: "Topup Date", type: "date", width: 150 },
+    { field: "createdAt", headerName: "Deposit Date", type: "date", width: 150 },
   ];
 
   async function addFund(e) {
@@ -76,7 +76,7 @@ export default function AddFund() {
     <div className="container-fluid">
       <div className="row">
         {/* Widthdrawl Form */}
-        <div className="col-lg-6">
+        <div className="col-lg">
           <div className="d-block mb-4 mb-md-0 mb-2">
             <h2 className="h4 my-0">Deposit XLD Coin</h2>
           </div>
@@ -135,8 +135,7 @@ export default function AddFund() {
       {/* Widthdrawal History */}
       <div className="my-3">
         <div className="d-block mb-4 mb-md-0 mb-2">
-          <h2 className="h4 my-0">Investment History</h2>
-          <p className="mb-0">All your investments are here...</p>
+          <h2 className="h4 my-0">Deposit History</h2>
         </div>
         <DataGrid
           //loading={loadingData}

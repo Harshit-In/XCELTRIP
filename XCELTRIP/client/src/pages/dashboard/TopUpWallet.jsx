@@ -21,10 +21,10 @@ export default function TopUpWallet() {
   const [fundHistory, setFundHistory] = useState([]);
   const topupColumns = [
     { field: "member_id", headerName: "Member ID", width: 150 },
-    { field: "level", headerName: "Level", width: 200 },
     { field: "amount", headerName: "Amount", width: 200 },
-    { field: "coin_wallet", headerName: "Coin Wallet", width: 200 },
-    { field: "income_wallet", headerName: "Income Wallet", width: 200 },
+    { field: "investment", headerName: "Inexpress wallet", width: 200 },
+    { field: "coin_wallet", headerName: "Vibration wallet", width: 200 },
+    { field: "income_wallet", headerName: "Cashoneer wallet", width: 200 },
     { field: "createdAt", headerName: "Topup Date", type: "date", width: 150 },
   ];
 
@@ -81,7 +81,7 @@ export default function TopUpWallet() {
     <div className="container-fluid">
       <div className="row">
         {/* Wallet Topup */}
-        <div className="col-lg-6">
+        <div className="col-lg">
           <div className="d-block mb-2">
             <h2 className="h4 my-0">Stake Coins</h2>
           </div>
@@ -175,8 +175,7 @@ export default function TopUpWallet() {
       {/* Income History */}
       <div className="my-3">
         <div className="d-block mb-4 mb-md-0 mb-2">
-          <h2 className="h4 my-0">Topup History</h2>
-          <p className="mb-0">All your topups are here...</p>
+          <h2 className="h4 my-0">Staking History</h2>
         </div>
         <DataGrid
           //loading={loadingData}

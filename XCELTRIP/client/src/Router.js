@@ -45,7 +45,10 @@ const Router = () => {
         <Route exact path="/faq" element={<FAQ />} />
         <Route exact path="/terms" element={<Terms />} />
         <Route exact path="/signin" element={<SignIn />} />
-        <Route exact path="/signup" element={<SignUp />} />
+        
+        <Route exact path="/signup" element={<SignUp/>}>
+          <Route exact path=":referrer" element={<SignUp />} />
+        </Route>
         <Route exact path="/forgot-password" element={<ForgotPassword />} />
         <Route exact path="/reset-password" element={<ResetPassword />} />
         <Route exact path="/error404" element={<Error404 />} />

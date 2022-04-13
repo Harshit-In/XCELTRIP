@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
+import { getFormData } from "../../helpers/helpers";
 import api from "../../utils/api";
+import { ranks } from "./data";
 //import Web3 from 'web3'
 
 export default function Settings() {
@@ -25,6 +27,27 @@ export default function Settings() {
       });
   }
 
+  async function changePassword(e) {
+    e.preventDefault();
+    const formData = getFormData(e.target);
+    console.log(formData);
+    const fundRes = api.post("/change_password", formData);
+
+    toast.promise(fundRes, {
+      loading: "Changing password....",
+      success: (data) => {
+        return `Congratulations, your password has been changed.`;
+      },
+      error: (err) => {
+        return (
+          err?.response?.data?.errors ??
+          err?.response?.data?.message ??
+          err?.message ??
+          "OOPs something went wrong."
+        );
+      },
+    });
+  }
   useEffect(async () => {
     await getUsersInfo();
 
@@ -34,7 +57,7 @@ export default function Settings() {
   }, []);
   return (
     <>
-      <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
+      {/* <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
         <div>
           <button
             className="btn btn-secondary text-dark mr-2 dropdown-toggle"
@@ -96,26 +119,27 @@ export default function Settings() {
             </a>
           </div>
         </div>
-      </div>
+      </div> */}
       <div className="row">
         <div className="col-12 col-xl-8">
           <div className="card card-body bg-white border-light shadow-sm mb-4">
             <h2 className="h5 mb-4">General information</h2>
             <form>
               <div className="row">
-                <div className="col-md-6 mb-3">
+                <div className="col-md mb-3">
                   <div>
                     <label for="first_name">First Name</label>
                     <input
                       className="form-control"
                       id="first_name"
                       type="text"
-                      placeholder="Enter your first name"
+                      placeholder="Full Name"
+                      defaultValue={userData.full_name}
                       required
                     />
                   </div>
                 </div>
-                <div className="col-md-6 mb-3">
+               {/*  <div className="col-md-6 mb-3">
                   <div>
                     <label for="last_name">Last Name</label>
                     <input
@@ -126,9 +150,9 @@ export default function Settings() {
                       required
                     />
                   </div>
-                </div>
+                </div> */}
               </div>
-              <div className="row align-items-center">
+              {/* <div className="row align-items-center">
                 <div className="col-md-6 mb-3">
                   <label for="birthday">Birthday</label>
                   <div className="input-group">
@@ -157,7 +181,7 @@ export default function Settings() {
                     <option value="2">Male</option>
                   </select>
                 </div>
-              </div>
+              </div> */}
               <div className="row">
                 <div className="col-md-6 mb-3">
                   <div className="form-group">
@@ -167,6 +191,7 @@ export default function Settings() {
                       id="email"
                       type="email"
                       placeholder="name@company.com"
+                      defaultValue={userData.email}
                       required
                     />
                   </div>
@@ -179,12 +204,13 @@ export default function Settings() {
                       id="phone"
                       type="number"
                       placeholder="+12-345 678 910"
+                      defaultValue={userData.mobile}
                       required
                     />
                   </div>
                 </div>
               </div>
-              <h2 className="h5 my-4">Adress</h2>
+              {/* <h2 className="h5 my-4">Adress</h2>
               <div className="row">
                 <div className="col-sm-9 mb-3">
                   <div className="form-group">
@@ -236,10 +262,113 @@ export default function Settings() {
                     />
                   </div>
                 </div>
-              </div>
+              </div> */}
               <div className="mt-3">
                 <button type="submit" className="btn btn-primary">
                   Save All
+                </button>
+              </div>
+            </form>
+          </div>
+
+          {/* Change Password Thing */}
+          <div className="card card-body bg-white border-light shadow-sm mb-4">
+            <h2 className="h5">Change Passwords</h2>
+            <form onClick={(e)=>{changePassword(e)}}>
+              <input type="hidden" name="member_id" value={userData.member_id} />
+              <input type="hidden" name="password_type" value="password" />
+              <div className="row">
+                <div className="col-md-4 mb-3">
+                  <div>
+                    <label for="old_pass">Old Password</label>
+                    <input
+                      className="form-control"
+                      id="old_pass"
+                      type="password"
+                      placeholder="Old Password"
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="col-md-4 mb-3">
+                  <div>
+                    <label for="first_name">New password</label>
+                    <input
+                      className="form-control"
+                      id="password"
+                      type="password"
+                      placeholder="New Password"
+                      name="pass"
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="col-md-4 mb-3">
+                  <div>
+                    <label for="last_name">Confirm Password</label>
+                    <input
+                      className="form-control"
+                      id="confirm_pass"
+                      type="password"
+                      placeholder="Confirm Password"
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="mt-1">
+                <button type="submit" className="btn btn-primary">
+                  Change Password
+                </button>
+              </div>
+            </form>
+
+            <h2 className="h5 mt-4">Change Transaction Password</h2>
+            <form onClick={(e)=>{changePassword(e)}}>
+              <input type="hidden" name="member_id" value={userData.member_id} />
+              <input type="hidden" name="password_type" value="txn_password" />
+              <div className="row">
+              <div className="col-md-4 mb-3">
+                  <div>
+                    <label for="old_pass">Old Password</label>
+                    <input
+                      className="form-control"
+                      id="old_pass"
+                      type="password"
+                      placeholder="Old Password"
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="col-md-4 mb-3">
+                  <div>
+                    <label for="txn_pass">New Password</label>
+                    <input
+                      className="form-control"
+                      id="txn_pass"
+                      type="password"
+                      placeholder="New Transaction Password"
+                      name="pass"
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="col-md-4 mb-3">
+                  <div>
+                    <label for="new_txn_pass">Confirm Password</label>
+                    <input
+                      className="form-control"
+                      id="new_txn_pass"
+                      type="password"
+                      placeholder="Confirm Password"
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="mt-1">
+                <button type="submit" className="btn btn-primary">
+                  Change Password
                 </button>
               </div>
             </form>
@@ -260,10 +389,9 @@ export default function Settings() {
                     alt="Neil Portrait"
                   />
                   <h6 className="h6">{userData?.email}</h6>
-                  <h5 className="font-weight-normal">
-                    Current Level : {userData.level}
-                  </h5>
-                  <p className="text-gray mb-4">New York, USA</p>
+                  <h6 className="h6">
+                    Current Level : {ranks[userData.level]}
+                  </h6>
                   <a className="btn btn-sm btn-primary mr-2" href="#">
                     <span className="fas fa-user-plus mr-1"></span> Connect
                   </a>

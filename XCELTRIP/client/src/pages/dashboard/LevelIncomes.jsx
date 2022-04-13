@@ -32,11 +32,10 @@ export default function LevelIncomes() {
   const [tableData, setTableData] = useState([]);
   const columns = [
     { field: "member_id", headerName: "Member ID", width: 150 },
-    { field: "level", headerName: "Level", width: 200 },
     { field: "amount", headerName: "Amount", width: 200 },
-    { field: "coin_wallet", headerName: "Coin Wallet", width: 200 },
-    { field: "income_wallet", headerName: "Income Wallet", width: 200 },
-    { field: "createdAt", headerName: "Joined On", type: "date", width: 150 },
+    { field: "coin_wallet", headerName: "Vibration wallet", width: 200 },
+    { field: "income_wallet", headerName: "Cashoneer wallet", width: 200 },
+    { field: "createdAt", headerName: "Income Date", type: "date", width: 150 },
   ];
   const newJoinings = [
     { member_id: "XELL000001", name: "Demo User", img: "" },
@@ -89,11 +88,10 @@ export default function LevelIncomes() {
     <>
       <div className="container-fluid py-4">
         <div className="row">
-          <div className="col-lg-9">
+          <div className="col-lg">
             <div className="my-2">
               <div className="d-block mb-4 mb-md-0 mb-2">
                 <h2 className="h4 my-0">Level Incomes</h2>
-                <p className="mb-0">Your web analytics dashboard template.</p>
               </div>
               <DataGrid
                 //loading={loadingData}

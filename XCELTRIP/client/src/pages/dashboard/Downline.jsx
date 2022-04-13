@@ -30,14 +30,12 @@ export default function Downline(props) {
         <div className="d-flex justify-content-between">
           <div>
             <div className="fw-bold" style={{ fontSize: "14px" }}>
-              {userInfo?.member_id ?? "Member ID"} {`[ Rank : ${ranks[userInfo.level] } ]`}
+              {userInfo?.member_id ?? "Member ID"}{" "}
+              {`[ Rank : ${ranks[userInfo.level]} ]`}
             </div>
             <div className="fw-bold" style={{ fontSize: "12px" }}>
-              {userInfo?.full_name ?? "Name Not Available"}{" "}
-              {`[${userInfo?.email}]`}
-            </div>
-            <div className="fw-bold" style={{ fontSize: "12px" }}>
-              Total Business : {userInfo.total_coin ?? 0}
+              <span className="me-2">Direct Business : {userInfo.direct_coin ?? 0}</span>
+              <span>Total Business : {userInfo.total_coin ?? 0}</span>
             </div>
           </div>
           <div
@@ -55,12 +53,13 @@ export default function Downline(props) {
 
         {childData && childData.length > 0 && (
           <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">
-            {childData.length} <span class="visually-hidden">unread messages</span>
+            {childData.length}{" "}
+            <span class="visually-hidden">unread messages</span>
           </span>
         )}
       </div>
       {showTeam && childData && childData.length > 0 && (
-        <div className="border-start ps-3">
+        <div className="border-start ps-4">
           {childData.map((child) => (
             <Downline memberID={child.member_id} />
           ))}

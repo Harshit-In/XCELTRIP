@@ -32,12 +32,11 @@ export default function TransactionHistory() {
   const [tableData, setTableData] = useState([]);
   const columns = [
     { field: "member_id", headerName: "Member ID", width: 150 },
-    { field: "level", headerName: "Level", width: 200 },
     { field: "amount", headerName: "Amount", width: 200 },
     { field: "income_type", headerName: "Transaction Type", width: 200 },
-    { field: "coin_wallet", headerName: "Coin Wallet", width: 200 },
-    { field: "income_wallet", headerName: "Income Wallet", width: 200 },
-    { field: "createdAt", headerName: "Joined On", type: "date", width: 150 },
+    { field: "coin_wallet", headerName: "Vibration wallet", width: 200 },
+    { field: "income_wallet", headerName: "Cashoneer wallet", width: 200 },
+    { field: "createdAt", headerName: "Transaction Date", type: "date", width: 150 },
   ];
   const newJoinings = [
     { member_id: "XELL000001", name: "Demo User", img: "" },

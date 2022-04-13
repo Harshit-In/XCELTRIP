@@ -131,11 +131,12 @@ export default function DashboardHome() {
   return (
     <>
       <div className="container-fluid py-4">
+        <div className="mb-2">Referral Link : <a href={`/signup/${userData.member_id}`} target="_blank" rel="noreferrer">http://signup?referrer={userData.member_id}</a></div>
         <div className="row">
           <div className="col-lg-12 col-xl-12">
             <div className="row">
               <div className="col-md-12 col-lg-12 col-xl-4 mb-2">
-                <div className="card card-body border-0 shadow-sm px-2 mb-2">
+                <div className="card card-body border-0 shadow-sm px-2 mb-2 h-100">
                   <div className="d-flex">
                     <div className="d-flex">
                       <div className="me-2">
@@ -229,7 +230,7 @@ export default function DashboardHome() {
           </div>
         </div>
         <div className="row">
-          <div className="col-lg-4">
+          <div className="col">
             {/* WalletTransfer */}
             <div className="card card-body border shadow-sm mb-2">
               <div className="d-flex mb-2 justify-content-between align-items-center">

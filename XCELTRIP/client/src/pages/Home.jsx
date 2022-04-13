@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import pageContents from "../helpers/page_contents";
+import Popup from "./Popup";
 
 export default function Home(props) {
   const pageContent = pageContents.home;
@@ -37,6 +38,7 @@ export default function Home(props) {
   ];
   return (
     <>
+    <Popup />
       <section className="container-fluid">
         <div className="container">
           <div className="row align-items-center">

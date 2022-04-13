@@ -10,7 +10,7 @@ export default function Wallet() {
               The Easy way to Earn Money-Like Crypto Assets
             </h1>
             <p className="app-para mb-4">
-              Download the App and start Earning rewards today.
+              Download the app and start earning rewards today.
             </p>
             <div>
               <a

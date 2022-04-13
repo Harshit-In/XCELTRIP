@@ -2,7 +2,7 @@ const sidebarMenus = [
     {title: "Dashboard", icon:"fas fa-chart-pie", page:"/dashboard"},
     {title: "Deposit XLD Coin", icon:"fas fa-hand-holding-usd", page:"addfund"},
     {title: "Stake Coin", icon:"fas fa-hand-holding-usd", page:"topupwallet"},
-    {title: "Transfer Vibration Wallet", icon:"fas fa-hand-holding-usd", page:"transferfund"},
+    {title: "Transfer Wallet", icon:"fas fa-hand-holding-usd", page:"transferfund"},
     {title: "Transaction History", icon:"fas fa-hand-holding-usd", page:"transactionhistory"},
     {title: "Level Incomes", icon:"fas fa-hand-holding-usd", page:"levelincomes"},
     {title: "Withdraw Amount", icon:"fas fa-hand-holding-usd", page:"widthdraw"},

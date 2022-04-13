@@ -1,8 +1,8 @@
-import { createRef, useState } from "react";
+import { createRef, useEffect, useState } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { getFormData } from "../../helpers/helpers";
 import api from "../../utils/api";
 
@@ -10,6 +10,7 @@ export default function SignUp() {
   const [isSignupSuccessful, setIsSignupSuccessful] = useState();
   const [isMemberVerified, setIsMemberVerified] = useState(null);
   const recaptchaRef = createRef();
+  const {referrer} = useParams();
 
   async function verifyMemberID(memberID) {
     if (memberID.length > 0) {
@@ -69,6 +70,12 @@ export default function SignUp() {
       toast.error("Please verify captcha.");
     }
   }
+
+  useEffect(()=>{
+    if(referrer) {
+      verifyMemberID(referrer);
+    }
+  },[])
   return (
     <section className="vh-lg-100 d-flex align-items-center">
       {isSignupSuccessful ? (
@@ -156,6 +163,7 @@ export default function SignUp() {
                         placeholder="Sponsor ID"
                         id="sponsor_id"
                         name="sponsor_id"
+                        defaultValue={referrer}
                         autofocus
                         required
                         onBlur={(e) => {

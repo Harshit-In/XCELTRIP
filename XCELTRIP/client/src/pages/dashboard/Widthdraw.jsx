@@ -22,11 +22,10 @@ export default function Widthdraw() {
   const [fundHistory, setFundHistory] = useState([]);
   const topupColumns = [
     { field: "member_id", headerName: "Member ID", width: 150 },
-    { field: "level", headerName: "Level", width: 200 },
     { field: "amount", headerName: "Amount", width: 200 },
-    { field: "coin_wallet", headerName: "Coin Wallet", width: 200 },
-    { field: "income_wallet", headerName: "Income Wallet", width: 200 },
-    { field: "createdAt", headerName: "Topup Date", type: "date", width: 150 },
+    { field: "coin_wallet", headerName: "Vibration wallet", width: 200 },
+    { field: "income_wallet", headerName: "Cashoneer wallet", width: 200 },
+    { field: "createdAt", headerName: "Withdraw Date", type: "date", width: 150 },
   ];
 
   async function widthdrawAmount(e) {
@@ -78,7 +77,7 @@ export default function Widthdraw() {
     <div className="container-fluid">
       <div className="row">
         {/* Widthdrawl Form */}
-        <div className="col-lg-6">
+        <div className="col-lg">
           <div className="d-block mb-4 mb-md-0 mb-2">
             <h2 className="h4 my-0">Withdraw Amount</h2>
           </div>
@@ -148,7 +147,6 @@ export default function Widthdraw() {
       <div className="my-3">
         <div className="d-block mb-4 mb-md-0 mb-2">
           <h2 className="h4 my-0">Withdraw History</h2>
-          <p className="mb-0">All your withdrawals are here...</p>
         </div>
         <DataGrid
           //loading={loadingData}

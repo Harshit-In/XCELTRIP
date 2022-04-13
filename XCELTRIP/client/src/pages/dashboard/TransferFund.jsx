@@ -102,7 +102,7 @@ export default function TransferFund() {
     <div className="container-fluid">
       <div className="row">
         {/* FundTransfer */}
-        <div className="col-lg-6">
+        <div className="col-lg">
           <div className="d-block mb-2">
             <h2 className="h4 my-0">Transfer Vibration Wallet</h2>
           </div>
@@ -183,7 +183,6 @@ export default function TransferFund() {
       <div className="my-3">
         <div className="d-block mb-4 mb-md-0 mb-2">
           <h2 className="h4 my-0">Fund Transfer History</h2>
-          <p className="mb-0">All your fund transfers are here...</p>
         </div>
         <DataGrid
           //loading={loadingData}
