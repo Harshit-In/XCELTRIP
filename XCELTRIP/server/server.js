@@ -312,6 +312,7 @@ async function resetCashbackAmount() {
 async function sendMonthlyRoyalty(dt = null) {
   const UserModel = require("./models/user");
   const HistoryModel = require("./models/history");
+  const RoyaltyHistoryModel = require("./models/royalty");
   const moment = require("moment");
   const tDate = dt ? moment(dt) : moment();
   /* tDate.setUTCHours(0, 0, 0, 0);
@@ -337,7 +338,7 @@ async function sendMonthlyRoyalty(dt = null) {
     { $sort: { _id: -1 } },
   ]);
   console.log(r);
-  const lastMonthBusiness = r[0]?.totalBusiness;
+  const lastMonthBusiness = r[1]?.totalBusiness;
   const royaltyAmount = (lastMonthBusiness * 5) / 100;
   console.log(
     "totalBusiness ",
@@ -357,38 +358,95 @@ async function sendMonthlyRoyalty(dt = null) {
     "level4rAmount : ",
     level4rAmount,
     "level5rAmount : ",
-    level5rAmount,
+    level5rAmount
   );
   console.log("r", r);
-  const RoyaltyHistoryModel = require("./models/royalty");
-  level4Members.map((member)=>{
-    /* await UserModel.updateOne(
-    { member_id: member.member_id },
-    { $inc: { cashback_wallet: level4rAmount/2 } }
-  );
-  await RoyaltyHistoryModel.updateOne({ member_id: member.member_id,},{
-    $set: {
-      date: new Date(),
-    },
-    $inc: {royalty_amount: level4rAmount}
-  }); */
-  })
+ 
 
-  level5Members.map((member)=>{
-    /* await UserModel.updateOne(
-    { member_id: member.member_id },
-    { $inc: { cashback_wallet: level5rAmount/2 } }
-  );
-  await RoyaltyHistoryModel.updateOne({ member_id: member.member_id,},{
-    $set: {
-      date: new Date(),
+  const rH = await RoyaltyHistoryModel.aggregate([
+    {
+      $group: {
+        _id: { $dateToString: { format: "%Y-%m", date: "$createdAt" } },
+        totalRoyaltyPaid: { $sum: "$royalty_amount" },
+        count: { $sum: 1 },
+      },
     },
-    $inc: {royalty_amount: level5rAmount}
-  }); */
-  })
+    { $sort: { _id: -1 } },
+  ]);
+  console.log("rH",rH)
+  /* const rr = await RoyaltyHistoryModel.find({royalty_amount: {$gt:0}});
+  rr.map(async(rrr)=>{
+    await RoyaltyHistoryModel.updateMany({_id: rrr._id},{$set: {date: new Date(rrr.date).toISOString()}})
+  }) */
+  
+  //console.log(level4Members, level5Members);
+  /* const a = level4Members.map(async (member) => {
+    await UserModel.updateOne(
+      { member_id: member.member_id },
+      {
+        $inc: {
+          income_wallet: level4rAmount / 2,
+          coin_wallet: level4rAmount / 2,
+        },
+      }
+    );
+    //console.log("Level4", member.member_id);
+
+    await RoyaltyHistoryModel.insertMany([
+      {
+        date: new Date().toISOString(),
+        income_type: "royalty",
+        member_id: member.member_id,
+        level: 4,
+        royalty_amount: level4rAmount,
+      },
+    ]);
+  });
+  Promise.all(a).then((rs) => {});
+
+  const b = level5Members.map(async (member) => {
+    await UserModel.updateOne(
+      { member_id: member.member_id },
+      {
+        $inc: {
+          income_wallet: level4rAmount / 2,
+          coin_wallet: level4rAmount / 2,
+        },
+      }
+    );
+    //console.log("Level5 ", member.member_id);
+    await RoyaltyHistoryModel.insertMany([
+      {
+        date: new Date().toISOString(),
+        income_type: "royalty",
+        member_id: member.member_id,
+        level: 5,
+        royalty_amount: level5rAmount,
+      },
+    ]);
+  });
+  Promise.all(b).then((rs) => {}); */
 }
-sendMonthlyRoyalty();
+//sendMonthlyRoyalty();
 
+async function resetRoyalty() {
+  const RoyaltyHistoryModel = require("./models/royalty");
+  const UserModel = require("./models/user");
+  const r = await RoyaltyHistoryModel.find({royalty_amount: {$gt:0}});
+  const a =r.map(async(rh)=>{
+    await UserModel.updateOne(
+      { member_id: rh.member_id },
+      {
+        $inc: {
+          income_wallet: -(rh.royalty_amount / 2),
+          coin_wallet: -(rh.royalty_amount / 2),
+        },
+      }
+    );
+  });
+  Promise.all(a).then((r)=>{});
+}
+//resetRoyalty();
 app.listen(process.env.PORT, () => {
   console.log(`server is running on port ${process.env.PORT}`);
 });
