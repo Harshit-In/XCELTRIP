@@ -361,7 +361,6 @@ async function sendMonthlyRoyalty(dt = null) {
     level5rAmount
   );
   console.log("r", r);
- 
 
   const rH = await RoyaltyHistoryModel.aggregate([
     {
@@ -373,12 +372,12 @@ async function sendMonthlyRoyalty(dt = null) {
     },
     { $sort: { _id: -1 } },
   ]);
-  console.log("rH",rH)
+  console.log("rH", rH);
   /* const rr = await RoyaltyHistoryModel.find({royalty_amount: {$gt:0}});
   rr.map(async(rrr)=>{
     await RoyaltyHistoryModel.updateMany({_id: rrr._id},{$set: {date: new Date(rrr.date).toISOString()}})
   }) */
-  
+
   //console.log(level4Members, level5Members);
   /* const a = level4Members.map(async (member) => {
     await UserModel.updateOne(
@@ -432,8 +431,8 @@ async function sendMonthlyRoyalty(dt = null) {
 async function resetRoyalty() {
   const RoyaltyHistoryModel = require("./models/royalty");
   const UserModel = require("./models/user");
-  const r = await RoyaltyHistoryModel.find({royalty_amount: {$gt:0}});
-  const a =r.map(async(rh)=>{
+  const r = await RoyaltyHistoryModel.find({ royalty_amount: { $gt: 0 } });
+  const a = r.map(async (rh) => {
     await UserModel.updateOne(
       { member_id: rh.member_id },
       {
@@ -444,9 +443,70 @@ async function resetRoyalty() {
       }
     );
   });
-  Promise.all(a).then((r)=>{});
+  Promise.all(a).then((r) => {});
 }
 //resetRoyalty();
+
+async function sendMonthlyROIFor(userID, dt = null) {
+  const CashbackModel = require("./models/cashback");
+  const UserModel = require("./models/user");
+  const tDate = dt ? new Date(dt) : new Date();
+  console.log("ROI Date", tDate);
+  const stakings = await CashbackModel.find({
+    member_id: userID,
+    paidMonth: { $lt: 18 },
+  });
+  if (stakings) {
+    console.log("stakings", stakings);
+    const a = stakings.map(async (stackData) => {
+      const stDate = new Date(
+        new Date(stackData.createdAt).setUTCHours(0, 0, 0, 0)
+      );
+      const ltDate = new Date(
+        new Date(stackData.last_cashback_date).setUTCHours(0, 0, 0, 0)
+      );
+      if (
+        tDate.getDate() == ltDate.getDate() &&
+        tDate.getMonth() == ltDate.getMonth() &&
+        tDate.getFullYear() == ltDate.getFullYear()
+      ) {
+        console.log("already paid");
+      } else if (stDate.getDate() == tDate.getDate() || tDate.getTime() >= stDate.getTime() + (3600 * 24 * 28 * 1000)) {
+        console.log("Pay ROI", stDate, stackData.member_id);
+        await CashbackModel.updateOne(
+          {
+            _id: stackData._id,
+          },
+          { $inc: { paidMonth: 1, paidCashback: stackData.monthly_cashback } },
+          { $set: { last_cashback_date: tDate } }
+        );
+        await UserModel.updateOne(
+          { member_id: stackData.member_id },
+          { $inc: { cashback_wallet: stackData.monthly_cashback } }
+        );
+        const CashbackHistoryModel = require("./models/cashback_history");
+        await CashbackHistoryModel.insertMany([
+          {
+            cashback_date: new Date(),
+            staking_id: stackData._id,
+            member_id: stackData.member_id,
+            staking_amount: stackData.plan_amount,
+            cashback_amount: stackData.monthly_cashback,
+          },
+        ]);
+      } else {
+        //console.log("Don't pay roi");
+      }
+    });
+    Promise.all(a).then(() => {
+      //console.log("Stakings :: ", stakings);
+    });
+  } else {
+    console.log("stakings not available for this user.");
+  }
+}
+//sendMonthlyROIFor("GDP1013023");
+
 app.listen(process.env.PORT, () => {
   console.log(`server is running on port ${process.env.PORT}`);
 });
